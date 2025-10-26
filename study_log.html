@@ -18,63 +18,66 @@ body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
 <div id="main"><h1>Select a day</h1></div>
 
 <script>
-const studyData = {
-  "September 2025": {
-    "27": "Stewart: Sections 3.3, 3.4, 3.5, 3.6<br>- Derivatives of Trigonometric functions<br>- Limits for sinx/x, (cosx-1)/x<br>- Implicit Differentiation<br>- Derivatives of Logarithms",
-    "28": "Stewart: Sections 3.8, 3.10, 3.11<br>- Derivative value at a point through limits<br>- Derivatives of Inverse Trig functions<br>- Derivatives of Hyperbolic and Inverse Hyperbolic functions<br>- Exponential growth/decay<br>- Hyperbolic Identities/exponential forms<br>- Log forms of Inverse Hyperbolic Functions",
-    "29": "Stewart: Sections 4.4<br>- l'Hospital's Rule and indeterminate forms",
-    "30": "Stewart: Sections 4.8, 4.9, 5.2, 5.3, 5.4, 5.5<br>- Newton's Method<br>- Riemann sum, indefinite integral<br>- Power sums<br>- Fundamental theorem of calculus<br>- Boundary flipping, Leibniz rule<br>- Substitution Rule, nested integrals"
-  },
-  "October 2025": {
-    "1": "Stewart: Sections 6.1, 6.2, 6.3, 6.5, 7.1<br>- Riemann's sum for area between curves<br>- Volume of a solid through slices<br>- Solid of Revolution<br>- Average value of a Function<br>- Integration by Parts",
-    "2": "Stewart: Sections 7.2, 7.3, 7.4<br>- Trig identities, trig substitution<br>- Integrate tan^n*sec^m and sin^n*cos^m cases<br>- Half angle identity<br>- Partial fractions",
-    "3": "Stewart: Sections 7.5, 7.8, 7.11<br>- Integrals practice, improper integrals<br>- Comparison theorem, Mean Value Theorem<br>- Arc Length and derivation",
-    "4": "Stewart: Sections 6.2, 6.3, 8.2, 9.1, 9.2, 9.3<br>- Surface of Revolution: Disk, Washer, Shell<br>- GitHub and LaTeX setup<br>- Logistic and separable differential equations",
-    "5": "Stewart: Sections 9.2, 9.4, 9.5, 9.6, 10.1, 10.2<br>- Euler's Method<br>- Logistic diff eq<br>- Linear diff eq<br>- Predator-prey systems<br>- Parametric curve derivatives",
-    "6": "Stewart: Sections 10.3, 10.4<br>- Polar/Cartesian conversion<br>- Symmetry rules<br>- Formulas for curves<br>- Area, Arc Length, Tangent derivations",
-    "7": "Stewart: Sections 10.5, 10.6, 11.1<br>- Conic Sections<br>- Sequence limits, Squeeze theorem, bounded sequences",
-    "8": "Rest",
-    "9": "Stewart: Sections 11.2, 11.3, 11.4<br>- Series Definition, Geometric series, Divergence Theorem<br>- Integral and P-Series Tests<br>- Remainder estimate, approximating Series value",
-    "10": "Stewart: Sections 11.5, 11.6, 11.7, 11.8<br>- Alternating Series Test, Remainder<br>- Absolute/Conditional Convergence<br>- Ratio and Root Tests<br>- Power Series: Form, Interval, Radius of Convergence",
-    "11": "Stewart: Sections 11.9, 11.10<br>- Functions as Power Series<br>- Taylor and Maclaurin Series (sin, cos, arctan, e^x, ln(1+x), 1/(1-x))",
-    "12": "Stewart: Sections 11.10<br>- Binomial Theorem<br>- More Taylor Series, Binomial Series",
-    "13": "Lay: Sections 1.1-1.4<br>- Linear Equations, Echelon Forms, Row Reduction<br>- Matrix rank, geometry<br>- Matrix-vector product properties",
-    "14": "Lay: Sections 1.5, 1.7, 1.8<br>- Homogenous equations, parametric vector equations<br>- Linear Independence<br>- Range, Image, Domain, Codomain<br>- Linear Transformations",
-    "15": "Lay: Sections 1.9, 2.1-2.3<br>- Matrix of Linear Transformation<br>- One-to-one, onto<br>- Matrix Operations, Transposes<br>- Inverse, Elementary Matrices",
-    "16": "Lay: Sections 2.4, 2.5<br>- Partitioned Matrices<br>- LU Factorization",
-    "17": "Lay: Sections 3.1, 3.2<br>- Determinant, cofactor expansions<br>- Properties with row operations and transpose",
-    "18": "Lay: Sections 3.3, 4.1-4.3<br>- Cramer's Rule, Adjugate, Inverse<br>- Subset, Subspace, Span, Null/Column Space",
-    "19": "Lay: Sections 4.4-4.7<br>- Unique Representation Theorem, Coordinates, Isomorphism, Dimensions, Row spaces, Rank, Change of Basis",
-    "20": "Lay: Sections 5.1-5.3<br>- Eigenvectors, Eigenvalues, Eigenspace, Characteristic Equation, Similar Matrices, Diagonalization",
-    "21": "Rest",
-    "22": "Lay: Sections 5.4<br>- Linear transformations with bases, Diagonal Matrix Representation<br>- Matrix conversion",
-    "23": "Lay: Sections 6.1<br>- Inner Product, vector length, unit vector, distance, orthogonal relations",
-    "24": "Vellerman: Intro, 1.1-1.4<br>- Factorizations, logic connectives, truth tables, tautologies, sets, union/intersection/difference",
-    "25": "Vellerman: Sections 1.5, 2.1-2.3<br>- Conditional Laws, Contrapositive, Quantifiers, Power Set, Family of Sets",
-    "26": "Vellerman: Sections 2.3 (2nd half), 3.1, 3.2<br>- Union/intersection notation, proofs P→Q, Proof by contradiction",
-    "27": "Vellerman: Sections 3.3, 3.4<br>- Universal and existential statements, practice, conjunction/disjunction/iff proofs"
-  }
-};
+document.addEventListener("DOMContentLoaded", () => {
+  const studyData = {
+    "September 2025": {
+      "27": "Stewart: Sections 3.3, 3.4, 3.5, 3.6<br>- Derivatives of Trigonometric functions<br>- Limits for sinx/x, (cosx-1)/x<br>- Implicit Differentiation<br>- Derivatives of Logarithms",
+      "28": "Stewart: Sections 3.8, 3.10, 3.11<br>- Derivative value at a point through limits<br>- Derivatives of Inverse Trig functions<br>- Derivatives of Hyperbolic and Inverse Hyperbolic functions<br>- Exponential growth/decay<br>- Hyperbolic Identities/exponential forms<br>- Log forms of Inverse Hyperbolic Functions",
+      "29": "Stewart: Sections 4.4<br>- l'Hospital's Rule and indeterminate forms",
+      "30": "Stewart: Sections 4.8, 4.9, 5.2, 5.3, 5.4, 5.5<br>- Newton's Method<br>- Riemann sum, indefinite integral<br>- Power sums<br>- Fundamental theorem of calculus<br>- Boundary flipping, Leibniz rule<br>- Substitution Rule, nested integrals"
+    },
+    "October 2025": {
+      "1": "Stewart: Sections 6.1, 6.2, 6.3, 6.5, 7.1<br>- Riemann's sum for area between curves<br>- Volume of a solid through slices<br>- Solid of Revolution<br>- Average value of a Function<br>- Integration by Parts",
+      "2": "Stewart: Sections 7.2, 7.3, 7.4<br>- Trig identities, trig substitution<br>- Integrate tan^n*sec^m and sin^n*cos^m cases<br>- Half angle identity<br>- Partial fractions",
+      "3": "Stewart: Sections 7.5, 7.8, 7.11<br>- Integrals practice, improper integrals<br>- Comparison theorem, Mean Value Theorem<br>- Arc Length and derivation",
+      "4": "Stewart: Sections 6.2, 6.3, 8.2, 9.1, 9.2, 9.3<br>- Surface of Revolution: Disk, Washer, Shell<br>- GitHub and LaTeX setup<br>- Logistic and separable differential equations",
+      "5": "Stewart: Sections 9.2, 9.4, 9.5, 9.6, 10.1, 10.2<br>- Euler's Method<br>- Logistic diff eq<br>- Linear diff eq<br>- Predator-prey systems<br>- Parametric curve derivatives",
+      "6": "Stewart: Sections 10.3, 10.4<br>- Polar/Cartesian conversion<br>- Symmetry rules<br>- Formulas for curves<br>- Area, Arc Length, Tangent derivations",
+      "7": "Stewart: Sections 10.5, 10.6, 11.1<br>- Conic Sections<br>- Sequence limits, Squeeze theorem, bounded sequences",
+      "8": "Rest",
+      "9": "Stewart: Sections 11.2, 11.3, 11.4<br>- Series Definition, Geometric series, Divergence Theorem<br>- Integral and P-Series Tests<br>- Remainder estimate, approximating Series value",
+      "10": "Stewart: Sections 11.5, 11.6, 11.7, 11.8<br>- Alternating Series Test, Remainder<br>- Absolute/Conditional Convergence<br>- Ratio and Root Tests<br>- Power Series: Form, Interval, Radius of Convergence",
+      "11": "Stewart: Sections 11.9, 11.10<br>- Functions as Power Series<br>- Taylor and Maclaurin Series (sin, cos, arctan, e^x, ln(1+x), 1/(1-x))",
+      "12": "Stewart: Sections 11.10<br>- Binomial Theorem<br>- More Taylor Series, Binomial Series",
+      "13": "Lay: Sections 1.1-1.4<br>- Linear Equations, Echelon Forms, Row Reduction<br>- Matrix rank, geometry<br>- Matrix-vector product properties",
+      "14": "Lay: Sections 1.5, 1.7, 1.8<br>- Homogenous equations, parametric vector equations<br>- Linear Independence<br>- Range, Image, Domain, Codomain<br>- Linear Transformations",
+      "15": "Lay: Sections 1.9, 2.1-2.3<br>- Matrix of Linear Transformation<br>- One-to-one, onto<br>- Matrix Operations, Transposes<br>- Inverse, Elementary Matrices",
+      "16": "Lay: Sections 2.4, 2.5<br>- Partitioned Matrices<br>- LU Factorization",
+      "17": "Lay: Sections 3.1, 3.2<br>- Determinant, cofactor expansions<br>- Properties with row operations and transpose",
+      "18": "Lay: Sections 3.3, 4.1-4.3<br>- Cramer's Rule, Adjugate, Inverse<br>- Subset, Subspace, Span, Null/Column Space",
+      "19": "Lay: Sections 4.4-4.7<br>- Unique Representation Theorem, Coordinates, Isomorphism, Dimensions, Row spaces, Rank, Change of Basis",
+      "20": "Lay: Sections 5.1-5.3<br>- Eigenvectors, Eigenvalues, Eigenspace, Characteristic Equation, Similar Matrices, Diagonalization",
+      "21": "Rest",
+      "22": "Lay: Sections 5.4<br>- Linear transformations with bases, Diagonal Matrix Representation<br>- Matrix conversion",
+      "23": "Lay: Sections 6.1<br>- Inner Product, vector length, unit vector, distance, orthogonal relations",
+      "24": "Vellerman: Intro, 1.1-1.4<br>- Factorizations, logic connectives, truth tables, tautologies, sets, union/intersection/difference",
+      "25": "Vellerman: Sections 1.5, 2.1-2.3<br>- Conditional Laws, Contrapositive, Quantifiers, Power Set, Family of Sets",
+      "26": "Vellerman: Sections 2.3 (2nd half), 3.1, 3.2<br>- Union/intersection notation, proofs P→Q, Proof by contradiction",
+      "27": "Vellerman: Sections 3.3, 3.4<br>- Universal and existential statements, practice, conjunction/disjunction/iff proofs"
+    }
+  };
 
-// Populate sidebar
-const sidebar = document.getElementById("sidebar");
-for (const month in studyData) {
-  const monthDiv = document.createElement("div");
-  monthDiv.className = "sidebar-month";
-  monthDiv.textContent = month;
-  sidebar.appendChild(monthDiv);
+  const sidebar = document.getElementById("sidebar");
+  const main = document.getElementById("main");
 
-  const days = studyData[month];
-  for (const day in days) {
-    const dayDiv = document.createElement("div");
-    dayDiv.className = "sidebar-day";
-    dayDiv.textContent = "Day " + day;
-    dayDiv.onclick = () => {
-      document.getElementById("main").innerHTML = `<h1>${month} ${day}</h1><div class="entry">${days[day]}</div>`;
-    };
-    sidebar.appendChild(dayDiv);
+  for (const month in studyData) {
+    const monthDiv = document.createElement("div");
+    monthDiv.className = "sidebar-month";
+    monthDiv.textContent = month;
+    sidebar.appendChild(monthDiv);
+
+    const days = studyData[month];
+    for (const day in days) {
+      const dayDiv = document.createElement("div");
+      dayDiv.className = "sidebar-day";
+      dayDiv.textContent = "Day " + day;
+      dayDiv.addEventListener("click", () => {
+        main.innerHTML = `<h1>${month} ${day}</h1><div class="entry">${days[day]}</div>`;
+      });
+      sidebar.appendChild(dayDiv);
+    }
   }
-}
+});
 </script>
 
 </body>
