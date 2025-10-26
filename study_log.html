@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Study Log</title>
+<style>
+body { font-family: sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; }
+h1 { text-align: center; }
+textarea { width: 100%; height: 200px; margin-bottom: 20px; }
+button { padding: 10px 20px; }
+.entry { border-bottom: 1px solid #ccc; margin-bottom: 10px; padding-bottom: 10px; }
+</style>
+</head>
+<body>
+<h1>My Study Log</h1>
+<textarea id="logInput" placeholder="Write today's study notes..."></textarea><br>
+<button onclick="addEntry()">Add Entry</button>
+<div id="logEntries"></div>
+<script>
+function addEntry() {
+    const input = document.getElementById('logInput');
+    if (!input.value.trim()) return;
+    const container = document.getElementById('logEntries');
+    const entry = document.createElement('div');
+    entry.className = 'entry';
+    const timestamp = new Date().toLocaleString();
+    entry.innerHTML = `<strong>${timestamp}</strong><p>${input.value}</p>`;
+    container.prepend(entry);
+    input.value = '';
+}
+</script>
+</body>
+</html>
