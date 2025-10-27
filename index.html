@@ -10,6 +10,7 @@ body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
 .sidebar-month { font-weight: bold; margin-top: 10px; cursor: pointer; }
 .sidebar-day { margin-left: 15px; cursor: pointer; }
 .entry { margin-bottom: 15px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+ul { margin-top: 5px; }
 </style>
 </head>
 <body>
@@ -21,39 +22,250 @@ body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
 document.addEventListener("DOMContentLoaded", () => {
   const studyData = {
     "September 2025": {
-      "27": "Stewart: Sections 3.3, 3.4, 3.5, 3.6<br>- Derivatives of Trigonometric functions<br>- Limits for sinx/x, (cosx-1)/x<br>- Implicit Differentiation<br>- Derivatives of Logarithms",
-      "28": "Stewart: Sections 3.8, 3.10, 3.11<br>- Derivative value at a point through limits<br>- Derivatives of Inverse Trig functions<br>- Derivatives of Hyperbolic and Inverse Hyperbolic functions<br>- Exponential growth/decay<br>- Hyperbolic Identities/exponential forms<br>- Log forms of Inverse Hyperbolic Functions",
-      "29": "Stewart: Sections 4.4<br>- l'Hospital's Rule and indeterminate forms",
-      "30": "Stewart: Sections 4.8, 4.9, 5.2, 5.3, 5.4, 5.5<br>- Newton's Method<br>- Riemann sum, indefinite integral<br>- Power sums<br>- Fundamental theorem of calculus<br>- Boundary flipping, Leibniz rule<br>- Substitution Rule, nested integrals"
+      "27": `Stewart: Sections 3.3, 3.4, 3.5, 3.6
+<ul>
+<li>Derivatives of Trigonometric functions</li>
+<li>Limits for sinx/x, (cosx-1)/x</li>
+<li>Implicit Differentiation</li>
+<li>Derivatives of Logarithms</li>
+</ul>`,
+      "28": `Stewart: Sections 3.8, 3.10, 3.11
+<ul>
+<li>Derivative value at a point through limits</li>
+<li>Derivatives of Inverse Trig functions</li>
+<li>Derivatives of Hyperbolic and Inverse Hyperbolic functions</li>
+<li>Exponential growth/decay</li>
+<li>Hyperbolic Identities/exponential forms</li>
+<li>Log forms of Inverse Hyperbolic Functions</li>
+</ul>`,
+      "29": `Stewart: Sections 4.4
+<ul>
+<li>l'Hospital's Rule</li>
+<li>Indeterminate forms and how to solve each</li>
+</ul>`,
+      "30": `Stewart: Sections 4.8, 4.9, 5.2, 5.3, 5.4, 5.5
+<ul>
+<li>Newton's Method</li>
+<li>Riemann sum - definition of indefinite integral</li>
+<li>Power sums for first 3 powers</li>
+<li>Fundamental theorem of calculus (2 parts)</li>
+<li>Boundary flipping property, Leibniz Integral rule</li>
+<li>Substitution Rule: technique, boundaries, symmetrical functions</li>
+<li>Boundaries when differentiating nested integrals</li>
+</ul>`
     },
     "October 2025": {
-      "1": "Stewart: Sections 6.1, 6.2, 6.3, 6.5, 7.1<br>- Riemann's sum for area between curves<br>- Volume of a solid through slices<br>- Solid of Revolution<br>- Average value of a Function<br>- Integration by Parts",
-      "2": "Stewart: Sections 7.2, 7.3, 7.4<br>- Trig identities, trig substitution<br>- Integrate tan^n*sec^m and sin^n*cos^m cases<br>- Half angle identity<br>- Partial fractions",
-      "3": "Stewart: Sections 7.5, 7.8, 7.11<br>- Integrals practice, improper integrals<br>- Comparison theorem, Mean Value Theorem<br>- Arc Length and derivation",
-      "4": "Stewart: Sections 6.2, 6.3, 8.2, 9.1, 9.2, 9.3<br>- Surface of Revolution: Disk, Washer, Shell<br>- GitHub and LaTeX setup<br>- Logistic and separable differential equations",
-      "5": "Stewart: Sections 9.2, 9.4, 9.5, 9.6, 10.1, 10.2<br>- Euler's Method<br>- Logistic diff eq<br>- Linear diff eq<br>- Predator-prey systems<br>- Parametric curve derivatives",
-      "6": "Stewart: Sections 10.3, 10.4<br>- Polar/Cartesian conversion<br>- Symmetry rules<br>- Formulas for curves<br>- Area, Arc Length, Tangent derivations",
-      "7": "Stewart: Sections 10.5, 10.6, 11.1<br>- Conic Sections<br>- Sequence limits, Squeeze theorem, bounded sequences",
-      "8": "Rest",
-      "9": "Stewart: Sections 11.2, 11.3, 11.4<br>- Series Definition, Geometric series, Divergence Theorem<br>- Integral and P-Series Tests<br>- Remainder estimate, approximating Series value",
-      "10": "Stewart: Sections 11.5, 11.6, 11.7, 11.8<br>- Alternating Series Test, Remainder<br>- Absolute/Conditional Convergence<br>- Ratio and Root Tests<br>- Power Series: Form, Interval, Radius of Convergence",
-      "11": "Stewart: Sections 11.9, 11.10<br>- Functions as Power Series<br>- Taylor and Maclaurin Series (sin, cos, arctan, e^x, ln(1+x), 1/(1-x))",
-      "12": "Stewart: Sections 11.10<br>- Binomial Theorem<br>- More Taylor Series, Binomial Series",
-      "13": "Lay: Sections 1.1-1.4<br>- Linear Equations, Echelon Forms, Row Reduction<br>- Matrix rank, geometry<br>- Matrix-vector product properties",
-      "14": "Lay: Sections 1.5, 1.7, 1.8<br>- Homogenous equations, parametric vector equations<br>- Linear Independence<br>- Range, Image, Domain, Codomain<br>- Linear Transformations",
-      "15": "Lay: Sections 1.9, 2.1-2.3<br>- Matrix of Linear Transformation<br>- One-to-one, onto<br>- Matrix Operations, Transposes<br>- Inverse, Elementary Matrices",
-      "16": "Lay: Sections 2.4, 2.5<br>- Partitioned Matrices<br>- LU Factorization",
-      "17": "Lay: Sections 3.1, 3.2<br>- Determinant, cofactor expansions<br>- Properties with row operations and transpose",
-      "18": "Lay: Sections 3.3, 4.1-4.3<br>- Cramer's Rule, Adjugate, Inverse<br>- Subset, Subspace, Span, Null/Column Space",
-      "19": "Lay: Sections 4.4-4.7<br>- Unique Representation Theorem, Coordinates, Isomorphism, Dimensions, Row spaces, Rank, Change of Basis",
-      "20": "Lay: Sections 5.1-5.3<br>- Eigenvectors, Eigenvalues, Eigenspace, Characteristic Equation, Similar Matrices, Diagonalization",
-      "21": "Rest",
-      "22": "Lay: Sections 5.4<br>- Linear transformations with bases, Diagonal Matrix Representation<br>- Matrix conversion",
-      "23": "Lay: Sections 6.1<br>- Inner Product, vector length, unit vector, distance, orthogonal relations",
-      "24": "Vellerman: Intro, 1.1-1.4<br>- Factorizations, logic connectives, truth tables, tautologies, sets, union/intersection/difference",
-      "25": "Vellerman: Sections 1.5, 2.1-2.3<br>- Conditional Laws, Contrapositive, Quantifiers, Power Set, Family of Sets",
-      "26": "Vellerman: Sections 2.3 (2nd half), 3.1, 3.2<br>- Union/intersection notation, proofs P→Q, Proof by contradiction",
-      "27": "Vellerman: Sections 3.3, 3.4<br>- Universal and existential statements, practice, conjunction/disjunction/iff proofs"
+      "1": `Stewart: Sections 6.1, 6.2, 6.3, 6.5, 7.1
+<ul>
+<li>Riemann's sum for area between the curves</li>
+<li>Volume of a solid through slices</li>
+<li>Solid of Revolution</li>
+<li>Average value of a Function</li>
+<li>Integration by Parts</li>
+</ul>`,
+      "2": `Stewart: Sections 7.2, 7.3, 7.4
+<ul>
+<li>Trigonometric identities for sinAsinB, cosAcosB, sinAcosB</li>
+<li>Trigonometric substitution</li>
+<li>How to integrate cases with tan^n{x}sec^m{x} and sin^n{x}cos^m{x}</li>
+<li>How to integrate cases with sin(nx)cos(mx), cos(nx)cos(mx), sin(nx)sin(mx)</li>
+<li>Half angle identity and derivation</li>
+<li>Partial fractions and different cases to solve them</li>
+</ul>`,
+      "3": `Stewart: Sections 7.5, 7.8, 7.11
+<ul>
+<li>All integrals practice and strategies</li>
+<li>Improper integrals, their properties</li>
+<li>Comparison theorem</li>
+<li>Mean Value Theorem</li>
+<li>Arc Length and derivation</li>
+</ul>`,
+      "4": `Stewart: Sections 6.2, 6.3, 8.2, 9.1, 9.2, 9.3
+<ul>
+<li>Area of a Surface of Revolution</li>
+<li>Disk and Washer method</li>
+<li>Shell Method</li>
+<li>Visualizing all that stuff and why/when it works</li>
+<li>GitHub and LaTeX setup</li>
+<li>Logistic and separable differential equations</li>
+</ul>`,
+      "5": `Stewart: Sections 9.2, 9.4, 9.5, 9.6, 10.1, 10.2
+<ul>
+<li>Euler's Method to find numerical approximations of solutions to diff eq</li>
+<li>Solution to logistic diff eq with derivation</li>
+<li>Models for population growth</li>
+<li>Linear diff eq solution and derivation</li>
+<li>Predator-prey systems</li>
+<li>Parametric curve: first and second derivatives, arc length, surface area, velocity and distance traveled of a particle through those curves</li>
+</ul>`,
+      "6": `Stewart: Sections 10.3, 10.4
+<ul>
+<li>Conversion from Polar to Cartesian and from Cartesian to Polar</li>
+<li>Symmetry rules for Polar Curves</li>
+<li>Formulas for Circles, Spirals, Lumacons, Roses, Lemniscates</li>
+<li>Area bounded by a polar curve with derivation</li>
+<li>Arc Length of a polar curve with derivation</li>
+<li>Tangent of polar curves</li>
+</ul>`,
+      "7": `Stewart: Sections 10.5, 10.6, 11.1
+<ul>
+<li>Conic Sections (ellipse, parabola, hyperbola)</li>
+<li>Limit of a sequence and their representation</li>
+<li>Limit laws for sequences (sum, diff, constant, product, quotient, power)</li>
+<li>Squeeze theorem, absolute value theorem</li>
+<li>r^n sequence convergence, n!/n^n sequence</li>
+<li>bounded sequence definition</li>
+</ul>`,
+      "8": `Rest`,
+      "9": `Stewart: Sections 11.2, 11.3, 11.4
+<ul>
+<li>Series Definition</li>
+<li>Geometric series: form, derivation of sum of n-terms, convergence condition</li>
+<li>Divergence Theorem</li>
+<li>Expressing repeating decimal in terms of integers</li>
+<li>Integral and P-Series Tests</li>
+<li>Remainder estimate of the Integral Test and approximating Series value through it</li>
+</ul>`,
+      "10": `Stewart: Sections 11.5, 11.6, 11.7, 11.8
+<ul>
+<li>Alternating Series Test</li>
+<li>Remainder of Alternating Series</li>
+<li>Absolute and Conditional Convergence</li>
+<li>Ratio Test and Root Test</li>
+<li>Power Series: Form, Interval and Radius of Convergence</li>
+</ul>`,
+      "11": `Stewart: Sections 11.9, 11.10
+<ul>
+<li>Representation of Functions as Power Series</li>
+<li>Taylor and Maclaurin Series</li>
+<li>Maclaurin Series of sinx,cosx,arctanx,e^x,ln(1+x), 1/(1-x)</li>
+</ul>`,
+      "12": `Stewart: Sections 11.10
+<ul>
+<li>Binomial Theorem</li>
+<li>More Taylor Series and Binomial Series</li>
+</ul>`,
+      "13": `Lay: Sections 1.1, 1.2, 1.3, 1.4
+<ul>
+<li>Linear Equations, Echelon Forms, Row Reduction</li>
+<li>Matrix rank, the geometrical meaning of matrix and its size</li>
+<li>Multiplying matrix by vector (matrix equation)</li>
+<li>Properties of the Matrix-Vector product</li>
+</ul>`,
+      "14": `Lay: Sections 1.5, 1.7, 1.8
+<ul>
+<li>Homogenous equation Ax=0: trivial and non trivial solutions</li>
+<li>Relation between solutions Ax=0 and Ax=b</li>
+<li>Parametric vector equations for line and plane</li>
+<li>Geometrical meaning of the number of free variables</li>
+<li>Linear Independence</li>
+<li>Range, Image, Transformation (Mapping), Domain, Codomain</li>
+<li>Linear Transformation</li>
+</ul>`,
+      "15": `Lay: Sections 1.9, 2.1, 2.2, 2.3
+<ul>
+<li>The Matrix of a Linear Transformation</li>
+<li>One-to-one, onto transformations</li>
+<li>Matrix Operations</li>
+<li>Transposes and their properties</li>
+<li>Matrix Inverse, properties, algorithm for finding the inverse and when does the matrix has one</li>
+<li>Elementary Matrices</li>
+<li>Characterizations of Invertible Matrices</li>
+</ul>`,
+      "16": `Lay: Sections 2.4, 2.5
+<ul>
+<li>Partitioned Matrices</li>
+<li>Matrix Factorization/LU Factorization algorithm (solve Ax=b, what it means, how to factor..)</li>
+</ul>`,
+      "17": `Lay: Sections 3.1, 3.2
+<ul>
+<li>Determinant for nxn, geometrical meaning</li>
+<li>Cofactor expansions for determinants, determinant of a triangular matrix</li>
+<li>Properties between determinant and row operations; between determinant and transpose; between determinant and matrix products</li>
+<li>Determinant of an inverse matrix</li>
+<li>Categorizing/searching for more theoretical textbooks</li>
+</ul>`,
+      "18": `Lay: Sections 3.3, 4.1, 4.2, 4.3
+<ul>
+<li>Cramer's Rule</li>
+<li>Adjugate Matrix and Inverse of nxn Matrix</li>
+<li>Change of the volume with transformation</li>
+<li>Subset, Subspace, Vector Space  - properties; Span and Subspace relationship</li>
+<li>Null Space, Column Space</li>
+<li>Basis of a Subspace, Basis of Col(A) and Nul(A); Spanning Set Theorem</li>
+</ul>`,
+      "19": `Lay: Sections 4.4, 4.5, 4.6, 4.7
+<ul>
+<li>The Unique Representation Theorem</li>
+<li>Coordinates of the vector relative to the basis; Change of those coordinates through change-of-coordinates matrix</li>
+<li>Isomorphism</li>
+<li>Dimension of a Vector Space, Subspaces of Finite Dimensional Space; Basis Theorem</li>
+<li>Row spaces, Basis of Row Spaces</li>
+<li>Rank, Rank Theorem</li>
+<li>Change of Basis, Change-of-coordinate matrix for B and C bases (P_{B->C})</li>
+<li>Change-of-coordinate method through standard basis</li>
+</ul>`,
+      "20": `Lay: Sections 5.1, 5.2, 5.3
+<ul>
+<li>Eigenvector, eigenvalue: what are they and how to find them; Eigenspace; Eigenvalues of a triangular matrix</li>
+<li>The Characteristic Equation, Similar Matrices</li>
+<li>Diagonal Matrix, Diagonalization, The Diagonalization Theorem</li>
+</ul>`,
+      "21": `Rest`,
+      "22": `Lay: Sections 5.4
+<ul>
+<li>Linear transformations with bases</li>
+<li>Diagonal Matrix Representation Theorem</li>
+<li>Matrix in another base conversion</li>
+</ul>`,
+      "23": `Lay: Sections 6.1
+<ul>
+<li>Inner Product, Length of a vector, Unit vector, Distance between vectors</li>
+<li>Orthogonal vectors, Orthogonal complement, Orthogonal relation between Null, Row and Column spaces</li>
+<li>Angles and vectors</li>
+</ul>`,
+      "24": `Vellerman: Sections Intro, 1.1, 1.2, 1.3, 1.4
+<ul>
+<li>2^n -1 factorization for proving, infinitely many primes proving idea</li>
+<li>Proving sequence of n composite consecutive integers for any integer n</li>
+<li>Logical connectives (or, and, not), Truth tables, Validity check</li>
+<li>Logical Laws (De-Morgan, Commutative, Associative, Idempotent, Distributive, Absorption, Double Negation</li>
+<li>Contradiction and Tautology Laws and forms</li>
+<li>Truth Set, Universe, Null Set</li>
+<li>Union, Intersection and Difference of Sets; Venn Diagrams</li>
+<li>Subset, Disjoint sets</li>
+</ul>`,
+      "25": `Vellerman: Sections 1.5, 2.1, 2.2, 2.3 (first half)
+<ul>
+<li>Conditional Laws, Contrapositive Law, Biconditional Statement</li>
+<li>Universal, Existential Quantifiers; Special "exactly one" quantifier</li>
+<li>Quantifier Negation Laws, Abbreviations; Distributive Laws for Quantifiers</li>
+<li>Power Set, Family of Sets; Definitions of the union and intersection of family sets</li>
+</ul>`,
+      "26": `Vellerman: Sections 2.3 (second half), 3.1, 3.2
+<ul>
+<li>Alternative notations for union and intersections of family sets</li>
+<li>Prove a goal of the form P→Q (2 methods)</li>
+<li>Prove a goal and given of the form ¬P; Proof by contradiction - method and why it works</li>
+<li>Proof of a given of the form P→Q and its contrapositive form</li>
+</ul>`,
+      "27": `Vellerman: Sections 3.3, 3.4
+<ul>
+<li>Prove a goal of the form ∀xP(x)</li>
+<li>Prove a goal of them for ∃xP(x)</li>
+<li>Using givens of the forms ∀xP(x) and ∃xP(x)</li>
+<li>A lot of practice for 3.3</li>
+<li>Prove a goal and use a given of the form P∧Q</li>
+<li>Prove a goal and use a given of the form P⇔Q</li>
+</ul>`,
+      "28": `Vellerman: Sections 3.5, 3.6, 4.1
+<ul>
+<li>Prove a goal and use a given of the form P∨Q</li>
+<li>Prove Uniqueness, prove Existence - prove a goal of the form ∃! xP(x)</li>
+<li>Use a given of the form ∃! xP(x)</li>
+<li>Cartesian product, truth set of P(x,y)</li>
+</ul>`,
+      "29": `<!-- Future Day Placeholder -->`
     }
   };
 
@@ -72,7 +284,7 @@ document.addEventListener("DOMContentLoaded", () => {
       dayDiv.className = "sidebar-day";
       dayDiv.textContent = "Day " + day;
       dayDiv.addEventListener("click", () => {
-        main.innerHTML = `<h1>${month} ${day}</h1><div class="entry">${days[day]}</div>`;
+        main.innerHTML = `<h1>${month} Day ${day}</h1><div class="entry">${days[day]}</div>`;
       });
       sidebar.appendChild(dayDiv);
     }
