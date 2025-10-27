@@ -2,13 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Study Log</title>
+<title>Study Log with Flashcards</title>
 <style>
 body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
-#sidebar { width: 150px; background: #f0f0f0; padding: 20px; overflow-y: auto; }
+#sidebar { width: 200px; background: #f0f0f0; padding: 20px; overflow-y: auto; }
 #main { flex: 1; padding: 20px; overflow-y: auto; }
-.sidebar-day { margin-bottom: 5px; cursor: pointer; }
+.sidebar-day { margin-bottom: 5px; cursor: pointer; display: flex; justify-content: space-between; }
 .entry { margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+.flashcards-page { display: none; }
+.back-btn { margin-bottom: 10px; cursor: pointer; color: blue; text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -25,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
     .then(res => res.json())
     .then(studyData => {
       studyData.forEach(dayEntry => {
-        // Create main entry
+        // Main entry
         const dayDiv = document.createElement("div");
         dayDiv.className = "entry";
         dayDiv.id = "day-" + dayEntry.day;
@@ -33,17 +35,49 @@ document.addEventListener("DOMContentLoaded", () => {
         dayDiv.innerHTML = `<h2>Day ${dayEntry.day} [${dayEntry.date}]</h2><ul>${topicsHtml}</ul>`;
         main.appendChild(dayDiv);
 
-        // Create sidebar link
-        const sideLink = document.createElement("div");
-        sideLink.className = "sidebar-day";
-        sideLink.textContent = "Day " + dayEntry.day;
-        sideLink.addEventListener("click", () => {
+        // Sidebar: day + flashcards
+        const sideRow = document.createElement("div");
+        sideRow.className = "sidebar-day";
+
+        const dayLabel = document.createElement("span");
+        dayLabel.textContent = "Day " + dayEntry.day;
+        dayLabel.style.cursor = "pointer";
+        dayLabel.addEventListener("click", () => {
           document.getElementById("day-" + dayEntry.day).scrollIntoView({ behavior: "smooth" });
         });
-        sidebar.appendChild(sideLink);
+
+        const fcLink = document.createElement("span");
+        fcLink.textContent = "Flashcards";
+        fcLink.style.color = "blue";
+        fcLink.style.textDecoration = "underline";
+        fcLink.style.cursor = "pointer";
+        fcLink.addEventListener("click", () => showFlashcards(dayEntry));
+
+        sideRow.appendChild(dayLabel);
+        sideRow.appendChild(fcLink);
+        sidebar.appendChild(sideRow);
       });
     })
     .catch(err => console.error("Failed to load study log JSON:", err));
+
+  function showFlashcards(dayEntry) {
+    main.innerHTML = "";
+    const fcDiv = document.createElement("div");
+    fcDiv.className = "flashcards-page";
+
+    const backBtn = document.createElement("div");
+    backBtn.className = "back-btn";
+    backBtn.textContent = "← Back to Study Log";
+    backBtn.addEventListener("click", () => location.reload());
+
+    const fcList = document.createElement("ul");
+    // Create a test flashcard for this day
+    fcList.innerHTML = `<li><b>Question:</b> Test Q for Day ${dayEntry.day} <br> <b>Answer:</b> Test A for Day ${dayEntry.day}</li>`;
+
+    fcDiv.appendChild(backBtn);
+    fcDiv.appendChild(fcList);
+    main.appendChild(fcDiv);
+  }
 });
 </script>
 
