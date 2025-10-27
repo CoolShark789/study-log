@@ -9,7 +9,22 @@
       "Implicit Differentiation",
       "Derivatives of Logarithms"
     ],
-    "flashcards": []
+    "flashcards": [
+      ["Epsilon-Delta proof\\Limit definition","\\lim_{x \\to a} f(x) = L \\iff  \\forall \\varepsilon>0, \\exists \\delta>0 : 0<|x-a|<\\delta \\implies |f(x)-L|<\\varepsilon\nIf for every number \\varepsilon>0 there exists a number \\delta>0 such that: [condition], then [condition]"],
+      ["Relation between continuous function and a limit","If g is continuous at L and \\lim_{x \\to a} f(x) = L, then \\lim_{x \\to a} g(f(x)) = g(\\lim_{x \\to a} f(x))"],
+      ["\\lim_{x \\to 0} \\frac{\\sin x}{x} = ?","1"],
+      ["\\lim_{x \\to 0} \\frac{\\cos x - 1}{x} = ?","0"],
+      ["Derivative of b^x","\\frac{d}{dx} b^x = b^x \\ln b"],
+      ["Derivative of \\tan{x}","\\frac{d}{dx} \\tan x = \\sec^2 x"],
+      ["Derivative of \\cot{x}","\\frac{d}{dx} \\cot x = -\\csc^2 x"],
+      ["Derivative of \\sec{x}","\\frac{d}{dx} \\sec x = \\sec x \\tan x"],
+      ["Derivative of \\csc{x}","\\frac{d}{dx} \\csc x = -\\csc x \\cot x"],
+      ["Derivative of \\log_b {x}","\\frac{d}{dx} \\log_b x = \\frac{1}{x \\ln b}"],
+      ["Derivative of \\log_b {f(x)}","\\frac{d}{dx} \\log_b f(x) = \\frac{f'(x)}{f(x) \\ln b}"],
+      ["Derivative of \\ln{x}","\\frac{d}{dx} \\ln x = \\frac{1}{x}"],
+      ["Derivative of \\ln{(f(x))}","\\frac{d}{dx} \\ln f(x) = \\frac{f'(x)}{f(x)}"],
+      ["Limit to represent e (two ways)","e = \\lim_{x \\to 0} (1+x)^{1/x}  and  e = \\lim_{n \\to +\\infty} (1 + 1/n)^n"]
+    ]
   },
   {
     "day": 2,
@@ -23,7 +38,41 @@
       "Hyperbolic Identities/exponential forms",
       "Log forms of Inverse Hyperbolic Functions"
     ],
-    "flashcards": []
+    "flashcards": [
+      ["\\frac{d}{dx} \\arcsin(x) = ?","\\frac{d}{dx} \\arcsin(x) = \\frac{1}{\\sqrt{1 - x^2}}"],
+      ["\\frac{d}{dx} \\arccos(x) = ?","\\frac{d}{dx} \\arccos(x) = -\\frac{1}{\\sqrt{1 - x^2}}"],
+      ["\\frac{d}{dx} \\arctan(x) = ?","\\frac{d}{dx} \\arctan(x) = \\frac{1}{1 + x^2}"],
+      ["\\frac{d}{dx} \\text{arccot}(x) = ?","\\frac{d}{dx} \\text{arccot}(x) = -\\frac{1}{1 + x^2}"],
+      ["\\frac{d}{dx} \\text{arcsec}(x) = ?","\\frac{d}{dx} \\text{arcsec}(x) = \\frac{1}{|x|\\sqrt{x^2 - 1}}"],
+      ["\\frac{d}{dx} \\text{arccsc}(x) = ?","\\frac{d}{dx} \\text{arccsc}(x) = -\\frac{1}{|x|\\sqrt{x^2 - 1}}"],
+      ["The general formula for exponential growth and decay","y(t) = y_0 e^{kt}, k>0 growth, k<0 decay"],
+      ["The fundamental hyperbolic identity","\\cosh^2(x) - \\sinh^2(x) = 1"],
+      ["Relation between \\tanh^2x and \\text{sech}^2x","1 - \\tanh^2(x) = \\text{sech}^2(x)"],
+      ["\\sinh(x+y) = ?","\\sinh(x+y) = \\sinh(x)\\cosh(y) + \\cosh(x)\\sinh(y)"],
+      ["\\cosh(x+y) = ?","\\cosh(x+y) = \\cosh(x)\\cosh(y) + \\sinh(x)\\sinh(y)"],
+      ["\\frac{d}{dx} \\sinh(x) = ?","\\frac{d}{dx} \\sinh(x) = \\cosh(x)"],
+      ["\\frac{d}{dx} \\cosh(x) = ?","\\frac{d}{dx} \\cosh(x) = \\sinh(x)"],
+      ["\\frac{d}{dx} \\tanh(x) = ?","\\frac{d}{dx} \\tanh(x) = \\text{sech}^2(x)"],
+      ["\\frac{d}{dx} \\coth(x) = ?","\\frac{d}{dx} \\coth(x) = -\\text{csch}^2(x)"],
+      ["\\frac{d}{dx} \\text{sech}(x) = ?","\\frac{d}{dx} \\text{sech}(x) = -\\text{sech}(x)\\text{tanh}(x)"],
+      ["\\frac{d}{dx} \\text{csch}(x) = ?","\\frac{d}{dx} \\text{csch}(x) = -\\text{csch}(x)\\text{coth}(x)"],
+      ["Log form of \\sinh^{-1}(x)","\\sinh^{-1}(x) = \\ln(x + \\sqrt{x^2 + 1})"],
+      ["Log form of \\cosh^{-1}(x)","\\cosh^{-1}(x) = \\ln(x + \\sqrt{x^2 - 1}), x \\ge 1"],
+      ["Log form of \\tanh^{-1}(x)","\\tanh^{-1}(x) = 1/2 \\ln((1+x)/(1-x)), |x|<1"],
+      ["Exponential form of \\sinh(x)","\\sinh(x) = (e^x - e^{-x})/2"],
+      ["Exponential form of \\cosh(x)","\\cosh(x) = (e^x + e^{-x})/2"],
+      ["\\frac{d}{dx} \\sinh^{-1}(x) = ?","1/\\sqrt{1+x^2}"],
+      ["\\frac{d}{dx} \\cosh^{-1}(x) = ?","1/\\sqrt{x^2-1}"],
+      ["\\frac{d}{dx} \\tanh^{-1}(x) = ?","1/(1-x^2), |x|<1"],
+      ["\\frac{d}{dx} \\coth^{-1}(x) = ?","1/(1-x^2), |x|>1"],
+      ["\\frac{d}{dx} \\text{sech}^{-1}(x) = ?","-1/(x\\sqrt{1-x^2}), 0<x<=1"],
+      ["\\frac{d}{dx} \\text{csch}^{-1}(x) = ?","-1/(|x|\\sqrt{1+x^2}), x != 0"],
+      ["e^{x} expression from hyperbolic functions","e^x = \\cosh(x) + \\sinh(x)"],
+      ["e^{-x} expression from hyperbolic functions","e^{-x} = \\cosh(x) - \\sinh(x)"],
+      ["e^{2x} expression with \\tanh(x)","e^{2x} = (1+\\tanh(x))/(1-\\tanh(x))"],
+      ["(\\cosh x+\\sinh x)^n = ?","(\\cosh x+\\sinh x)^n = e^{nx} = \\cosh(nx)+\\sinh(nx)"],
+      ["The value of f'(a) using limits","f'(a) = \\lim_{x \\to a} (f(x) - f(a))/(x - a)"]
+    ]
   },
   {
     "day": 3,
@@ -32,7 +81,12 @@
       "Stewart: Sections 4.4",
       "l'Hospital's Rule and indeterminate forms"
     ],
-    "flashcards": []
+    "flashcards": [
+      ["What is L'Hôpital's Rule and when is it used?","\\lim_{x \\to c} f(x)/g(x) = \\lim_{x \\to c} f'(x)/g'(x), for f/g = 0/0, ±∞/∞"],
+      ["How to solve indeterminate form 0 * ∞ ?","Rewrite as a fraction: 0*∞ → f(x)/(1/g(x)) or g(x)/(1/f(x))"],
+      ["How to solve indeterminate form ∞ - ∞ ?","Take a common denominator or factor"],
+      ["How to solve power indeterminate forms 0^0, ∞^0, 1^∞","Take ln of the functions inside the limit or exponentiate them: lim[f(x)^g(x)] = lim[g(x) ln(f(x))] or lim[f(x)^g(x)] = lim[e^(g(x) ln(f(x)))]"]
+    ]
   },
   {
     "day": 4,
@@ -47,7 +101,22 @@
       "Substitution Rule: technique, boundaries, symmetrical functions",
       "Boundaries when differentiating nested integrals"
     ],
-    "flashcards": []
+    "flashcards": [
+      ["Newton's Method for Approximations","x_{n+1}=x_n - f(x_n)/f'(x_n), x_1 = guess"],
+      ["Σ i^2 = ?","Σ_{i=1}^n i^2 = n(n+1)(2n+1)/6"],
+      ["Definite integral definition with limits (Riemann sum)","∫_a^b f(x) dx = lim_{n→∞} Δx Σ_{k=1}^n f(x_k), Δx = (b-a)/n, x_k = a + kΔx"],
+      ["Σ i = ?","Σ_{i=1}^n i = n(n+1)/2"],
+      ["Σ i^3 = ?","Σ_{i=1}^n i^3 = (n(n+1)/2)^2"],
+      ["Property for flipping boundaries of Indefinite Integral","∫_a^b f(x) dx = -∫_b^a f(x) dx"],
+      ["Fundamental Theorem of Calculus (2 parts)","1. If g(x)=∫_a^x f(t) dt, then g'(x)=f(x); 2. ∫_a^b f(x) dx = F(b)-F(a), where F'(x) = f(x)"],
+      ["Leibniz Integral Rule","g(x)=∫_{u(x)}^{v(x)} f(t) dt → g'(x) = v'(x)f(v(x)) - u'(x)f(u(x))"],
+      ["∫ tan x dx = ?","ln|sec x| + C"],
+      ["∫ b^{nx} dx = ?","b^{nx}/(n ln b) + C"],
+      ["Substitution rule for Definite Integrals","∫_a^b f(g(x)) g'(x) dx = ∫_{g(a)}^{g(b)} f(u) du"],
+      ["Definite Integrals of Symmetric Functions around 0","f(-x)=f(x) → ∫_{-a}^a f(x) dx = 2∫_0^a f(x) dx; f(-x)=-f(x) → ∫_{-a}^a f(x) dx = 0"],
+      ["∫ cot x dx = ?","ln|sin x| + C"],
+      ["Boundaries in nested integral differentiation","d^2/dx^2 ∫_0^x [∫_1^{sin t} √(1+u^4) du] dt = d/dx ∫_1^{sin x} √(1+u^4) du = cos x √(1+(sin x)^4)"]
+    ]
   },
   {
     "day": 5,
@@ -60,7 +129,14 @@
       "Average value of a Function",
       "Integration by Parts"
     ],
-    "flashcards": []
+    "flashcards": [
+      ["Riemann Sum for Area between the Curves","A = lim_{n→∞} Δx Σ_{i=1}^n [f(x_i)-g(x_i)] = ∫_a^b [f(x)-g(x)] dx, Δx=(b-a)/n"],
+      ["Volume of a solid in space","V = ∫_a^b A(x) dx, A(x) = cross-sectional area"],
+      ["Washer cross-section formula","A = π(r_out)^2 - π(r_in)^2, r_in = distance to closest function from rotation axis"],
+      ["How to derive the volume of a torus","1. Equation of circle w.r.t y, divide into halves; 2. Right half = outer radius, left = inner, subtract; 3. Integrate from -r to r"],
+      ["Average value of f(x) on [a,b]","1/(b-a) ∫_a^b f(x) dx = lim_{n→∞} Δx Σ f(x_i)/(b-a)"],
+      ["Integration by parts derivation","∫ u dv = uv - ∫ v du"]
+    ]
   },
   {
     "day": 6,
@@ -74,7 +150,26 @@
       "Half angle identity and derivation",
       "Partial fractions and different cases to solve them"
     ],
-    "flashcards": []
+    "flashcards": [
+      ["How to integrate ∫[sin^m(x) cos^n(x)] dx","1. If n=2k+1, use u=sin x; 2. If m=2k+1, use u=cos x; 3. If m,n even, use half-angle identities"],
+      ["How to integrate ∫[tan^m(x) sec^n(x)] dx","1. If n even, u=tan x; 2. If m odd, u=sec x; save sec^2 or sec*tan accordingly"],
+      ["∫ sec x dx = ?","ln|sec x + tan x| + C"],
+      ["sin A cos B = ?","1/2[sin(A-B)+sin(A+B)]"],
+      ["sin A sin B = ?","1/2[cos(A-B)-cos(A+B)]"],
+      ["cos A cos B = ?","1/2[cos(A-B)+cos(A+B)]"],
+      ["How to solve ∫[sin(nx)sin(mx)]","Use identity sin A sin B = 1/2[cos(A-B)-cos(A+B)]"],
+      ["How to solve ∫[sin(nx)cos(mx)]","Use identity sin A cos B = 1/2[sin(A-B)+sin(A+B)]"],
+      ["How to solve ∫[cos(nx)cos(mx)]","Use identity cos A cos B = 1/2[cos(A-B)+cos(A+B)]"],
+      ["Half-angle identities for sin and cos","cos(2θ)=2cos^2 θ -1 = 1-2sin^2 θ → sin θ=±√((1-cos2θ)/2), cos θ=±√((1+cos2θ)/2)"],
+      ["For √(a^2 - x^2) substitute","x=a sin θ"],
+      ["For √(a^2 + x^2) substitute","x=a tan θ"],
+      ["For √(x^2 - a^2) substitute","x=a sec θ"],
+      ["∫ dx/(x^2 + a^2) = ?","1/a arctan(x/a) + C"],
+      ["How to solve ∫ P(x)/Q(x) (3 ways)","1. deg(P)≥deg(Q) → long division; 2. deg(P)<deg(Q) → partial fractions; 3. D<0, u-sub or complete the square"],
+      ["∫ dx/(x^2 - a^2) = ?","1/(2a) ln|(x-a)/(x+a)| + C"],
+      ["Irreducible factor with power n in partial fractions","Include each power separately, e.g., 1/(x^2+5)^3 = (Ax+B)/(x^2+5) + (Cx+D)/(x^2+5)^2 + (Ex+F)/(x^2+5)^3"],
+      ["Convert non-rational function with √[n]{g(x)}","Let u = √[n]{g(x)}, then algebra and continue with partial fractions or other methods"]
+    ]
   },
   {
     "day": 7,
