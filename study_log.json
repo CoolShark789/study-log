@@ -388,12 +388,14 @@
     "day": 31,
     "date": "27.10.2025",
     "topics": [
-      "Vellerman: Sections 3.5, 3.6",
-      "Pages 179-211",
-      "Practice proofs with sets, proofs using Venn diagrams",
-      "Proofs for subset, equality, union, intersection",
-      "More proofs for disjoint, intersection of complements, difference of sets"
+      "Vellerman: Sections 3.5, 3.6, 4.1",
+      "Pages 179-203, 215-225",
+      "Prove a goal and use a given of the form P∨Q",
+      "Prove Uniqueness, prove Existence - prove a goal of the form ∃! x P(x)",
+      "Use a given of the form ∃! x P(x)",
+      "Cartesian product, truth set of P(x,y)"
     ],
     "flashcards": []
   }
 ]
+
