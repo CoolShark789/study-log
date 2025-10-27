@@ -391,10 +391,10 @@
     "topics": [
       "Vellerman: Sections 3.5, 3.6, 4.1",
       "Pages 179-203, 215-225",
-      "Prove a goal and use a given of the form P\\lor Q",
-      "Prove Uniqueness, prove Existence - prove a goal of the form \\exists !\\;xP(x)",
-      "Use a given of the form \\exists !\\;xP(x)",
-                "Cartesian product, truth set of P(x,y)"
+      "Prove a goal and use a given of the form P∨Q",
+      "Prove Uniqueness, prove Existence - prove a goal of the form ∃! x P(x)",
+      "Use a given of the form ∃! x P(x)",
+      "Cartesian product, truth set of P(x,y)"
     ],
     "flashcards": []
   }
