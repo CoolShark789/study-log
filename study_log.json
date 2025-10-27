@@ -10,8 +10,8 @@
       "Derivatives of Logarithms"
     ],
     "flashcards": [
-      ["Epsilon-Delta proof\\Limit definition","\\lim_{x \\to a} f(x) = L \\iff  \\forall \\varepsilon>0, \\exists \\delta>0 : 0<|x-a|<\\delta \\implies |f(x)-L|<\\varepsilon\nIf for every number \\varepsilon>0 there exists a number \\delta>0 such that: [condition], then [condition]"],
-      ["Relation between continuous function and a limit","If g is continuous at L and \\lim_{x \\to a} f(x) = L, then \\lim_{x \\to a} g(f(x)) = g(\\lim_{x \\to a} f(x))"],
+      ["Epsilon-Delta proof\\Limit definition","\\lim_{x \\to a} f(x) = L \\iff  \\forall \\varepsilon>0, \\exists \\delta>0 : 0<|x-a|<\\delta \\implies 	|f(x)-L|<\\varepsilon\nIf for every number \\varepsilon>0 there exists a number \\delta>0 such that: [condition], then [condition]"],
+      ["Relation between continuous function and a limit","If g is continuous at L and \\lim_{x \\to a} f(x) = L, then \\lim_{x \\to a} g(f(x)) = g(\\lim_{x 	\\to a} f(x))"],
       ["\\lim_{x \\to 0} \\frac{\\sin x}{x} = ?","1"],
       ["\\lim_{x \\to 0} \\frac{\\cos x - 1}{x} = ?","0"],
       ["Derivative of b^x","\\frac{d}{dx} b^x = b^x \\ln b"],
@@ -85,7 +85,7 @@
       ["What is L'Hôpital's Rule and when is it used?","\\lim_{x \\to c} f(x)/g(x) = \\lim_{x \\to c} f'(x)/g'(x), for f/g = 0/0, ±∞/∞"],
       ["How to solve indeterminate form 0 * ∞ ?","Rewrite as a fraction: 0*∞ → f(x)/(1/g(x)) or g(x)/(1/f(x))"],
       ["How to solve indeterminate form ∞ - ∞ ?","Take a common denominator or factor"],
-      ["How to solve power indeterminate forms 0^0, ∞^0, 1^∞","Take ln of the functions inside the limit or exponentiate them: lim[f(x)^g(x)] = lim[g(x) ln(f(x))] or lim[f(x)^g(x)] = lim[e^(g(x) ln(f(x)))]"]
+      ["How to solve power indeterminate forms 0^0, ∞^0, 1^∞","Take ln of the functions inside the limit or exponentiate them: lim[f(x)^g(x)] = lim[g(x) 	ln(f(x))] or lim[f(x)^g(x)] = lim[e^(g(x) ln(f(x)))]"]
     ]
   },
   {
@@ -133,7 +133,7 @@
       ["Riemann Sum for Area between the Curves","A = lim_{n→∞} Δx Σ_{i=1}^n [f(x_i)-g(x_i)] = ∫_a^b [f(x)-g(x)] dx, Δx=(b-a)/n"],
       ["Volume of a solid in space","V = ∫_a^b A(x) dx, A(x) = cross-sectional area"],
       ["Washer cross-section formula","A = π(r_out)^2 - π(r_in)^2, r_in = distance to closest function from rotation axis"],
-      ["How to derive the volume of a torus","1. Equation of circle w.r.t y, divide into halves; 2. Right half = outer radius, left = inner, subtract; 3. Integrate from -r to r"],
+      ["How to derive the volume of a torus","1. Equation of circle w.r.t y, divide into halves; 2. Right half = outer radius, left = inner, subtract; 3. 	Integrate from -r to r"],
       ["Average value of f(x) on [a,b]","1/(b-a) ∫_a^b f(x) dx = lim_{n→∞} Δx Σ f(x_i)/(b-a)"],
       ["Integration by parts derivation","∫ u dv = uv - ∫ v du"]
     ]
