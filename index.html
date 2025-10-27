@@ -5,16 +5,15 @@
 <title>Study Log</title>
 <style>
 body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
-#sidebar { width: 200px; background: #f0f0f0; padding: 20px; overflow-y: auto; }
-#main { flex: 1; padding: 20px; overflow-y: auto; scroll-behavior: smooth; }
+#sidebar { width: 150px; background: #f0f0f0; padding: 20px; overflow-y: auto; }
+#main { flex: 1; padding: 20px; overflow-y: auto; }
 .sidebar-day { margin-bottom: 5px; cursor: pointer; }
-.entry { margin-bottom: 30px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
-ul { margin-top: 5px; }
+.entry { margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
 </style>
 </head>
 <body>
 
-<div id="sidebar"></div>
+<div id="sidebar"><h3>Days</h3></div>
 <div id="main"></div>
 
 <script>
@@ -23,25 +22,30 @@ document.addEventListener("DOMContentLoaded", () => {
   const main = document.getElementById("main");
 
   fetch("study_log.json")
-    .then(response => response.json())
+    .then(res => res.json())
     .then(studyData => {
-      // Create sidebar and entries
       studyData.forEach(dayEntry => {
+        // Create main entry
         const dayDiv = document.createElement("div");
-        dayDiv.className = "sidebar-day";
-        dayDiv.textContent = "Day " + dayEntry.day;
-        dayDiv.addEventListener("click", () => {
-          const topicsHtml = dayEntry.topics.map(t => `<li>${t}</li>`).join("");
-          main.innerHTML = `<h1>Day ${dayEntry.day} [${dayEntry.date}]</h1><ul class="entry">${topicsHtml}</ul>`;
+        dayDiv.className = "entry";
+        dayDiv.id = "day-" + dayEntry.day;
+        const topicsHtml = dayEntry.topics.map(t => `<li>${t}</li>`).join("");
+        dayDiv.innerHTML = `<h2>Day ${dayEntry.day} [${dayEntry.date}]</h2><ul>${topicsHtml}</ul>`;
+        main.appendChild(dayDiv);
+
+        // Create sidebar link
+        const sideLink = document.createElement("div");
+        sideLink.className = "sidebar-day";
+        sideLink.textContent = "Day " + dayEntry.day;
+        sideLink.addEventListener("click", () => {
+          document.getElementById("day-" + dayEntry.day).scrollIntoView({ behavior: "smooth" });
         });
-        sidebar.appendChild(dayDiv);
+        sidebar.appendChild(sideLink);
       });
     })
     .catch(err => console.error("Failed to load study log JSON:", err));
 });
 </script>
 
-
 </body>
 </html>
-
