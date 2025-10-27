@@ -30,8 +30,7 @@
     "date": "29.09.2025",
     "topics": [
       "Stewart: Sections 4.4",
-      "l'Hospital's Rule",
-      "It's indeterminant forms and the ways to solve each of them"
+      "l'Hospital's Rule and indeterminate forms"
     ],
     "flashcards": []
   },
@@ -197,7 +196,6 @@
       "Stewart: Sections 11.10",
       "Binomial Theorem",
       "More Taylor Series and Binomial Series",
-      "                                       ",
       "Lay: Sections 1.1, 1.2, 1.3, 1.4",
       "Linear Equations, Echelon Forms, Row Reduction",
       "Matrix rank, the geometrical meaning of matrix and its size",
@@ -380,8 +378,9 @@
       "Prove a goal of the form ∀xP(x)",
       "Prove a goal of them for ∃xP(x)",
       "Using givens of the forms ∀xP(x) and ∃xP(x)",
-      "A lot of practice for 3.3........ (I feel like going insane doing this section for 3.5 hours)",
+      "A lot of practice for 3.3........",
       "Prove a goal and given of the form P∧Q, P∨Q, P↔Q",
+      "A lot of practice for 3.4........"
     ],
     "flashcards": []
   },
@@ -389,13 +388,12 @@
     "day": 31,
     "date": "27.10.2025",
     "topics": [
-      "Vellerman: Sections 3.5, 3.6, 4.1",
-      "Pages 179-203, 215-225",
+      "Vellerman: Sections 3.5, 3.6",
+      "Pages 179-211",
+      "Practice proofs with sets, proofs using Venn diagrams",
+      "Proofs for subset, equality, union, intersection",
+      "More proofs for disjoint, intersection of complements, difference of sets"
     ],
     "flashcards": []
   }
 ]
-
-
-
-
