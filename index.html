@@ -4,72 +4,48 @@
 <meta charset="UTF-8">
 <title>Study Log</title>
 <style>
-  body { display: flex; font-family: sans-serif; }
-  #sidebar { width: 200px; padding: 10px; background: #f0f0f0; overflow-y: auto; height: 100vh; }
-  #main { flex: 1; padding: 20px; overflow-y: auto; height: 100vh; }
-  .entry { margin-bottom: 40px; }
-  .sidebar-day { cursor: pointer; margin: 5px 0; color: blue; text-decoration: underline; }
+body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
+#sidebar { width: 150px; background: #f0f0f0; padding: 20px; overflow-y: auto; }
+#main { flex: 1; padding: 20px; overflow-y: auto; }
+.sidebar-day { margin-bottom: 5px; cursor: pointer; }
+.entry { margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
 </style>
 </head>
 <body>
-  <div id="sidebar"></div>
-  <div id="main"></div>
 
-  <script>
-  function escapeHtml(str) {
-    return str
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
-  }
+<div id="sidebar"><h3>Days</h3></div>
+<div id="main"></div>
 
-  document.addEventListener("DOMContentLoaded", () => {
-    const sidebar = document.getElementById("sidebar");
-    const main = document.getElementById("main");
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const sidebar = document.getElementById("sidebar");
+  const main = document.getElementById("main");
 
-    fetch("study_log.json")
-      .then(res => res.json())
-      .then(studyData => {
-        studyData.forEach(dayEntry => {
-          const dayDiv = document.createElement("div");
-          dayDiv.className = "entry";
-          dayDiv.id = "day-" + dayEntry.day;
+  fetch("study_log.json")
+    .then(res => res.json())
+    .then(studyData => {
+      studyData.forEach(dayEntry => {
+        // Create main entry
+        const dayDiv = document.createElement("div");
+        dayDiv.className = "entry";
+        dayDiv.id = "day-" + dayEntry.day;
+        const topicsHtml = dayEntry.topics.map(t => `<li>${t}</li>`).join("");
+        dayDiv.innerHTML = `<h2>Day ${dayEntry.day} [${dayEntry.date}]</h2><ul>${topicsHtml}</ul>`;
+        main.appendChild(dayDiv);
 
-          const topicsHtml = dayEntry.topics.map(t => `<li>${escapeHtml(t)}</li>`).join("");
-
-          // -----------------------------
-          // Flashcards code commented out
-          // -----------------------------
-          /*
-          let flashcardsHtml = "";
-          if (Array.isArray(dayEntry.flashcards) && dayEntry.flashcards.length > 0) {
-            flashcardsHtml = "<h3>Flashcards:</h3><ul>";
-            dayEntry.flashcards.forEach(fc => {
-              flashcardsHtml += `<li><b>${escapeHtml(fc[0])}</b>: ${escapeHtml(fc[1])}</li>`;
-            });
-            flashcardsHtml += "</ul>";
-          }
-          */
-
-          dayDiv.innerHTML = `<h2>Day ${dayEntry.day} [${escapeHtml(dayEntry.date)}]</h2>
-                              <ul>${topicsHtml}</ul>
-                              <!-- ${/*flashcardsHtml*/''} -->`;
-
-          main.appendChild(dayDiv);
-
-          const sideLink = document.createElement("div");
-          sideLink.className = "sidebar-day";
-          sideLink.textContent = "Day " + dayEntry.day;
-          sideLink.addEventListener("click", () => {
-            document.getElementById("day-" + dayEntry.day).scrollIntoView({ behavior: "smooth" });
-          });
-          sidebar.appendChild(sideLink);
+        // Create sidebar link
+        const sideLink = document.createElement("div");
+        sideLink.className = "sidebar-day";
+        sideLink.textContent = "Day " + dayEntry.day;
+        sideLink.addEventListener("click", () => {
+          document.getElementById("day-" + dayEntry.day).scrollIntoView({ behavior: "smooth" });
         });
-      })
-      .catch(err => console.error("Failed to load study log JSON:", err));
-  });
-  </script>
+        sidebar.appendChild(sideLink);
+      });
+    })
+    .catch(err => console.error("Failed to load study log JSON:", err));
+});
+</script>
+
 </body>
 </html>
