@@ -39,6 +39,10 @@
 
           const topicsHtml = dayEntry.topics.map(t => `<li>${escapeHtml(t)}</li>`).join("");
 
+          // -----------------------------
+          // Flashcards code commented out
+          // -----------------------------
+          /*
           let flashcardsHtml = "";
           if (Array.isArray(dayEntry.flashcards) && dayEntry.flashcards.length > 0) {
             flashcardsHtml = "<h3>Flashcards:</h3><ul>";
@@ -47,10 +51,12 @@
             });
             flashcardsHtml += "</ul>";
           }
+          */
 
           dayDiv.innerHTML = `<h2>Day ${dayEntry.day} [${escapeHtml(dayEntry.date)}]</h2>
                               <ul>${topicsHtml}</ul>
-                              ${flashcardsHtml}`;
+                              <!-- ${/*flashcardsHtml*/''} -->`;
+
           main.appendChild(dayDiv);
 
           const sideLink = document.createElement("div");
