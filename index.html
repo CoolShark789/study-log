@@ -12,11 +12,12 @@ document.addEventListener("DOMContentLoaded", () => {
         dayDiv.className = "entry";
         dayDiv.id = "day-" + dayEntry.day;
 
+        // Topics HTML
         const topicsHtml = dayEntry.topics.map(t => `<li>${t}</li>`).join("");
 
-        // Flashcards HTML
+        // Flashcards HTML (only if any)
         let flashcardsHtml = "";
-        if (dayEntry.flashcards && dayEntry.flashcards.length > 0) {
+        if (Array.isArray(dayEntry.flashcards) && dayEntry.flashcards.length > 0) {
           flashcardsHtml = "<h3>Flashcards:</h3><ul>";
           dayEntry.flashcards.forEach(fc => {
             flashcardsHtml += `<li><b>${fc[0]}</b>: ${fc[1]}</li>`;
@@ -24,12 +25,13 @@ document.addEventListener("DOMContentLoaded", () => {
           flashcardsHtml += "</ul>";
         }
 
+        // Insert HTML
         dayDiv.innerHTML = `<h2>Day ${dayEntry.day} [${dayEntry.date}]</h2>
                             <ul>${topicsHtml}</ul>
                             ${flashcardsHtml}`;
         main.appendChild(dayDiv);
 
-        // Create sidebar link
+        // Sidebar link
         const sideLink = document.createElement("div");
         sideLink.className = "sidebar-day";
         sideLink.textContent = "Day " + dayEntry.day;
