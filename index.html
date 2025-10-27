@@ -5,31 +5,29 @@
 <title>Study Log</title>
 <style>
 body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
-#sidebar { width: 250px; background: #f0f0f0; padding: 20px; overflow-y: auto; }
-#main { flex: 1; padding: 20px; overflow-y: auto; }
-.sidebar-month { font-weight: bold; margin-top: 10px; cursor: pointer; }
-.sidebar-day { margin-left: 15px; cursor: pointer; }
-.entry { margin-bottom: 15px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+#sidebar { width: 200px; background: #f0f0f0; padding: 20px; overflow-y: auto; }
+#main { flex: 1; padding: 20px; overflow-y: auto; scroll-behavior: smooth; }
+.sidebar-day { margin-bottom: 5px; cursor: pointer; }
+.entry { margin-bottom: 30px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
 ul { margin-top: 5px; }
 </style>
 </head>
 <body>
 
 <div id="sidebar"></div>
-<div id="main"><h1>Select a day</h1></div>
+<div id="main"></div>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const studyData = {
-    "September 2025": {
-      "27": `Stewart: Sections 3.3, 3.4, 3.5, 3.6
+  const studyData = [
+    {day:1, date:"27.09.2025", content:`Stewart: Sections 3.3, 3.4, 3.5, 3.6
 <ul>
 <li>Derivatives of Trigonometric functions</li>
 <li>Limits for sinx/x, (cosx-1)/x</li>
 <li>Implicit Differentiation</li>
 <li>Derivatives of Logarithms</li>
-</ul>`,
-      "28": `Stewart: Sections 3.8, 3.10, 3.11
+</ul>`},
+    {day:2, date:"28.09.2025", content:`Stewart: Sections 3.8, 3.10, 3.11
 <ul>
 <li>Derivative value at a point through limits</li>
 <li>Derivatives of Inverse Trig functions</li>
@@ -37,13 +35,13 @@ document.addEventListener("DOMContentLoaded", () => {
 <li>Exponential growth/decay</li>
 <li>Hyperbolic Identities/exponential forms</li>
 <li>Log forms of Inverse Hyperbolic Functions</li>
-</ul>`,
-      "29": `Stewart: Sections 4.4
+</ul>`},
+    {day:3, date:"29.09.2025", content:`Stewart: Sections 4.4
 <ul>
 <li>l'Hospital's Rule</li>
-<li>Indeterminate forms and how to solve each</li>
-</ul>`,
-      "30": `Stewart: Sections 4.8, 4.9, 5.2, 5.3, 5.4, 5.5
+<li>It's indeterminant forms and the ways to solve each of them</li>
+</ul>`},
+    {day:4, date:"30.09.2025", content:`Stewart: Sections 4.8, 4.9, 5.2, 5.3, 5.4, 5.5
 <ul>
 <li>Newton's Method</li>
 <li>Riemann sum - definition of indefinite integral</li>
@@ -52,18 +50,16 @@ document.addEventListener("DOMContentLoaded", () => {
 <li>Boundary flipping property, Leibniz Integral rule</li>
 <li>Substitution Rule: technique, boundaries, symmetrical functions</li>
 <li>Boundaries when differentiating nested integrals</li>
-</ul>`
-    },
-    "October 2025": {
-      "1": `Stewart: Sections 6.1, 6.2, 6.3, 6.5, 7.1
+</ul>`},
+    {day:5, date:"01.10.2025", content:`Stewart: Sections 6.1, 6.2, 6.3, 6.5, 7.1
 <ul>
 <li>Riemann's sum for area between the curves</li>
 <li>Volume of a solid through slices</li>
 <li>Solid of Revolution</li>
 <li>Average value of a Function</li>
 <li>Integration by Parts</li>
-</ul>`,
-      "2": `Stewart: Sections 7.2, 7.3, 7.4
+</ul>`},
+    {day:6, date:"02.10.2025", content:`Stewart: Sections 7.2, 7.3, 7.4
 <ul>
 <li>Trigonometric identities for sinAsinB, cosAcosB, sinAcosB</li>
 <li>Trigonometric substitution</li>
@@ -71,16 +67,16 @@ document.addEventListener("DOMContentLoaded", () => {
 <li>How to integrate cases with sin(nx)cos(mx), cos(nx)cos(mx), sin(nx)sin(mx)</li>
 <li>Half angle identity and derivation</li>
 <li>Partial fractions and different cases to solve them</li>
-</ul>`,
-      "3": `Stewart: Sections 7.5, 7.8, 7.11
+</ul>`},
+    {day:7, date:"03.10.2025", content:`Stewart: Sections 7.5, 7.8, 7.11
 <ul>
 <li>All integrals practice and strategies</li>
 <li>Improper integrals, their properties</li>
 <li>Comparison theorem</li>
 <li>Mean Value Theorem</li>
 <li>Arc Length and derivation</li>
-</ul>`,
-      "4": `Stewart: Sections 6.2, 6.3, 8.2, 9.1, 9.2, 9.3
+</ul>`},
+    {day:8, date:"04.10.2025", content:`Stewart: Sections 6.2, 6.3, 8.2, 9.1, 9.2, 9.3
 <ul>
 <li>Area of a Surface of Revolution</li>
 <li>Disk and Washer method</li>
@@ -88,8 +84,8 @@ document.addEventListener("DOMContentLoaded", () => {
 <li>Visualizing all that stuff and why/when it works</li>
 <li>GitHub and LaTeX setup</li>
 <li>Logistic and separable differential equations</li>
-</ul>`,
-      "5": `Stewart: Sections 9.2, 9.4, 9.5, 9.6, 10.1, 10.2
+</ul>`},
+    {day:9, date:"05.10.2025", content:`Stewart: Sections 9.2, 9.4, 9.5, 9.6, 10.1, 10.2
 <ul>
 <li>Euler's Method to find numerical approximations of solutions to diff eq</li>
 <li>Solution to logistic diff eq with derivation</li>
@@ -97,8 +93,8 @@ document.addEventListener("DOMContentLoaded", () => {
 <li>Linear diff eq solution and derivation</li>
 <li>Predator-prey systems</li>
 <li>Parametric curve: first and second derivatives, arc length, surface area, velocity and distance traveled of a particle through those curves</li>
-</ul>`,
-      "6": `Stewart: Sections 10.3, 10.4
+</ul>`},
+    {day:10, date:"06.10.2025", content:`Stewart: Sections 10.3, 10.4
 <ul>
 <li>Conversion from Polar to Cartesian and from Cartesian to Polar</li>
 <li>Symmetry rules for Polar Curves</li>
@@ -106,8 +102,8 @@ document.addEventListener("DOMContentLoaded", () => {
 <li>Area bounded by a polar curve with derivation</li>
 <li>Arc Length of a polar curve with derivation</li>
 <li>Tangent of polar curves</li>
-</ul>`,
-      "7": `Stewart: Sections 10.5, 10.6, 11.1
+</ul>`},
+    {day:11, date:"07.10.2025", content:`Stewart: Sections 10.5, 10.6, 11.1
 <ul>
 <li>Conic Sections (ellipse, parabola, hyperbola)</li>
 <li>Limit of a sequence and their representation</li>
@@ -115,9 +111,9 @@ document.addEventListener("DOMContentLoaded", () => {
 <li>Squeeze theorem, absolute value theorem</li>
 <li>r^n sequence convergence, n!/n^n sequence</li>
 <li>bounded sequence definition</li>
-</ul>`,
-      "8": `Rest`,
-      "9": `Stewart: Sections 11.2, 11.3, 11.4
+</ul>`},
+    {day:12, date:"08.10.2025", content:`Rest`},
+    {day:13, date:"09.10.2025", content:`Stewart: Sections 11.2, 11.3, 11.4
 <ul>
 <li>Series Definition</li>
 <li>Geometric series: form, derivation of sum of n-terms, convergence condition</li>
@@ -125,34 +121,35 @@ document.addEventListener("DOMContentLoaded", () => {
 <li>Expressing repeating decimal in terms of integers</li>
 <li>Integral and P-Series Tests</li>
 <li>Remainder estimate of the Integral Test and approximating Series value through it</li>
-</ul>`,
-      "10": `Stewart: Sections 11.5, 11.6, 11.7, 11.8
+</ul>`},
+    {day:14, date:"10.10.2025", content:`Stewart: Sections 11.5, 11.6, 11.7, 11.8
 <ul>
 <li>Alternating Series Test</li>
 <li>Remainder of Alternating Series</li>
 <li>Absolute and Conditional Convergence</li>
 <li>Ratio Test and Root Test</li>
 <li>Power Series: Form, Interval and Radius of Convergence</li>
-</ul>`,
-      "11": `Stewart: Sections 11.9, 11.10
+</ul>`},
+    {day:15, date:"11.10.2025", content:`Stewart: Sections 11.9, 11.10
 <ul>
 <li>Representation of Functions as Power Series</li>
 <li>Taylor and Maclaurin Series</li>
-<li>Maclaurin Series of sinx,cosx,arctanx,e^x,ln(1+x), 1/(1-x)</li>
-</ul>`,
-      "12": `Stewart: Sections 11.10
+<li>Maclaurin Series of sinx, cosx, arctanx, e^x, ln(1+x), 1/(1-x)</li>
+</ul>`},
+    {day:16, date:"12.10.2025", content:`Stewart: Sections 11.10
 <ul>
 <li>Binomial Theorem</li>
 <li>More Taylor Series and Binomial Series</li>
-</ul>`,
-      "13": `Lay: Sections 1.1, 1.2, 1.3, 1.4
+</ul>
+<p>CONTINUING ON TO LINAL BY LAY</p>
+Lay: Sections 1.1, 1.2, 1.3, 1.4
 <ul>
 <li>Linear Equations, Echelon Forms, Row Reduction</li>
 <li>Matrix rank, the geometrical meaning of matrix and its size</li>
 <li>Multiplying matrix by vector (matrix equation)</li>
 <li>Properties of the Matrix-Vector product</li>
-</ul>`,
-      "14": `Lay: Sections 1.5, 1.7, 1.8
+</ul>`},
+    {day:17, date:"13.10.2025", content:`Lay: Sections 1.5, 1.7, 1.8
 <ul>
 <li>Homogenous equation Ax=0: trivial and non trivial solutions</li>
 <li>Relation between solutions Ax=0 and Ax=b</li>
@@ -161,8 +158,8 @@ document.addEventListener("DOMContentLoaded", () => {
 <li>Linear Independence</li>
 <li>Range, Image, Transformation (Mapping), Domain, Codomain</li>
 <li>Linear Transformation</li>
-</ul>`,
-      "15": `Lay: Sections 1.9, 2.1, 2.2, 2.3
+</ul>`},
+    {day:18, date:"14.10.2025", content:`Lay: Sections 1.9, 2.1, 2.2, 2.3
 <ul>
 <li>The Matrix of a Linear Transformation</li>
 <li>One-to-one, onto transformations</li>
@@ -171,30 +168,30 @@ document.addEventListener("DOMContentLoaded", () => {
 <li>Matrix Inverse, properties, algorithm for finding the inverse and when does the matrix has one</li>
 <li>Elementary Matrices</li>
 <li>Characterizations of Invertible Matrices</li>
-</ul>`,
-      "16": `Lay: Sections 2.4, 2.5
+</ul>`},
+    {day:19, date:"15.10.2025", content:`Lay: Sections 2.4, 2.5
 <ul>
 <li>Partitioned Matrices</li>
 <li>Matrix Factorization/LU Factorization algorithm (solve Ax=b, what it means, how to factor..)</li>
-</ul>`,
-      "17": `Lay: Sections 3.1, 3.2
+</ul>`},
+    {day:20, date:"16.10.2025", content:`Lay: Sections 3.1, 3.2
 <ul>
 <li>Determinant for nxn, geometrical meaning</li>
 <li>Cofactor expansions for determinants, determinant of a triangular matrix</li>
 <li>Properties between determinant and row operations; between determinant and transpose; between determinant and matrix products</li>
 <li>Determinant of an inverse matrix</li>
 <li>Categorizing/searching for more theoretical textbooks</li>
-</ul>`,
-      "18": `Lay: Sections 3.3, 4.1, 4.2, 4.3
+</ul>`},
+    {day:21, date:"17.10.2025", content:`Lay: Sections 3.3, 4.1, 4.2, 4.3
 <ul>
 <li>Cramer's Rule</li>
 <li>Adjugate Matrix and Inverse of nxn Matrix</li>
-<li>Change of the volume with transformation</li>
+<li>Change of the volume with transformaton</li>
 <li>Subset, Subspace, Vector Space  - properties; Span and Subspace relationship</li>
 <li>Null Space, Column Space</li>
 <li>Basis of a Subspace, Basis of Col(A) and Nul(A); Spanning Set Theorem</li>
-</ul>`,
-      "19": `Lay: Sections 4.4, 4.5, 4.6, 4.7
+</ul>`},
+    {day:22, date:"18.10.2025", content:`Lay: Sections 4.4, 4.5, 4.6, 4.7
 <ul>
 <li>The Unique Representation Theorem</li>
 <li>Coordinates of the vector relative to the basis; Change of those coordinates through change-of-coordinates matrix</li>
@@ -204,52 +201,57 @@ document.addEventListener("DOMContentLoaded", () => {
 <li>Rank, Rank Theorem</li>
 <li>Change of Basis, Change-of-coordinate matrix for B and C bases (P_{B->C})</li>
 <li>Change-of-coordinate method through standard basis</li>
-</ul>`,
-      "20": `Lay: Sections 5.1, 5.2, 5.3
+</ul>`},
+    {day:23, date:"19.10.2025", content:`Lay: Sections 5.1, 5.2, 5.3
 <ul>
 <li>Eigenvector, eigenvalue: what are they and how to find them; Eigenspace; Eigenvalues of a triangular matrix</li>
 <li>The Characteristic Equation, Similar Matrices</li>
 <li>Diagonal Matrix, Diagonalization, The Diagonalization Theorem</li>
-</ul>`,
-      "21": `Rest`,
-      "22": `Lay: Sections 5.4
+</ul>`},
+    {day:24, date:"20.10.2025", content:`Rest`},
+    {day:25, date:"21.10.2025", content:`Lay: Sections 5.4
 <ul>
 <li>Linear transformations with bases</li>
 <li>Diagonal Matrix Representation Theorem</li>
 <li>Matrix in another base conversion</li>
-</ul>`,
-      "23": `Lay: Sections 6.1
+</ul>`},
+    {day:26, date:"22.10.2025", content:`Lay: Sections 6.1
 <ul>
 <li>Inner Product, Length of a vector, Unit vector, Distance between vectors</li>
 <li>Orthogonal vectors, Orthogonal complement, Orthogonal relation between Null, Row and Column spaces</li>
 <li>Angles and vectors</li>
-</ul>`,
-      "24": `Vellerman: Sections Intro, 1.1, 1.2, 1.3, 1.4
+</ul>
+<p>CONTINUING ON TO PROOF INTRO BY VELLERMAN</p>`},
+    {day:27, date:"23.10.2025", content:`Vellerman: Sections Intro, 1.1, 1.2, 1.3, 1.4
+Pages 13-65
 <ul>
 <li>2^n -1 factorization for proving, infinitely many primes proving idea</li>
-<li>Proving sequence of n composite consecutive integers for any integer n</li>
+<li>proving sequence of n composite consecutive integers for any integer n</li>
 <li>Logical connectives (or, and, not), Truth tables, Validity check</li>
 <li>Logical Laws (De-Morgan, Commutative, Associative, Idempotent, Distributive, Absorption, Double Negation</li>
 <li>Contradiction and Tautology Laws and forms</li>
 <li>Truth Set, Universe, Null Set</li>
 <li>Union, Intersection and Difference of Sets; Venn Diagrams</li>
 <li>Subset, Disjoint sets</li>
-</ul>`,
-      "25": `Vellerman: Sections 1.5, 2.1, 2.2, 2.3 (first half)
+</ul>`},
+    {day:28, date:"24.10.2025", content:`Vellerman: Sections 1.5, 2.1, 2.2, 2.3 (first half)
+Pages 65-109
 <ul>
 <li>Conditional Laws, Contrapositive Law, Biconditional Statement</li>
 <li>Universal, Existential Quantifiers; Special "exactly one" quantifier</li>
 <li>Quantifier Negation Laws, Abbreviations; Distributive Laws for Quantifiers</li>
 <li>Power Set, Family of Sets; Definitions of the union and intersection of family sets</li>
-</ul>`,
-      "26": `Vellerman: Sections 2.3 (second half), 3.1, 3.2
+</ul>`},
+    {day:29, date:"25.10.2025", content:`Vellerman: Sections 2.3 (second half), 3.1, 3.2
+Pages 109-145
 <ul>
 <li>Alternative notations for union and intersections of family sets</li>
 <li>Prove a goal of the form P→Q (2 methods)</li>
 <li>Prove a goal and given of the form ¬P; Proof by contradiction - method and why it works</li>
 <li>Proof of a given of the form P→Q and its contrapositive form</li>
-</ul>`,
-      "27": `Vellerman: Sections 3.3, 3.4
+</ul>`},
+    {day:30, date:"26.10.2025", content:`Vellerman: Sections 3.3, 3.4
+Pages 145-179
 <ul>
 <li>Prove a goal of the form ∀xP(x)</li>
 <li>Prove a goal of them for ∃xP(x)</li>
@@ -257,38 +259,40 @@ document.addEventListener("DOMContentLoaded", () => {
 <li>A lot of practice for 3.3</li>
 <li>Prove a goal and use a given of the form P∧Q</li>
 <li>Prove a goal and use a given of the form P⇔Q</li>
-</ul>`,
-      "28": `Vellerman: Sections 3.5, 3.6, 4.1
+</ul>`},
+    {day:31, date:"27.10.2025", content:`Vellerman: Sections 3.5, 3.6, 4.1
+Pages 179-203, 215-225
 <ul>
 <li>Prove a goal and use a given of the form P∨Q</li>
 <li>Prove Uniqueness, prove Existence - prove a goal of the form ∃! xP(x)</li>
 <li>Use a given of the form ∃! xP(x)</li>
 <li>Cartesian product, truth set of P(x,y)</li>
-</ul>`,
-      "29": `<!-- Future Day Placeholder -->`
-    }
-  };
+</ul>`}
+  ];
 
   const sidebar = document.getElementById("sidebar");
   const main = document.getElementById("main");
 
-  for (const month in studyData) {
-    const monthDiv = document.createElement("div");
-    monthDiv.className = "sidebar-month";
-    monthDiv.textContent = month;
-    sidebar.appendChild(monthDiv);
+  // Build main page
+  studyData.forEach(entry => {
+    const entryDiv = document.createElement("div");
+    entryDiv.className = "entry";
+    entryDiv.id = "day-" + entry.day;
+    entryDiv.innerHTML = `<h2>Day ${entry.day} [${entry.date}]</h2>${entry.content}`;
+    main.appendChild(entryDiv);
+  });
 
-    const days = studyData[month];
-    for (const day in days) {
-      const dayDiv = document.createElement("div");
-      dayDiv.className = "sidebar-day";
-      dayDiv.textContent = "Day " + day;
-      dayDiv.addEventListener("click", () => {
-        main.innerHTML = `<h1>${month} Day ${day}</h1><div class="entry">${days[day]}</div>`;
-      });
-      sidebar.appendChild(dayDiv);
-    }
-  }
+  // Build sidebar
+  studyData.forEach(entry => {
+    const dayDiv = document.createElement("div");
+    dayDiv.className = "sidebar-day";
+    dayDiv.textContent = "Day " + entry.day;
+    dayDiv.addEventListener("click", () => {
+      const target = document.getElementById("day-" + entry.day);
+      target.scrollIntoView({behavior: "smooth"});
+    });
+    sidebar.appendChild(dayDiv);
+  });
 });
 </script>
 
