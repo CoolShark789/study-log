@@ -1,21 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Study Log</title>
-<style>
-body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
-#sidebar { width: 150px; background: #f0f0f0; padding: 20px; overflow-y: auto; }
-#main { flex: 1; padding: 20px; overflow-y: auto; }
-.sidebar-day { margin-bottom: 5px; cursor: pointer; }
-.entry { margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
-</style>
-</head>
-<body>
-
-<div id="sidebar"><h3>Days</h3></div>
-<div id="main"></div>
-
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const sidebar = document.getElementById("sidebar");
@@ -29,8 +11,22 @@ document.addEventListener("DOMContentLoaded", () => {
         const dayDiv = document.createElement("div");
         dayDiv.className = "entry";
         dayDiv.id = "day-" + dayEntry.day;
+
         const topicsHtml = dayEntry.topics.map(t => `<li>${t}</li>`).join("");
-        dayDiv.innerHTML = `<h2>Day ${dayEntry.day} [${dayEntry.date}]</h2><ul>${topicsHtml}</ul>`;
+
+        // Flashcards HTML
+        let flashcardsHtml = "";
+        if (dayEntry.flashcards && dayEntry.flashcards.length > 0) {
+          flashcardsHtml = "<h3>Flashcards:</h3><ul>";
+          dayEntry.flashcards.forEach(fc => {
+            flashcardsHtml += `<li><b>${fc[0]}</b>: ${fc[1]}</li>`;
+          });
+          flashcardsHtml += "</ul>";
+        }
+
+        dayDiv.innerHTML = `<h2>Day ${dayEntry.day} [${dayEntry.date}]</h2>
+                            <ul>${topicsHtml}</ul>
+                            ${flashcardsHtml}`;
         main.appendChild(dayDiv);
 
         // Create sidebar link
@@ -46,6 +42,3 @@ document.addEventListener("DOMContentLoaded", () => {
     .catch(err => console.error("Failed to load study log JSON:", err));
 });
 </script>
-
-</body>
-</html>
