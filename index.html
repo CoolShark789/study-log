@@ -37,14 +37,15 @@ body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const sidebar = document.getElementById("sidebar");
   const main = document.getElementById("main");
 
   function scrollToCenter(el) {
-    const rect = el.getBoundingClientRect();
-    const scrollTop = window.scrollY || window.pageYOffset;
-    const elCenter = rect.top + scrollTop - window.innerHeight / 2 + rect.height / 2;
-    window.scrollTo({ top: elCenter, behavior: "smooth" });
+    const mainRect = main.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+    const scrollTop = main.scrollTop;
+    const elTop = elRect.top - mainRect.top + scrollTop;
+    const scrollTarget = elTop - main.clientHeight / 2 + el.offsetHeight / 2;
+    main.scrollTo({ top: scrollTarget, behavior: "smooth" });
   }
 
   // Collapsible folders
