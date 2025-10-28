@@ -8,7 +8,7 @@
       "Limits for sinx/x, (cosx-1)/x",
       "Implicit Differentiation",
       "Derivatives of Logarithms"
-    ],
+    ]
   },
   {
     "day": 2,
@@ -21,7 +21,7 @@
       "Exponential growth/decay",
       "Hyperbolic Identities/exponential forms",
       "Log forms of Inverse Hyperbolic Functions"
-    ],
+    ]
   },
   {
     "day": 3,
@@ -29,7 +29,7 @@
     "topics": [
       "Stewart: Sections 4.4",
       "l'Hospital's Rule and indeterminate forms"
-    ],
+    ]
   },
   {
     "day": 4,
@@ -43,7 +43,7 @@
       "Boundary flipping property, Leibniz Integral rule",
       "Substitution Rule: technique, boundaries, symmetrical functions",
       "Boundaries when differentiating nested integrals"
-    ],
+    ]
   },
   {
     "day": 5,
@@ -55,7 +55,7 @@
       "Solid of Revolution",
       "Average value of a Function",
       "Integration by Parts"
-    ],
+    ]
   },
   {
     "day": 6,
@@ -68,7 +68,7 @@
       "How to integrate cases with sin(nx)cos(mx), cos(nx)cos(mx), sin(nx)sin(mx)",
       "Half angle identity and derivation",
       "Partial fractions and different cases to solve them"
-    ],
+    ]
   },
   {
     "day": 7,
@@ -80,7 +80,7 @@
       "Comparison theorem",
       "Mean Value Theorem",
       "Arc Length and derivation"
-    ],
+    ]
   },
   {
     "day": 8,
@@ -93,7 +93,7 @@
       "Visualizing all that stuff and why/when it works",
       "GitHub and LaTeX setup",
       "Logistic and separable differential equations"
-    ],
+    ]
   },
   {
     "day": 9,
@@ -106,7 +106,7 @@
       "Linear diff eq solution and derivation",
       "Predator-prey systems",
       "Parametric curve: first and second derivatives, arc length, surface area, velocity and distance traveled of a particle through those curves"
-    ],
+    ]
   },
   {
     "day": 10,
@@ -119,7 +119,7 @@
       "Area bounded by a polar curve with derivation",
       "Arc Length of a polar curve with derivation",
       "Tangent of polar curves"
-    ],
+    ]
   },
   {
     "day": 11,
@@ -132,7 +132,7 @@
       "Squeeze theorem, absolute value theorem",
       "r^n sequence convergence, n!/n^n sequence",
       "bounded sequence definition"
-    ],
+    ]
   },
   {
     "day": 12,
@@ -150,7 +150,7 @@
       "Expressing repeating decimal in terms of integers",
       "Integral and P-Series Tests",
       "Remainder estimate of the Integral Test and approximating Series value through it"
-    ],
+    ]
   },
   {
     "day": 14,
@@ -162,7 +162,7 @@
       "Absolute and Conditional Convergence",
       "Ratio Test and Root Test",
       "Power Series: Form, Interval and Radius of Convergence"
-    ],
+    ]
   },
   {
     "day": 15,
@@ -172,7 +172,7 @@
       "Representation of Functions as Power Series",
       "Taylor and Maclaurin Series",
       "Maclaurin Series of sinx, cosx, arctanx, e^x, ln(1+x), 1/(1-x)"
-    ],
+    ]
   },
   {
     "day": 16,
@@ -186,7 +186,7 @@
       "Matrix rank, the geometrical meaning of matrix and its size",
       "Multiplying matrix by vector (matrix equation)",
       "Properties of the Matrix-Vector product"
-    ],
+    ]
   },
   {
     "day": 17,
@@ -200,7 +200,7 @@
       "Linear Independence",
       "Range, Image, Transformation (Mapping), Domain, Codomain",
       "Linear Transformation"
-    ],
+    ]
   },
   {
     "day": 18,
@@ -214,7 +214,7 @@
       "Matrix Inverse, properties, algorithm for finding the inverse and when does the matrix has one",
       "Elementary Matrices",
       "Characterizations of Invertible Matrices"
-    ],
+    ]
   },
   {
     "day": 19,
@@ -223,7 +223,7 @@
       "Lay: Sections 2.4, 2.5",
       "Partitioned Matrices",
       "Matrix Factorization/LU Factorization algorithm (solve Ax=b, what it means, how to factor..)"
-    ],
+    ]
   },
   {
     "day": 20,
@@ -235,7 +235,7 @@
       "Properties between determinant and row operations; between determinant and transpose; between determinant and matrix products",
       "Determinant of an inverse matrix",
       "Categorizing/searching for more theoretical textbooks"
-    ],
+    ]
   },
   {
     "day": 21,
@@ -248,7 +248,7 @@
       "Subset, Subspace, Vector Space  - properties; Span and Subspace relationship",
       "Null Space, Column Space",
       "Basis of a Subspace, Basis of Col(A) and Nul(A); Spanning Set Theorem"
-    ],
+    ]
   },
   {
     "day": 22,
@@ -263,7 +263,7 @@
       "Rank, Rank Theorem",
       "Change of Basis, Change-of-coordinate matrix for B and C bases (P_{B->C})",
       "Change-of-coordinate method through standard basis"
-    ],
+    ]
   },
   {
     "day": 23,
@@ -273,7 +273,7 @@
       "Eigenvector, eigenvalue: what are they and how to find them; Eigenspace; Eigenvalues of a triangular matrix",
       "The Characteristic Equation, Similar Matrices",
       "Diagonal Matrix, Diagonalization, The Diagonalization Theorem"
-    ],
+    ]
   },
   {
     "day": 24,
@@ -288,7 +288,7 @@
       "Linear transformations with bases",
       "Diagonal Matrix Representation Theorem",
       "Matrix in another base conversion"
-    ],
+    ]
   },
   {
     "day": 26,
@@ -298,7 +298,7 @@
       "Inner Product, Length of a vector, Unit vector, Distance between vectors",
       "Orthogonal vectors, Orthogonal complement, Orthogonal relation between Null, Row and Column spaces",
       "Angles and vectors"
-    ],
+    ]
   },
   {
     "day": 27,
@@ -314,7 +314,7 @@
       "Truth Set, Universe, Null Set",
       "Union, Intersection and Difference of Sets; Venn Diagrams",
       "Subset, Disjoint sets"
-    ],
+    ]
   },
   {
     "day": 28,
@@ -326,7 +326,7 @@
       "Universal, Existential Quantifiers; Special 'exactly one' quantifier",
       "Quantifier Negation Laws, Abbreviations; Distributive Laws for Quantifiers",
       "Power Set, Family of Sets; Definitions of the union and intersection of family sets"
-    ],
+    ]
   },
   {
     "day": 29,
@@ -338,7 +338,7 @@
       "Prove a goal of the form P→Q (2 methods)",
       "Prove a goal and given of the form ¬P; Proof by contradiction - method and why it works",
       "Proof of a given of the form P→Q and its contrapositive form"
-    ],
+    ]
   },
   {
     "day": 30,
@@ -352,7 +352,7 @@
       "Please help me, I am going insane doing this section for 3.5 hours",
       "Prove a goal and given of the form P∧Q, P∨Q, P↔Q",
       "Help is no longer needed, I have transcended"
-    ],
+    ]
   },
   {
     "day": 31,
@@ -365,7 +365,7 @@
       "Use a given of the form ∃! x P(x)",
       "Cartesian product, truth set of P(x,y)",
       "Static Github website for study log"
-    ],
+    ]
   },
   {
     "day": 32,
@@ -374,7 +374,7 @@
       "Vellerman: Sections ???",
       "Pages 225-???",
       "???"
-    ],
+    ]
   }
 ]
 
