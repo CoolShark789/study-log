@@ -5,8 +5,7 @@
 <title>Study Log & Flashcards</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" 
-    onload="renderMathInElement(document.body);"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
 <style>
 body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
 #sidebar { width: 200px; background: #f0f0f0; padding: 20px; overflow-y: auto; }
@@ -20,10 +19,10 @@ body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
 .sidebar-sub { display: none; margin-left: 15px; margin-bottom: 10px; }
 .sidebar-day { cursor: pointer; margin-bottom: 3px; }
 
-.entry { margin-bottom: 30px; border-bottom: 1px solid #ccc; padding-bottom: 10px; }
-.flashcard-entry { margin-bottom: 30px; border: 1px solid #aaa; padding: 15px; border-radius: 5px; background: #fafafa; }
-.flashcard-title { cursor: pointer; font-weight: bold; margin-bottom: 5px; }
-.flashcard-answer { display: none; margin-left: 15px; margin-bottom: 10px; font-style: italic; }
+.entry { margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+.flashcard-entry { margin-bottom: 25px; border: 1px solid #aaa; padding: 15px; border-radius: 5px; }
+.flashcard-question { cursor: pointer; margin-bottom: 10px; font-weight: bold; }
+.flashcard-answer { display: none; margin-left: 15px; margin-bottom: 10px; }
 </style>
 </head>
 <body>
@@ -96,60 +95,63 @@ document.addEventListener("DOMContentLoaded", () => {
         const sideCard = document.createElement("div");
         sideCard.className = "sidebar-day";
         sideCard.textContent = "Day " + dayEntry.day;
-        sideCard.addEventListener("click", async () => {
+        sideCard.addEventListener("click", () => {
           const fc = document.getElementById("fc-day-" + dayEntry.day);
           if(fc) scrollToCenter(fc);
         });
         flashcardsSub.appendChild(sideCard);
       });
 
-      // Flashcards header
+      // Flashcards section
       const fcHeader = document.createElement("h1");
       fcHeader.textContent = "Flashcards";
       main.appendChild(fcHeader);
 
-      // Load flashcards for each day
       studyData.forEach(dayEntry => {
         const fcDiv = document.createElement("div");
         fcDiv.className = "flashcard-entry";
         fcDiv.id = "fc-day-" + dayEntry.day;
-        fcDiv.innerHTML = `<h3>Day ${dayEntry.day} Flashcards</h3>`;
-        main.appendChild(fcDiv);
+        const fcTitle = document.createElement("h3");
+        fcTitle.textContent = `Day ${dayEntry.day} Flashcards`;
+        fcDiv.appendChild(fcTitle);
 
         fetch(`flashcards/day${dayEntry.day}.txt`)
           .then(res => {
-            if(!res.ok) throw new Error("File not found");
+            if(!res.ok) throw new Error("No flashcards for this day");
             return res.text();
           })
-          .then(text => {
-            const lines = text.split("\n").slice(2); // skip first 2 lines
+          .then(txt => {
+            const lines = txt.split("\n").filter(line => line.trim() && !line.startsWith("#"));
             let counter = 1;
             lines.forEach(line => {
-              if(!line.trim()) return;
               const [title, answer] = line.split("\t");
-              const card = document.createElement("div");
-              const titleDiv = document.createElement("div");
-              titleDiv.className = "flashcard-title";
-              titleDiv.innerHTML = `${counter}) ${title}`;
+              if(!title || !answer) return;
+              const questionDiv = document.createElement("div");
+              questionDiv.className = "flashcard-question";
+              questionDiv.innerHTML = `${counter}) ${title.replace(/^\[\\\[/,'').replace(/\\\]$/,'')}`;
               const answerDiv = document.createElement("div");
               answerDiv.className = "flashcard-answer";
-              answerDiv.innerHTML = answer;
-              titleDiv.addEventListener("click", () => {
+              answerDiv.innerHTML = answer.replace(/^\[\\\[/,'').replace(/\\\]$/,'');
+              renderMathInElement(questionDiv);
+              renderMathInElement(answerDiv);
+
+              questionDiv.addEventListener("click", () => {
                 answerDiv.style.display = answerDiv.style.display === "block" ? "none" : "block";
-                renderMathInElement(answerDiv); // render LaTeX when expanded
               });
-              card.appendChild(titleDiv);
-              card.appendChild(answerDiv);
-              card.style.marginBottom = "20px"; // spacing between cards
-              fcDiv.appendChild(card);
+
+              fcDiv.appendChild(questionDiv);
+              fcDiv.appendChild(answerDiv);
               counter++;
             });
           })
-          .catch(() => {
+          .catch(err => {
             const msg = document.createElement("div");
             msg.textContent = "No flashcards for this day.";
+            msg.style.fontStyle = "italic";
             fcDiv.appendChild(msg);
           });
+
+        main.appendChild(fcDiv);
       });
     })
     .catch(err => console.error("Failed to load study log JSON:", err));
