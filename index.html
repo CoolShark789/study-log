@@ -20,9 +20,9 @@ body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
 .sidebar-day { cursor: pointer; margin-bottom: 3px; }
 
 .entry { margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
-.flashcard-entry { margin-bottom: 25px; border: 1px solid #aaa; padding: 15px; border-radius: 5px; }
+.flashcard-entry { margin-bottom: 30px; border: 1px solid #aaa; padding: 15px; border-radius: 5px; }
 .flashcard-question { cursor: pointer; margin-bottom: 10px; font-weight: bold; }
-.flashcard-answer { display: none; margin-left: 15px; margin-bottom: 10px; }
+.flashcard-answer { display: none; margin-left: 15px; margin-bottom: 15px; }
 </style>
 </head>
 <body>
@@ -122,18 +122,16 @@ document.addEventListener("DOMContentLoaded", () => {
           })
           .then(txt => {
             const lines = txt.split("\n").filter(line => line.trim() && !line.startsWith("#"));
-            let counter = 1;
-            lines.forEach(line => {
+            lines.forEach((line, index) => {
               const [title, answer] = line.split("\t");
               if(!title || !answer) return;
               const questionDiv = document.createElement("div");
               questionDiv.className = "flashcard-question";
-              questionDiv.innerHTML = `${counter}) ${title.replace(/^\[\\\[/,'').replace(/\\\]$/,'')}`;
+              questionDiv.innerHTML = `${index + 1}) ${title}`;
+
               const answerDiv = document.createElement("div");
               answerDiv.className = "flashcard-answer";
-              answerDiv.innerHTML = answer.replace(/^\[\\\[/,'').replace(/\\\]$/,'');
-              renderMathInElement(questionDiv);
-              renderMathInElement(answerDiv);
+              answerDiv.innerHTML = answer;
 
               questionDiv.addEventListener("click", () => {
                 answerDiv.style.display = answerDiv.style.display === "block" ? "none" : "block";
@@ -141,7 +139,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
               fcDiv.appendChild(questionDiv);
               fcDiv.appendChild(answerDiv);
-              counter++;
+
+              renderMathInElement(questionDiv, {delimiters: [{left:"\\[", right:"\\]"}]});
+              renderMathInElement(answerDiv, {delimiters: [{left:"\\[", right:"\\]"}]});
             });
           })
           .catch(err => {
