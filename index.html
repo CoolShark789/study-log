@@ -77,12 +77,30 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const studyData = await fetch("study_log.json").then(r => r.json());
 
-  // Days folder
-  const daysFolder = document.createElement("div");
-  daysFolder.classList.add("folder");
-  daysFolder.innerHTML = `<div class="folder-title">Days</div>`;
-  const dayList = document.createElement("div");
-  dayList.classList.add("folder-content");
+  // Study Log folder
+  const studyFolder = document.createElement("div");
+  studyFolder.classList.add("folder");
+  studyFolder.innerHTML = `<div class="folder-title">Study Log</div>`;
+  const studyList = document.createElement("div");
+  studyList.classList.add("folder-content");
+
+  studyData.forEach(entry => {
+    const div = document.createElement("div");
+    div.textContent = `Day ${entry.day} — ${entry.date}`;
+    div.classList.add("file-item");
+    div.addEventListener("click", () => showStudyLog(entry));
+    studyList.appendChild(div);
+  });
+
+  studyFolder.appendChild(studyList);
+  sidebar.appendChild(studyFolder);
+
+  // Flashcards folder
+  const flashFolder = document.createElement("div");
+  flashFolder.classList.add("folder");
+  flashFolder.innerHTML = `<div class="folder-title">Flashcards</div>`;
+  const flashList = document.createElement("div");
+  flashList.classList.add("folder-content");
 
   for (let entry of studyData) {
     const authorMatch = entry.topics.find(t => t.match(/Stewart|Lay|Velleman|Abbott|Friedberg|Resnick/i));
@@ -91,10 +109,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     item.textContent = `Day ${entry.day} (${author})`;
     item.classList.add("file-item");
     item.onclick = () => loadFlashcards(entry.day);
-    dayList.appendChild(item);
+    flashList.appendChild(item);
   }
-  daysFolder.appendChild(dayList);
-  sidebar.appendChild(daysFolder);
+
+  flashFolder.appendChild(flashList);
+  sidebar.appendChild(flashFolder);
 
   // Self-study folder
   const selfStudyFolder = document.createElement("div");
@@ -111,12 +130,23 @@ document.addEventListener("DOMContentLoaded", async () => {
   selfStudyFolder.appendChild(selfStudyList);
   sidebar.appendChild(selfStudyFolder);
 
-  // Toggle folders
+  // Folder toggles
   document.querySelectorAll(".folder-title").forEach(title => {
     title.addEventListener("click", () => {
       title.parentElement.classList.toggle("open");
     });
   });
+
+  function showStudyLog(entry) {
+    content.innerHTML = `<h2>Day ${entry.day} — ${entry.date}</h2>`;
+    const ul = document.createElement("ul");
+    entry.topics.forEach(t => {
+      const li = document.createElement("li");
+      li.textContent = t;
+      ul.appendChild(li);
+    });
+    content.appendChild(ul);
+  }
 
   async function loadFlashcards(dayNumber) {
     content.innerHTML = `<h2>Day ${dayNumber} Flashcards</h2>`;
@@ -154,7 +184,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // Self-study summary
   selfStudyBtn.addEventListener("click", async () => {
     if (selfStudyPage.style.opacity === "0" || !selfStudyPage.style.opacity) {
       selfStudyPage.style.opacity = "1";
