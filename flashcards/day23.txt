@@ -1,0 +1,17 @@
+#separator:tab
+#html:false
+\[\text{What is an eigenvector?}\]	\[\text{A vector that doesn't change its direction upon transformation:}\;A\vec{v}=\lambda\vec{v}\]
+\[\text{What is an eigenvalue?}\]	\[\text{A scalar}\;\lambda\;\text{by which the eigenvector's length is changed:}\;\\A\vec{v}=\lambda\vec{v}\]
+\[\text{How to find eigenvalues?}\]	\[A\vec{x}=\lambda\vec{x}=\lambda I\vec{x}\implies (A-\lambda I)\vec{x}=0\]\[\text{If there is an eigenvector, then this equation has non-trivial solutions}\implies\det\left((A-\lambda I)\vec{x}\right)=0\]\[\text{Calculate the determinant and solve for}\;\lambda\]
+\[\text{How to find eigenvectors?}\]	\[\text{After finding eigenvalues through determinant, put them back and row reduce to row reduced echelon form}\]
+\[\text{What is eigenspace?}\]	\[\text{A special nullspace for}\;\{\vec{x}\in\mathbb{R}^n\mid (A-\lambda I)\vec{x}=0\}\]
+\[\text{What are the eigenvalues of an ORIGINAL triangular matrix and why?}\]	\[\text{The entries on the main diagonal, because if we make at least one of them zero, then}\;\det(A)=0\]\[\text{(If row operations were applied - we can't use that fact!!!)}\]
+\[\text{What is one of the eigenvalues of any non-invertable matrix?}\]	\[\text{0, because their determinant is 0}\]
+\[\text{What is the Characteristic Equation\Polynomial of a matrix?}\]	\[\det(A-\lambda I)=0\]
+\[\text{When are matrices A and B similar?}\]	\[\text{When there exists invertible matrix P that:}\;B=PAP^{-1}\]
+\[\text{If matrices A and B are similar, then...?}\]	\[\text{They have the same characteristic polynomial}\implies\text{they have the same eigenvalues}\]
+\[\text{What is a diagonal matrix and its property?}\]	\[\text{Matrix D all terms of which below or above the main diagonal are 0}\]\[D = \begin{bmatrix}  \lambda_1 & 0 & \dots & 0 \\  0 & \lambda_2 & \dots & 0 \\  \vdots & \vdots & \ddots & \vdots \\  0 & 0 & \dots & \lambda_n  \end{bmatrix}, \quad\quad\quad  D^k = \underbrace{D \cdot D \cdot \dots \cdot D}_{k \text{ times}} =  \begin{bmatrix}  \lambda_1^k & 0 & \dots & 0 \\  0 & \lambda_2^k & \dots & 0 \\  \vdots & \vdots & \ddots & \vdots \\  0 & 0 & \dots & \lambda_n^k  \end{bmatrix}.\]
+\[\text{What is the form of a diagonizable matrix}\;A\;\text{and}\;A^k\]	\[A=PDP^{-1},\quad A^2=PD(P^{-1}P)DP^{-1}=PD^2P\implies A^k=PD^kP^{-1}\]\[D\;\text{is a diagonal matrix with eigenvalues}\quad\quad\quad P\;\text{is a matrix with eigenvectors}\]
+\[\text{What does it mean for a matrix to be DIagonalizable?}\]	\[\text{When matrix A is similar to a diagonal matrix}:\quad A=PDP^{-1}\]
+\[\text{What is Diagonalization Theorem?}\]	\[n\times n\;\text{matrix A is diagonalizable if and only if it has n linearly independent eigenvectors}\]\[\text{(If there is an eigenvector basis for}\;R^n\;\text{then A is diagonalizable)}\]
+\[\text{What is a multiplicity of eigenvalue?}\]	\[\text{The number of time the eigenvalue}\;\lambda\;\text{appears as a root to the characteristic expression}\]

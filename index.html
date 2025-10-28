@@ -18,7 +18,18 @@ body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
 
 .entry { margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
 .flashcard-entry { margin-bottom: 15px; border: 1px solid #aaa; padding: 10px; border-radius: 5px; }
+.fc-content div { margin-bottom: 8px; }
 </style>
+
+<!-- KaTeX for LaTeX rendering -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body, {delimiters: [
+        {left: '\\[', right: '\\]', display: true},
+        {left: '\\(', right: '\\)', display: false}
+    ]});"></script>
+
 </head>
 <body>
 
@@ -95,24 +106,38 @@ document.addEventListener("DOMContentLoaded", () => {
           if(fc) scrollToCenter(fc);
         });
         flashcardsSub.appendChild(sideCard);
-      });
 
-      // Dummy flashcards section
-      const fcHeader = document.createElement("h1");
-      fcHeader.textContent = "Flashcards";
-      main.appendChild(fcHeader);
-
-      studyData.forEach(dayEntry => {
+        // Flashcard section
         const fcDiv = document.createElement("div");
         fcDiv.className = "flashcard-entry";
         fcDiv.id = "fc-day-" + dayEntry.day;
-        fcDiv.innerHTML = `<h3>Day ${dayEntry.day} Flashcards</h3>
-          <ul>
-            <li>Dummy flashcard 1</li>
-            <li>Dummy flashcard 2</li>
-            <li>Dummy flashcard 3</li>
-          </ul>`;
+        fcDiv.innerHTML = `<h3>Day ${dayEntry.day} Flashcards</h3><div class="fc-content">Loading...</div>`;
         main.appendChild(fcDiv);
+
+        // Load flashcards from txt
+        fetch(`flashcards/day${dayEntry.day}.txt`)
+          .then(res => res.text())
+          .then(text => {
+              const lines = text.split("\n").filter(l => l.trim() !== "");
+              const html = lines.map(l => {
+                  const parts = l.split("\t");
+                  return `<div>${parts.join(" &rarr; ")}</div>`;
+              }).join("");
+              fcDiv.querySelector(".fc-content").innerHTML = html;
+
+              // Render LaTeX inside
+              if(window.renderMathInElement) {
+                  renderMathInElement(fcDiv, {
+                      delimiters: [
+                          {left: "\\[", right: "\\]", display: true},
+                          {left: "\\(", right: "\\)", display: false}
+                      ]
+                  });
+              }
+          })
+          .catch(err => {
+              fcDiv.querySelector(".fc-content").innerHTML = "No flashcards found for this day.";
+          });
       });
     })
     .catch(err => console.error("Failed to load study log JSON:", err));

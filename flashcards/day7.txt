@@ -1,0 +1,13 @@
+#separator:tab
+#html:false
+\[\text{How to integrate}\; \sec^3 x\]	\[\text{Do IBP: differentiate}\;\sec(x)\;\text{and integrate}\;\sec^2(x)\]
+\[\text{Notation for improper integrals}\]	\[\int_{a}^{\infty}f(x)\;dx=\lim_{t \to \infty}\int_{a}^t f(x)\;dx\quad\quad\quad\int_{-\infty}^{b}f(x)\;dx=\lim_{t \to -\infty}\int_{t}^b f(x)\;dx\]
+\[\text{When is this true?}\]\[\int_{-\infty}^{\infty}f(x)\;dx=\int_{-\infty}^{a}f(x)\;dx+\int_{a}^{\infty}f(x)\;dx\]	\[\text{If both}\;\int_{-\infty}^{a}f(x)\;dx\;\text{and}\;\int_{a}^{\infty}f(x)\;dx\;\text{are convergent}\]\[\text{Convergent means that the limit exists}\]
+\[\text{For which values of p is}\;\int_{1}^{\infty}\frac{1}{x^p}\;dx\;\text{convergent?}\]	\[\text{For p>1}\]\[\int_{1}^{\infty}\frac{1}{x^p}\;dx=\lim_{t \to \infty}\int_{1}^{\infty}\frac{1}{x^p}\;dx=\lim_{t \to \infty}\frac{1}{1-P}\bigg[\frac{1}{t^{P-1}}-\frac{1}{1^{P-1}}\bigg],\quad p\ne1\]
+\[\text{Notation for}\;\int_{a}^b f(x)\;dx\;\text{when f(x) continuous on [a,b)}\]	\[\int_{a}^b f(x)\;dx=\lim_{t \to b^{-}}\int_{a}^t f(x)\;dx\]
+\[\text{Notation for}\;\int_{a}^b f(x)\;dx\;\text{when f(x) continuous on (a,b]}\]	\[\int_{a}^b f(x)\;dx=\lim_{t \to a^{+}}\int_{t}^b f(x)\;dx\]
+\[\text{How to rewrite}\int_{a}^b f(x)\;dx\;\text{if f(x) is discontinuous at c : a<c<b}\]	\[\int_{a}^b f(x)\;dx=\int_{a}^c f(x)\;dx+\int_{c}^b f(x)\;dx,\quad \text{(if f(x) is convergent on [a,c)} \cup \text{(c,b])}\]
+\[\text{Comparison Test for Improper Integrals}\]	"\[\text{If f(x) and g(x) are continuous functions with f(x)}\ge\text{g(x)}\ge \text{0 for}\;x\ge a\;\text{, then:}\]\[\text{1. If}\;\int_{a}^{\infty}f(x)\;dx\;\text{is convergent}\int_{a}^{\infty}g(x)\;dx\;\text{is also convergent}\]\[\text{2. If}\;\int_{a}^{\infty}g(x)\;dx\;\text{is divergent}\int_{a}^{\infty}f(x)\;dx\;\text{is also divergent}\]\[\text{Function f(x) is always ""above"" g(x) and they are both positive}\]"
+\[\text{When is this true?} \lim_{t \to \infty}t^P = \infty\]	\[\text{When P>0}\]
+\[\text{What is Mean Value Theorem?}\]	\[\text{For any continuous and differentiable function f(x) on (a,b) there exists a<c<b:}\]\[f'(c)=\frac{f(b)-f(a)}{b-a}\quad \Longrightarrow\quad f(b)-f(a)=f'(c)(b-a)\]\[\text{The meaning: for an average slope of an interval there exists a point with that exact slope}\]
+\[\text{Arc length formula (derivation using MVT)}\]	\[L=\int_{a}^b\sqrt{1+\left(\frac{dy}{dx}\right)^2}\;dx=\lim_{n \to \infty}\Delta x \sum_{i=1}^n \sqrt{1+\Big[f'(x^{*}_i)\Big]^2}\] \[L=\lim_{n \to \infty}\sum_{i=1}^n \Big|P_{i-1}P_{i}\Big|\]\[\Big|P_{i-1}P_{i}\Big|=\sqrt{(\Delta x)^2 + (\Delta y)^2}=\sqrt{(\Delta x)^2 + (f'(x^{*}_i) \Delta x)^2}=\sqrt{1+\left(\frac{dy}{dx}\right)^2}\Delta x\]\[\text{According to Mean Value Theorem (MVT):}\quad \Delta y =f'(x^{*}_i)\Delta x\]

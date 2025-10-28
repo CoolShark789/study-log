@@ -1,0 +1,18 @@
+#separator:tab
+#html:false
+\[\text{What does it mean for a Transformation to be ONTO}\;\mathbb{R}^m\]	\[\text{It means that the Matrix is full Rank (pivot in every row) - every vector is reachable}\]
+\[\text{What does it mean for a Transformation to be ONE-TO-ONE?}\]	\[\text{For every output vector there is only ONE input vector - columns are nearly independent, only the trivial solution}\]
+\[\text{When is Transformation ONE-TO-ONE?}\]	\[\text{If and only if}\;T(\vec{x})=A\vec{x}=0\;\text{has only the trivial solution}\]
+\[\text{What is the Transpose of a Matrix?}\]	\[\text{The Matrix}\;A^T\text{, which rows and columns are flipped:}\;A^T _{ij} = A_{ji}\]
+\[\text{What are the four properties of Transpose Matrices?}\]	\[1.\;(A^T)^T=A\]\[2.\;(A+B)^T = A^T + B^T\]\[3.\;(rA)^T=rA^T\]\[4.\;(AB)^T=B^TA^T\]
+\[\text{What is the formula for an identity matrix}\;I_n\;\text{and how does it look like}\]	\[\text{For a matrix A}\;n\times n:\quad A^{-1}A=AA^{-1}=I_n\]\[\text{All ones in the diagonal, the rest are zeros}\]
+\[\text{What is a Singular Matrix?}\]	\[\text{A matrix that doesn't have an Inverse}\]
+\[\text{What is a Nonsingular Matrix?}\]	\[\text{A matrix that has an inverse}\]
+\[\text{When does the}\;2\times 2\;\text{matrix has an Inverse?}\]	\[\text{When}\;\det(A)=ad-bc\ne 0,\quad\quad A=\begin{bmatrix}a&b\\c&d\end{bmatrix}\]
+\[\text{What is an inverse of the matrix}\;A=\begin{bmatrix}a&b\\c&d\end{bmatrix}\]	\[\frac{1}{\det(A)}\begin{bmatrix}d&-b\\-c&a\end{bmatrix}=\frac{1}{ad-bc}\begin{bmatrix}d&-b\\-c&a\end{bmatrix}\]
+\[\text{What is the solution for}\;A\vec{x}=\vec{b}\]	\[\vec{x}=A^{-1}\vec{b}\]
+\[\text{What are the three properties of Invertable Matrices?}\]	\[1.\;(A^{-1})^{-1}=A\]\[2.\;(AB)^{-1}=B^{-1}A^{-1}\]\[3.\;(A^T)^{-1}=(A^{-1})^T\]
+\[\text{What is an elementary matrix?}\]	\[\text{It is a matrix obtained by performing a single elemenary row operation}\]\[\text{For example:}\;E=\begin{bmatrix}1&0&0\\0&1&0\\-4&0&1\end{bmatrix}\text{ means to subtract 4 first rows from the last}\]
+\[\text{What is the property of Elementary Matrices?}\]	\[\text{They are always invertable to cancel the elementary row operation on the Identity Matrix}\]
+\[\text{What is the algorithm for finding an Inverse Matrix?}\]	\[\text{To place A and I side by side and perform elemenary row operations on both until A isn't I}\]\[\text{It works because row operations are elementary matrices and transforming A into I, transforms I into}\;A^{-1}\]
+\[\text{When does a Matrix have an inverse? (related to I)}\]	\[\text{If and only if A is a row equivalent to I (sequences of elementary row operations transform I into}\;A^{-1}\]

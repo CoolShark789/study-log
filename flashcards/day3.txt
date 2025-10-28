@@ -1,0 +1,6 @@
+#separator:tab
+#html:false
+\[\text{What is L'Hôpital's Rule and when is it used?}\]	\[\lim_{x \to c} \frac{f(x)}{g(x)} = \lim_{x \to c} \frac{f'(x)}{g'(x)}, \quad \text{for } \frac{f(x)}{g(x)} = \frac{0}{0},\pm\frac{\infty}{\infty}\]
+\[\text{How to solve indeterminate form } 0 \cdot \infty \;?\]	\[\text{Rewrite as a fraction:} \quad 0 \cdot \infty \;\;\to\;\;  \frac{f(x)}{1/g(x)} \quad \text{or} \quad \frac{g(x)}{1/f(x)},\]
+\[\text{How to solve indeterminate form } \infty - \infty \;?\]	\[\text{Take a common denominator or factor}\]
+\[\text{How to solve power indeterminate forms?} \quad 0^{0}, \; \infty^{0}, \; 1^{\infty}\]	\[\text{Take }\ln\; \text{of the functions inside the limit or exponentiate them} \] \[\lim_{x\to ?}\left[ f(x)^{g(x)} \right]=\lim_{x\to ?}\left[g(x)\ln\left(f(x)\right)\right] \quad \text{or} \quad  \lim_{x\to ?}\left[ f(x)^{g(x)} \right]=\lim_{x\to ?}\left[e^{g(x)\ln\left(f(x)\right)}\right]\]

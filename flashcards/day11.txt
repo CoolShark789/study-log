@@ -1,0 +1,19 @@
+#separator:tab
+#html:false
+\[\text{What is parabola and its formula?}\]	"\[\text{Parabola is a set of points located equal distance from the focus and the directrix}\]\[\text{Focus at} \;(0,p)\;\text{directrix} \;y=-p: \sqrt{x^2 +(y-p)^2}=|y+p|\implies x^2=4py\]\[\text{If the parabola ""on"" y-axis: } y^2 =4px\]"
+\[\text{What are the conic sections and their examples?}\]	\[\text{Shapes resulted from the intersection of the plane with a cone}\]\[\text{Conic shapes: Ellipse, Parabola, Hyperbola}\quad\text{(Circle is a special ellipse)}\]
+\[\text{What is ellipse and its formula?}\]	"\[\text{Ellipse is a set of points, sum of the distances from which to foci is a constant and equals}\;2a\;\text{(longest axis)}\] \[\text{Ellipse ""on"" x-axis:}\; \frac{x^2}{a^2}+\frac{y^2}{b^2}=1\quad\text{""on"" y-axis:}\;\frac{x^2}{b^2}+\frac{y^2}{a^2}=1\]\[\text{Foci are}\; (\pm c,0) \;\text{or}\; (0,\pm c)\quad c=a^2-b^2\]"
+\[\text{What is hyperbola and its formula?}\]	"\[\text{Hyperbola is a set of points whose difference of distances from foci equals to}\;\pm 2a\]\[\text{""on"" x-axis:}\; \frac{x^2}{a^2}-\frac{y^2}{b^2}=1\quad\text{""on"" y-axis:}\; \frac{y^2}{a^2}-\frac{x^2}{b^2}=1\quad \left(c^2=a^2+b^2\right)\]"
+\[\text{What are the assymptotes of hyperbola?}\]	\[\frac{x^2}{a^2}-\frac{y^2}{b^2}=1:\quad \pm\frac{b}{a}x\]\[\frac{y^2}{a^2}-\frac{x^2}{b^2}=1:\quad \pm\frac{a}{b}x\]
+\[\text{How do equations of conics change if we shift them h in x direction and k in y?}\]	\[\text{We substitute}\;(x-h)\;\text{and}\;(y-k)\;\text{in place of x and y}\]
+\[\text{What are the vertices coordinates of ellipse, parabola and hyperbola?}\]	"\[\text{""on"" x-axis: }(\pm a, 0)\quad\quad\quad\text{""on"" y-axis: }(0, \pm a)\]"
+\[\text{Notation for a limit of a sequence}\]	\[\lim_{n\to\infty}a_n =L\]
+\[\text{What are the Sum, Difference, Constant Multiple, Product and Quotient laws for Convergent Sequences?}\]	\[\lim_{n\to\infty}(a_n\pm b_n)=\lim_{n\to\infty}(a_n)\pm\lim_{n\to\infty}(b_n)\quad\quad\quad\lim_{n\to\infty}ca_n = c\lim_{n\to\infty}a_n\]\[\lim_{n\to\infty}(a_n b_n)=\lim_{n\to\infty}(a_n)\cdot\lim_{n\to\infty}(b_n)\quad\quad\quad\lim_{n\to\infty}\frac{a_n}{b_n}=\frac{\lim_{n\to\infty} a_n}{\lim_{n\to\infty}b_n}\]
+\[\text{What's the power law for Sequences?}\]	\[\lim_{n\to\infty}a^P _n=\left(\lim_{n\to\infty}a_n\right)^P\quad\quad(p>0, a_n >0)\]
+\[\text{Whats the Squeeze Theorem for Sequences?}\]	\[\text{If}\quad a_n \le b_n \le c_n\;\;\text{ and } \lim_{n\to\infty}a_n =\lim_{n\to\infty}c_n=L,\quad \text{then }\lim_{n\to\infty}b_n=L\]
+\[\text{Absolute Module Theorem for Sequences}\]	\[\text{If}\quad \lim_{n\to\infty}|a_n|=0,\quad\text{then}\lim_{n\to\infty}a_n=0\]
+\[\text{How to prove that the sequence}\; a_n = \frac{n!}{n^n}\quad\text{approaches 0?}\]	\[a_n = \frac{1}{n}\left[\frac{1\cdot 2\cdot 3 \;...\;  n}{n\cdot n\cdot n\; ... \;n}\right]\implies 0<a_n \le\frac{1}{n},\quad\quad\quad\lim_{n\to\infty}\frac{1}{n}=0\]\[\text{According to Squeeze Theorem:}\quad\lim_{n\to\infty}a_n = 0\]
+\[\text{For which values of r is the sequence}\;{r^n}\;\text{convergent?}\]	\[\text{Convergent for}\; -1<r\le 1,\quad\quad\text{Divergent for every other value}\]
+\[\text{What are the three types of Series?}\]	\[\text{Increasing:}\; a_{n+1}>a_n \quad\quad\quad\text{Decreasing:}\; a_{n+1}<a_n \quad\quad\quad\text{Monotonic: neither}\]
+\[\text{What does it mean for a Sequence to be bounded?}\]	\[\text{It means there are such numbers M and m that:}\quad a_n \le M \;\text{and}\; a_n \ge m\]
+\[\text{What is Monotonic Sequence Theorem?}\]	\[\text{It states that every bounded Monotonic Sequence is convergent}\]

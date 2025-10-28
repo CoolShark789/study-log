@@ -1,0 +1,6 @@
+#separator:tab
+#html:false
+\[\text{What is the formula for Linear Transformation with the change of basis?}\;(T:V\rightarrow W)\]	\[\Big[T(x)\Big]_C = M\big[x\big]_B,\quad M=\Big[\left[T(b_1)\right]_C +\;\cdots\;+\left[T(b_n)\right]_C\Big]\]\[x=r_1b_1+\cdots+r_nb_n\implies\big[x\big]_B=\begin{bmatrix}r_1\\ \vdots \\ r_n\end{bmatrix}\]\[T(x)=T(r_1b_1)+\cdots+T(r_nb_n)=r_1T(b_1)+\cdots+r_nT(b_n)\implies\Big[T(x)\Big]_C=r_1\Big[T(b_1)\Big]_C+\cdots+r_n\Big[T(b_n)\Big]_C=M\big[x\big]_B\]
+\[\text{What is the formula for Linear Transformation from V into V?}\quad (T:V\rightarrow V)\]	\[\Big[T(x)\Big]_B=\big[T\big]_B\big[x\big]_B\]
+\[\text{What is Diagonal Matrix Representation Theorem and why is it true?}\]	\[\text{Suppose}\;A=PDP^{-1}\;(D\text{ is a diagonal matrix}\;n\times n).\;\text{If}\;B\;\text{ is the basis formed by columns of}\;P\;\text{(eigenvectors), then:}\]\[D\;\text{is a}\;B\text{-matrix}\;\big[T]_B\;\text{for a transformation}\]\[\big[T]_B=\Big[\big[T(b_1)\big]_B\cdots \big[T(b_n)\big]_B\Big],\;T(x)=Ax\implies\big[T]_B=\Big[\big[Ab_1\big]_B\cdots \big[Ab_1\big]_B\Big]\]\[x=P[x]_B\implies\big[T]_B=\Big[P^{-1}Ab_1\cdots P^{-1}Ab_n\Big]=P^{-1}A\Big[b_1\cdots b_n]=P^{-1}AP=P^{-1}(PDP^{-1})P=D\]
+\[\text{How to express matrix A in another base?}\]	\[\big[T\big]_B = P^{-1}AP,\quad\quad P=\Big[\big[b_1\big]_E \cdots\big[b_n\big]_E\Big]\]

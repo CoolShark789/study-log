@@ -1,0 +1,10 @@
+#separator:tab
+#html:false
+\[\text{What does arc of a circle equal to}\]	\[s=r\theta\]
+\[\text{Surface area of a cone with derivation}\]	\[\text{We can unwrap a cone into a circle sector with radius L and arc}\;2\pi r\]\[L\theta=2\pi r\Longrightarrow A=\pi L^2 \frac{\theta}{2\pi}=\frac{(\pi L^2)(2\pi r)}{2\pi L}=\pi rL\quad \text{(L - slant height, r - base radius)}\]\[\text{Area with base: } A=\pi rL+\pi r^2\]
+\[\text{Formula for Volume by Cylindrical Shells (slices parallel to the rotation axis)}\]	\[\text{1. Around the x-axis: }2\pi\int_{a}^b yf(y)\;dy\]\[\text{2. Around the y-axis: }2\pi\int_{a}^b xf(x)\;dx\]
+\[\text{Formula for Volume by Disks (slices perpendicular to the rotation axis)}\]	\[\text{1. Around the x-axis: }\pi\int_{a}^b \Big[f(x)]\Big]^2\;dx\]\[\text{2. Around the y-axis: }\pi\int_{a}^b \Big[f(y)]\Big]^2\;dy\]
+\[\text{Area of a Surface of Revolution}\]	\[\text{1. Around x-axis:}\quad A=2\pi\int_{a}^b y\;ds, \quad y-\text{distance from axis}\]\[\text{2.Around y-axis:} \quad A=2\pi\int_{a}^b x\;ds,\quad x-\text{distance from axis}\]\[ds=\sqrt{1+\left(\frac{dy}{dx}\right)^2}dx\]
+\[\text{What is the solution to}\; \frac{dP}{dt}=kP(t)\]	\[P(t)=Ce^{kt}\]
+\[\text{What's the logistic differential equation? (for growth population)}\]	\[\frac{dP}{dt}=cP(M-P)=kP(1-\frac{P}{M}),\quad k=cM\]\[\text{As population P approaches carrying capacity M, the slower growth of P is}\]\[\text{M - maximum population the environment can support}\]
+\[\text{What's the form of separable differential equation?}\]	\[\frac{dy}{dx}=\frac{f(x)}{g(y)}\]

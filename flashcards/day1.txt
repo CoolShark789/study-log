@@ -1,0 +1,16 @@
+#separator:tab
+#html:false
+\[\text{Epsilon-Delta proof\Limit definition}\]	\[\lim_{x \to a} f(x) = L \iff  \forall \varepsilon>0, \exists \delta>0 : 0<|x-a|<\delta \implies |f(x)-L|<\varepsilon\]\[\text{If for every number}\;\varepsilon>0\;\text{there exists a number}\;\delta>0\;\text{such that: [condition], then [condition]}\]
+\[\text{Relation between continuous function and a limit}\]	\[\text{If } g \text{ is continuous at } L \text{ and } \lim_{x \to a} f(x) = L,  \text{ then } \lim_{x \to a} g(f(x)) = g\big(\lim_{x \to a} f(x)\big)\]
+\[\lim_{x \to 0} \frac{\sin x}{x} = \text?\]	\[1\]
+\[\lim_{x \to 0} \frac{\cos x - 1}{x} = \text?\]	\[0\]
+\[\text{Derivative of } b^x\]	\[\frac{d}{dx} b^x = b^x \ln b\]
+\[\text{Derivative of } \tan{x}\]	\[\frac{d}{dx} \tan x = \sec^2 x\]
+\[\text{Derivative of } \cot{x}\]	\[\frac{d}{dx} \cot x = -\csc^2 x\]
+\[\text {Derivative of } \sec{x}\]	\[\frac{d}{dx} \sec x = \sec x \tan x\]
+\[\text {Derivative of } \csc{x}\]	\[\frac{d}{dx} \csc x = -\csc x \cot x\]
+\[\text{Derivative of } \log_b {x}\]	\[\frac{d}{dx} \log_b x = \frac{1}{x \ln b}\]
+\[\text{Derivative of } \log_b {f(x)}\]	\[\frac{d}{dx} \log_b f(x) = \frac{f'(x)}{f(x) \ln b}\]
+\[\text{Derivative of } \ln{x}\]	\[\frac{d}{dx} \ln x = \frac{1}{x}\]
+\[\text{Derivative of } \ln{(f(x))}\]	\[\frac{d}{dx} \ln f(x) = \frac{f'(x)}{f(x)}\]
+\[\text{Limit to represent e (two ways)}\]	\[e = \lim_{x \to 0} (1+x)^{\frac{1}{x}}  \quad \text{and} \quad e = \lim_{n \to +\infty} \left(1 + \frac{1}{n}\right)^n\]

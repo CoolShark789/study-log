@@ -1,0 +1,16 @@
+#separator:tab
+#html:false
+\[\text{Newton's Method for Approximations}\]	\[x_{n+1}=x_n-\frac{f(x_{n})}{f'(x_{n})}, \quad x_1= \text{guess}\]
+\[\sum_{i=1}^n i^2 = \;?\]	\[\sum_{i=1}^n i^2=1^{2}+2^{2}+3^{2}+\;...\;+n^{2}=\frac{n(n+1)(2n+1)}{6}\]
+\[\text{Definite integral definition with limits (Riemann sum)}\]	\[\int_{a}^bf(x)dx=\lim_{n\to\infty}\Delta x\sum_{k=1}^nf(x_{k}), \quad \Delta x=\frac{b-a}{n} \quad \text{and} \quad x_{k}=a+k\Delta x\]
+\[\sum_{i=1}^n i =\;?\]	\[\sum_{i=1}^n i = \frac{n(n+1)}{2}\]
+\[\sum_{i=1}^n i^{3} = \;?\]	\[\sum_{i=1}^n i^{3} = \left[\frac{n(n+1)}{2}\right]^{2}\]
+\[\text{Property for flipping the boundaries of the Indefinite Integral}\]	\[\int_{a}^b f(x) dx= -\int_{b}^a f(x) dx\]
+\[\text{Fundamental Theorem of Calculus (2 parts)}\]	\[\text{1. If } g(x)=\int_{a}^x f(t)\;dt, \quad \text{then} \quad g'(x)=\frac{d}{dx}\left[\int_{a}^x f(t)\;dt\right]=f(x)\]\[2. \int_{a}^b f(x)\;dx = F(b)-F(a), \quad \text{where} \quad  \frac{d}{dx}F(x) = f(x)\]
+\[\text{Leibniz Integral Rule (derivative of the definite integral with functions in boundaries)}\]	\[g(x)=\int_{u(x)}^{v(x)}f(t)\;dt=F\Big[v(x)\Big]-F\Big[u(x)\Big] \quad\Longrightarrow\quad g'(x)=v'(x)f\Big[v(x)\Big]-u'(x)f\Big[u(x)\Big]\]
+\[\int \tan{x}\; dx = \;?\]	\[\int \tan{x}\; dx = \ln{|\sec x|}+C\]
+\[\int b^{nx} =\;?\]	\[\int b^{nx} = \frac{b^{nx}}{n\ln{b}}+C\]
+\[\text{Substitution rule for Definite Integrals}\]	\[\int_{a}^b f\Big[g(x)\Big]g'(x)\;dx=\int_{g(a)}^{g(b)}f(u)\;du\]
+\[\text{Definite Integrals of Symmetric Functions around 0}\]	\[f(-x)=f(x): \quad \int_{-a}^a f(x)\;dx=2\int_{0}^a f(x) \;dx\]\[f(-x)=-f(x): \quad \int_{-a}^a f(x) \;dx = 0\]
+\[\int \cot x =\;?\]	\[\int \cot x = \ln|\sin x|+C\]
+\[\text{What happens with boundaries while differentiating nested integrals}\]	\[\frac{d^{2}}{dx^2}\int_{0}^{x}\Bigg[\int_{1}^{\sin{t}}\sqrt{1+u^{4}}\;du\Bigg]dt=\frac{d}{dx}\int_{1}^{\sin{x}}\sqrt{1+u^{4}}\;du=\cos{x}\sqrt{1+(\sin{x})^4}\]\[\text{First step happens due to FTC1, while the second because of the Leibniz Integral Rule}\]

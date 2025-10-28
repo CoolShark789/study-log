@@ -1,0 +1,18 @@
+#separator:tab
+#html:false
+\[\text{What is a homogenous equation's form?}\]	\[A\vec{x}=0\]
+\[\text{What are trivial and non-trivial solutions of}\;A\vec{x}=0\]	\[\text{Trivial solution is a vector}\;\vec{x}=0\]\[\text{Non-Trivial solution is some non-zero vector}\;\vec{x}\;\text{that satisfies}\;A\vec{x}=0\]
+\[\text{When does}\;A\vec{x}=\vec{b}\;\text{has a solution?}\]	\[\text{When}\;\vec{b}\;\text{is a linear combination of columns}\;A\]
+\[\text{When does a homogenous equation}\;A\vec{x}=0\;\text{has a non-trivial solution?}\]	\[\text{When there is at least one free variable, i.e. rank is not full}\]
+\[\text{What does the number of free variables indicate in a Matrix? (from dimension perspective)}\]	\[\text{The number of dimensions collapsed and the subspace dimension which those collapsed vectors are}\]
+\[\text{What are parametric vector equations of a line and a plane?}\]	\[\text{Line:}\;\vec{x}=t\vec{v}\]\[\text{Plane:}\;\vec{x}=s\vec{u}+t\vec{v}\]
+\[\text{What is the relation between solutions of}\;A\vec{x}=\vec{b}\;\text{and}\;A\vec{x}=0\]	\[\text{Suppose}\;A\vec{x}=\vec{b}\;\text{is consistent and}\;\vec{p}\;\text{is one of the solutions}\;(\vec{p}\text{ is fixed})\]\[\text{Then the set of solutions}\;A\vec{x}=\vec{b}\;\;\text{is}\;\;\vec{w}=\vec{p}+\vec{v_h}\;\text{where}\;v_h\;\text{is a solution to}\;A\vec{x}=0\]\[A(\vec{p}+\vec{v_h})=A\vec{p}+A\vec{v_h}=\vec{b}+0=\vec{b}\]
+\[\text{When is the set of vectors}\;\{v_1,\cdots,v_p\}\;\text{linear independent and when linearly dependent?}\]	\[\text{Linearly independent: }x_1v_1+x_2v_2+\cdots+x_pv_p=0\;\text{has only trivial solutions}\]\[\text{Linearly dependent: }c_1v_1+c_2v_2+\cdots+c_pv_p=0\;\text{has non-trivial solutions}\]
+\[\text{When are the columns of A linearly independent?}\]	\[\text{When the equation}\;A\vec{x}=0\;\text{has only the trivial solution}\]
+\[\text{What does it mean for a set of two vectors to be linearly dependent\independent?}\]	\[\text{Dependent - multiples of each other}\quad\quad\quad\text{Otherwise - independent}\]
+\[\text{When is the set (Matrix) is automatically linearly dependent? (3)}\]	\[\text{1) When there are more vectors than there are entries in each vector}\]\[\text{2) When there is a zero vector in the set}\]\[\text{3) When one of the vectors is a linear combination of others}\]
+\[\text{What is Domain?}\]	\[\text{It is the space of input vectors}\]\[\text{If A is}\;m\times n\text{, then domain is}\;\mathbb{R}^n\]
+\[\text{What is Codomain?}\]	\[\text{The space in which outputs lie}\]\[\text{If A is}\;m\times n\text{, then codomain is}\;\mathbb{R}^m\]
+\[\text{What is Transformation\Mapping?}\]	\[\text{A rule that assings each vector}\;\vec{x}\;\text{in}\;\mathbb{R}^n\;\text{a vector}\;T(x)\;\text{in}\;\mathbb{R}^m\]\[\text{Notation for transformation:}\quad T:\mathbb{R}^n \rightarrow\mathbb{R}^m\]
+\[\text{What are Image and Range?}\]	\[\text{Image is a result vector}\;T(x)\;\text{in}\;\mathbb{R}^m\;\text{for vector}\;\vec{x}\;\text{in}\;\mathbb{R}^n\]\[\text{Range is the set of all images}\;T(x)\]
+\[\text{When is the transfomation}\;T\;\text{linear?}\]	\[\text{1. }T(\vec{u}+\vec{v})=T(\vec{u})+T(\vec{v})\]\[\text{2. }T(c\vec{u})=cT(\vec{u})\]

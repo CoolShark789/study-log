@@ -1,0 +1,8 @@
+#separator:tab
+#html:false
+\[\text{Riemann Sum for Area between the Curves}\]	\[A=\lim_{n \to \infty}\Delta x \sum_{i=1}^n \Big[f(x_{i})-g(x_{i})\Big]=\int_{a}^b \Big[f(x)-g(x)]\,dx\quad\Delta x=\frac{b-a}{n}\]
+\[\text{Volume of a solid in a space (basic understanding)}\]	\[V=\lim_{n \to \infty} \Delta x \sum_{i=1}^n A(x_{i})=\int_{a}^b A(x)\;dx, \quad A(x) \text{ is a cross-sectional area (a slice)}\]
+\[\text{Washer cross-section formula}\]	\[A=\pi(r_{out})^2-\pi(r_{in})^2 \]\[r_{in} \text{ is the distance between the rotation axis and the closest function to that axis}\]
+\[\text{How to derive the volume of a torus (example for a volume of solids)}\]	\[\text{1. Set up the equation of a circle with respect to y (spinning around y-axis) and divide into 2 halves}\]\[\text{2. Right half is the outer radius, left is the inner, so subtract and set up A(x)}\]\[\text{3. Integrate A(x) from -r to r because its the domain for y}\]
+\[\text{Average value of f(x) on the interval [a, b]}\]	\[\lim_{n \to \infty} \frac{\Delta x}{b-a} \sum_{i=1}^n f(x_{i})=\frac{1}{b-a}\int_{a}^bf(x)\;dx\]
+\[\text{Integration by parts (with derivation)}\]	\[\frac{d}{dx}\Big[f(x)g(x)]=f'(x)g(x)+f(x)g'(x)\Longrightarrow f(x)g(x)=\int\Big[f'(x)g(x)\Big]dx+\int\Big[f(x)g'(x)\Big]dx\Longrightarrow \int\Big[f(x)g'(x)\Big]dx=f(x)g(x)-\int\Big[f'(x)g(x)\Big]dx\] \[\Large{\int u\;dv = uv - \int v\;du}\]

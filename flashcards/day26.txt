@@ -1,0 +1,13 @@
+#separator:tab
+#html:false
+\[\text{What does Inner Product equal to and why?}\]	\[u^Tv=\begin{bmatrix}u_1\;\;u_2\;\cdots\;u_n\end{bmatrix}\begin{bmatrix}v_1\\v_2\\ \vdots \\ v_n\end{bmatrix}=u_1v_1+u_2v_2+\cdots+u_nv_n\]\[\operatorname{Col}(A)=\operatorname{Row}(A^T)\implies\begin{bmatrix}u_1\\u_2\\ \vdots \\ u_n\end{bmatrix}=\begin{bmatrix}u_1\;\;u_2\;\cdots\;u_n\end{bmatrix}\]
+\[\text{What does the length (norm) of}\;\vec{v}\;\text{equal to?}\]	\[\|v\|=\sqrt{v\cdot v}=\sqrt{v^2 _1 + v^2 _2 +\cdots+v^2 _n},\quad\quad \|v\|^2 = v\cdot v\]
+\[\text{What is a unit vector and how to find one of some other vector?}\]	\[\text{Unit vector is a vector with length of one}\]\[\vec{u}=\frac{\vec{v}}{\|v\|}\]
+\[\text{What is the distance between two vectors?}\]	\[\operatorname{dist}(u,v)=\|u-v\|=\sqrt{(u-v)(u-v)}=\sqrt{(u_1-v_1)^2+\cdots+(u_n-v_n)^2}\]
+\[\text{When are two vectors orthogonal and why?}\]	\[\vec{u}\cdot\vec{v}=0\]\[\operatorname{dist}^2(u,v)=\operatorname{dist}^2(u,-v)\implies \|u-v\|^2=\|u\|^2 +\|v\|^2 - 2u\cdot v = \|u+v\|^2=\|u\|^2 +\|v\|^2 +2u\cdot v\implies \vec{u}\cdot\vec{v}=0\]
+\[\text{When are two vectors Orthogonal? (by Pythagorean Theorem)}\]	\[\|u+v\|^2=\|u\|^2+\|v\|^2\]
+\[\text{What is orthogonal complement of some subspace}\; W\;\text{and its notation?}\]	\[\text{It is the set of all vectors that are orthogonal the subspace}\;W:\quad W^{\perp}\]
+\[\text{What is the relation between Null, Row and Column space in terms of Orthogonality?}\]	\[(\operatorname{Row}A)^{\perp}=\operatorname{Nul}A\quad\quad (\operatorname{Col}A)^{\perp}=\operatorname{Nul}A^T\]
+\[\text{What is the formula for relation between vectors, their lengths and angle between them?}\]	\[\vec{u}\cdot\vec{v}=\|u\|\|v\|\cos\theta\]\[\|u-v\|^2 =\|u\|^2 +\|v\|^2 -2\|u\|\|v\|\cos\theta\implies\|u\|\|v\|\cos\theta=\frac{1}{2}\left(\|u\|^2 +\|v\|^2-\|u-v\|^2\right)=\]\[=\frac{1}{2}\left(u^2 _1 +u^2 _2 +v^2 _1 +v^2 _2 - (u_1-v_2)^2 - (u_2-v_2)^2\right)=\vec{u}\cdot\vec{v}\]
+\[\text{What is an Orthogonal Set?}\]	\[\text{It is a set of vectors in which each pair of distinct vectors is orthogonal}\]
+\[\text{What is the property of the Orthogonal Set of nonzero vectors in}\;\mathbb{R}^n\]	\[\text{If}\;S=\{u_1,\cdots,u_p\}\;\text{is such set, then}\;S\;\text{is linearly independent and is a basis for a subspace spanned by}\;S\]

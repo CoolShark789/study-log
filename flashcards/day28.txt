@@ -1,0 +1,19 @@
+#separator:tab
+#html:false
+\[\text{What are conditional Laws?}\quad(P\rightarrow Q)\]	\[\text{If}\;P\;\text{then}\;Q:\quad P\rightarrow Q\equiv \neg P\lor Q\equiv\neg(P\land \neg Q)\]
+\[\text{What is the contrapositive of}\;P\rightarrow Q?\]	\[P\rightarrow Q\equiv\neg Q\rightarrow\neg P\]
+\[\text{What is a biconditional statement's notation?}\]	\[P\;\text{if and only if (iff)}\; Q\]\[P\leftrightarrow Q\equiv(P\rightarrow Q)\land(Q\rightarrow P)\]
+\[\text{What is Universal Quantifier and why is it called that way?}\]	"\[\text{Universal Quantifier}\; \forall\;\text{means ""For all ... statement is true}\]\[\text{It says that some set is universally true, i.e. truth set of some}\;P(x)\;\text{is the whole universe}\; U\]"
+\[\text{What is an Existential Quantifier?}\]	"\[\text{Existential quantifier}\;\exists\;\text{means: ""There exists ... such that some statement is true}\]\[\text{It means that the truth set of}\;P(x)\;\text{isn't}\;\emptyset\]"
+\[\text{What are two Quantifier Negation Laws?}\]	\[\neg\exists xP(x)\equiv\forall x\neg P(x)\]\[\neg\forall xP(x)\equiv\exists x \neg P(x)\]
+\[\text{What are the rules for the order of Universal and Existential Quantifiers?}\]	\[\text{For the quantifiers of the same type we are allowed to switch the order, for the different ones - cannot}\]\[\forall x\forall y P(x,y)\equiv\forall y\forall x P(x,y)\quad\quad\forall x\exists y P(x,y)\not\equiv\exists y\forall xP(x,y)\]
+"\[\text{What is the notation for ""exactly one"" and its general notation?}\]"	\[\exists !xP(x)=\exists x\Big[P(x)\land \neg\exists y\big[P(y)\land x\neq y\big]\Big]\]
+\[\text{What's the expanded form of}\;A\subseteq B?\]	\[\forall x(x\in A \rightarrow x\in B)\]
+\[\text{What is the expanded form of}\;\forall x\in A\,P(x)?\]	\[\forall x\in A\,P(x)=\forall x(x\in A\rightarrow P(x))\]
+\[\text{What are the Distributive Laws for Quantifiers?}\]	\[\forall x(P(x)\land Q(x))\equiv (\forall x\,P(x))\land (\forall x\,Q(x))\]\[\exists x(P(x)\lor Q(x))\equiv (\exists x\,P(x))\lor (\exists x\, Q(x))\]
+\[\text{What does it mean for}\;A=B\;\text{in set notation?}\]	\[A=B\Longleftrightarrow (A\subseteq B)\land (B\subseteq A)\] \[A=B:\;\;\forall x(x\in A\leftrightarrow x\in B)\equiv\forall x\Big[\big(x\in A\rightarrow x\in B\big)\land\big(x\in B\rightarrow x\in A\big)\Big]=(A\subseteq B)\land (B\subseteq A)\]
+\[\text{What is a Power Set}\;\mathscr{P}{(A)}\]	\[\text{It is a set of all the subsets of the set}\;A\]\[A=\{1,2,3\}\implies\mathscr{P}{(A)}=\{x\mid x\subseteq A\}=\{\emptyset,\{1\},\{2\},\{1, 2\}\}\]
+\[\text{What does it mean for}\;x\in\mathscr{P}{(A)}\;\text{in expanded notation?}\]	\[x\in\mathscr{P}{(A)}\equiv x\subseteq A\equiv\forall y(y\in x\rightarrow y\in A)\]
+\[\text{What is the definition of an Intersection of a family set}\;\mathcal{F}?\]	\[\bigcap\mathcal{F}=\{x\mid\forall A(A\in\mathcal{F}\rightarrow x\in A)\}=\{x\mid\forall A\in\mathcal{F},x\in A\}\]
+\[\text{What is the definition of a Union of a family set}\;\mathcal{F}?\]	\[\bigcup\mathcal{F}=\{x\mid\exists A(A\in\mathcal{F}\land x\in A)\}=\{x\mid\exists A\in\mathcal{F},x\in A\}\]
+\[\text{What are Union and Intersection of a family set}\;\mathcal{F}?\;\text{(an example)}\]	\[\mathcal{F}=\{\{1,2,3\},\{2,3,4\},\{3,4,5\}\}\]\[\bigcap\mathcal{F}=\{3,4\}\quad\quad\bigcup\mathcal{F}=\{1,2,3,4,5,6\}\]
