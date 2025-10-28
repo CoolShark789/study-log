@@ -63,154 +63,179 @@ body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const main = document.getElementById("main");
-  const selfStudyBtn = document.getElementById("selfStudyBtn");
-  const selfStudyPage = document.getElementById("self-study-page");
+document.addEventListener("DOMContentLoaded", async () => {
+  const sidebar = document.getElementById("sidebar");
+  const content = document.getElementById("content");
+  const selfStudyBtn = document.createElement("button");
+  selfStudyBtn.id = "self-study-btn";
+  selfStudyBtn.textContent = "Self-Study Stats";
+  document.body.appendChild(selfStudyBtn);
 
-  function scrollToCenter(el) {
-    const mainRect = main.getBoundingClientRect();
-    const elRect = el.getBoundingClientRect();
-    const scrollTop = main.scrollTop;
-    const elTop = elRect.top - mainRect.top + scrollTop;
-    const scrollTarget = elTop - main.clientHeight / 2 + el.offsetHeight / 2;
-    main.scrollTo({ top: scrollTarget, behavior: "smooth" });
+  Object.assign(selfStudyBtn.style, {
+    position: "fixed",
+    top: "10px",
+    right: "10px",
+    background: "#222",
+    color: "white",
+    border: "1px solid #555",
+    padding: "10px 15px",
+    borderRadius: "8px",
+    cursor: "pointer",
+    zIndex: "1000"
+  });
+
+  const selfStudyPage = document.createElement("div");
+  selfStudyPage.id = "self-study-page";
+  Object.assign(selfStudyPage.style, {
+    position: "fixed",
+    top: "0",
+    left: "0",
+    width: "100%",
+    height: "100%",
+    background: "rgba(0,0,0,0.95)",
+    color: "white",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    opacity: "0",
+    pointerEvents: "none",
+    transition: "opacity 0.4s ease"
+  });
+  document.body.appendChild(selfStudyPage);
+
+  selfStudyPage.innerHTML = `
+    <h1 id="ss-day-count" style="font-size:50px;margin-bottom:30px;"></h1>
+    <div id="ss-total-cards" style="font-size:40px;margin-bottom:40px;"></div>
+    <div id="ss-plans" style="font-size:20px;"></div>
+  `;
+
+  const studyData = await fetch("study_log.json").then(r => r.json());
+  const daysFolder = document.createElement("div");
+  daysFolder.classList.add("folder");
+  daysFolder.innerHTML = `<div class="folder-title">Days</div>`;
+  const dayList = document.createElement("div");
+  dayList.classList.add("folder-content");
+
+  for (let entry of studyData) {
+    const authorMatch = entry.topics.find(t => t.match(/Stewart|Lay|Velleman|Abbott|Friedberg|Resnick/i));
+    const author = authorMatch ? authorMatch.match(/(Stewart|Lay|Velleman|Abbott|Friedberg|Resnick)/i)[0] : "Unknown";
+    const item = document.createElement("div");
+    item.textContent = `Day ${entry.day} (${author})`;
+    item.classList.add("file-item");
+    item.onclick = () => loadFlashcards(entry.day);
+    dayList.appendChild(item);
   }
 
-  document.querySelectorAll(".sidebar-folder").forEach(folder => {
-    const arrow = folder.querySelector(".arrow");
-    const sub = folder.querySelector(".sidebar-sub");
-    folder.addEventListener("click", e => {
-      if (e.target !== folder) return;
-      const isOpen = sub.style.display === "block";
-      sub.style.display = isOpen ? "none" : "block";
-      arrow.classList.toggle("open", !isOpen);
+  daysFolder.appendChild(dayList);
+  sidebar.appendChild(daysFolder);
+
+  const selfStudyFolder = document.createElement("div");
+  selfStudyFolder.classList.add("folder");
+  selfStudyFolder.innerHTML = `<div class="folder-title">Self-Study</div>`;
+  const selfStudyList = document.createElement("div");
+  selfStudyList.classList.add("folder-content");
+  ["Folder 1", "Folder 2"].forEach(name => {
+    const div = document.createElement("div");
+    div.textContent = name;
+    div.classList.add("file-item");
+    selfStudyList.appendChild(div);
+  });
+  selfStudyFolder.appendChild(selfStudyList);
+  sidebar.appendChild(selfStudyFolder);
+
+  document.querySelectorAll(".folder-title").forEach(title => {
+    title.addEventListener("click", () => {
+      title.parentElement.classList.toggle("open");
     });
   });
 
-  fetch("study_log.json")
-    .then(res => res.json())
-    .then(async studyData => {
-      const daysSub = document.getElementById("days-sub");
-      const flashcardsSub = document.getElementById("flashcards-sub");
+  document.querySelectorAll(".file-item").forEach(item => {
+    item.addEventListener("mouseenter", () => item.style.background = "#333");
+    item.addEventListener("mouseleave", () => item.style.background = "transparent");
+  });
 
-      async function fileExists(url) {
-        try {
-          const res = await fetch(url, { method: "HEAD" });
-          return res.ok;
-        } catch {
-          return false;
-        }
+  async function loadFlashcards(dayNumber) {
+    content.innerHTML = `<h2>Day ${dayNumber} Flashcards</h2>`;
+    try {
+      const txt = await fetch(`flashcards/day${dayNumber}.txt`).then(r => { if (!r.ok) throw 0; return r.text(); });
+      const lines = txt.split("\n").filter(l => l.trim() && !l.startsWith("#"));
+      if (!lines.length) {
+        content.innerHTML += "<p>No flashcards found for this day.</p>";
+        return;
       }
+      let container = document.createElement("div");
+      container.style.display = "flex";
+      container.style.flexDirection = "column";
+      container.style.gap = "15px";
 
+      lines.forEach((line, i) => {
+        const [q, a] = line.split("\t");
+        const div = document.createElement("div");
+        div.style.border = "1px solid #444";
+        div.style.padding = "10px";
+        div.style.borderRadius = "8px";
+        div.style.cursor = "pointer";
+        div.innerHTML = `<b>${i + 1})</b> <span class="question">${q}</span><div class="answer" style="display:none;margin-top:5px;">${a}</div>`;
+        div.addEventListener("click", () => {
+          const ans = div.querySelector(".answer");
+          ans.style.display = ans.style.display === "none" ? "block" : "none";
+          MathJax.typesetPromise([ans]);
+        });
+        container.appendChild(div);
+      });
+      content.appendChild(container);
+      MathJax.typesetPromise();
+    } catch {
+      content.innerHTML += "<p>Error loading flashcards.</p>";
+    }
+  }
+
+  selfStudyBtn.addEventListener("click", async () => {
+    if (selfStudyPage.style.opacity === "0") {
+      selfStudyPage.style.opacity = "1";
+      selfStudyPage.style.pointerEvents = "auto";
       const flashcardDays = [];
       for (let dayEntry of studyData) {
-        const dayDiv = document.createElement("div");
-        dayDiv.className = "entry";
-        dayDiv.id = "day-" + dayEntry.day;
-        const topicsHtml = dayEntry.topics.map(t => `<li>${t}</li>`).join("");
-        dayDiv.innerHTML = `<h2>Day ${dayEntry.day} [${dayEntry.date}]</h2><ul>${topicsHtml}</ul>`;
-        main.appendChild(dayDiv);
-
-        // extract author from first topic
-        let author = "";
-        const firstTopic = dayEntry.topics[0];
-        if (firstTopic && firstTopic.includes(":")) {
-          author = firstTopic.split(":")[0].trim();
-        }
-
-        const sideDay = document.createElement("div");
-        sideDay.className = "sidebar-day";
-        sideDay.textContent = "Day " + dayEntry.day + (author ? ` (${author})` : "");
-        sideDay.addEventListener("click", () => scrollToCenter(dayDiv));
-        daysSub.appendChild(sideDay);
-
-        const sideCard = document.createElement("div");
-        sideCard.className = "sidebar-day";
-        sideCard.textContent = "Day " + dayEntry.day;
-        sideCard.addEventListener("click", async () => {
-          const fc = document.getElementById("fc-day-" + dayEntry.day);
-          if (fc) scrollToCenter(fc);
-        });
-        flashcardsSub.appendChild(sideCard);
-      }
-
-      const fcHeader = document.createElement("h1");
-      fcHeader.textContent = "Flashcards";
-      main.appendChild(fcHeader);
-
-      for (let dayEntry of studyData) {
-        const fcDiv = document.createElement("div");
-        fcDiv.className = "flashcard-entry";
-        fcDiv.id = "fc-day-" + dayEntry.day;
-        const fcTitle = document.createElement("h3");
-        fcTitle.textContent = `Day ${dayEntry.day} Flashcards`;
-        fcDiv.appendChild(fcTitle);
-
-        const path = `flashcards/day${dayEntry.day}.txt`;
-        if (await fileExists(path)) flashcardDays.push(dayEntry.day);
-
         try {
-          const txt = await fetch(path).then(r => { if (!r.ok) throw 0; return r.text(); });
+          const txt = await fetch(`flashcards/day${dayEntry.day}.txt`).then(r => { if (!r.ok) throw 0; return r.text(); });
           const lines = txt.split("\n").filter(l => l.trim() && !l.startsWith("#"));
-          lines.forEach((line, index) => {
-            const [title, answer] = line.split("\t");
-            if (!title || !answer) return;
-
-            const questionDiv = document.createElement("div");
-            questionDiv.className = "flashcard-question";
-            questionDiv.innerHTML = `${index + 1}) ${title}`;
-
-            const answerDiv = document.createElement("div");
-            answerDiv.className = "flashcard-answer";
-            answerDiv.innerHTML = answer;
-
-            questionDiv.addEventListener("click", () => {
-              answerDiv.style.display = answerDiv.style.display === "block" ? "none" : "block";
-            });
-
-            fcDiv.appendChild(questionDiv);
-            fcDiv.appendChild(answerDiv);
-
-            renderMathInElement(questionDiv, { delimiters: [{ left: "\\[", right: "\\]" }] });
-            renderMathInElement(answerDiv, { delimiters: [{ left: "\\[", right: "\\]" }] });
-          });
-        } catch {
-          const msg = document.createElement("div");
-          msg.textContent = "No flashcards for this day.";
-          msg.style.fontStyle = "italic";
-          fcDiv.appendChild(msg);
-        }
-
-        main.appendChild(fcDiv);
+          if (lines.length) flashcardDays.push(dayEntry.day);
+        } catch {}
       }
+      document.getElementById("ss-day-count").textContent = `Days self-studied: ${flashcardDays.length}`;
 
-      selfStudyBtn.addEventListener("click", () => {
-        selfStudyPage.classList.toggle("visible");
-        if (selfStudyPage.classList.contains("visible")) {
-          document.getElementById("ss-day-count").textContent = `Days self-studied: ${flashcardDays.length}`;
+      let totalFlashcards = 0;
+      for (let dayEntry of studyData) {
+        try {
+          const txt = await fetch(`flashcards/day${dayEntry.day}.txt`).then(r => { if (!r.ok) throw 0; return r.text(); });
+          const lines = txt.split("\n").filter(l => l.trim() && !l.startsWith("#"));
+          totalFlashcards += lines.length;
+        } catch {}
+      }
+      document.getElementById("ss-total-cards").textContent = `Total flashcards: ${totalFlashcards}`;
 
-          const plans = [
-            {name: "Stewart's Calculus (Chapters 3-11)", status: "completed"},
-            {name: "Lay's Linear Algebra (Chapters 1-6.1)", status: "completed"},
-            {name: "Vellerman's Intro to Proofs", status: "ongoing"},
-            {name: "Abbott's Intro to Real Analysis", status: "planned"},
-            {name: "Friedberg's Real Analysis", status: "planned"},
-            {name: "Stewart's Calculus (Chapters 12-16)", status: "planned"},
-            {name: "Resnick's Physics (Chapters 1-20)", status: "planned"},
-            {name: "Python (Basics, Numpy, Pandas)", status: "planned"}
-          ];
-
-          const ssPlansDiv = document.getElementById("ss-plans");
-          ssPlansDiv.innerHTML = "";
-          plans.forEach(p => {
-            let color = p.status === "completed" ? "green" : p.status === "ongoing" ? "orange" : "red";
-            ssPlansDiv.innerHTML += `<div style="margin-bottom:10px;"><span class="status-square" style="background:${color}"></span>${p.name}</div>`;
-          });
-        }
+      const plans = [
+        {name: "Stewart's Calculus (Chapters 3-11)", status: "completed"},
+        {name: "Lay's Linear Algebra (Chapters 1-6.1)", status: "completed"},
+        {name: "Velleman’s Intro to Proofs", status: "ongoing"},
+        {name: "Abbott’s Intro to Real Analysis", status: "planned"},
+        {name: "Friedberg’s Real Analysis", status: "planned"},
+        {name: "Stewart’s Calculus (Chapters 12-16)", status: "planned"},
+        {name: "Resnick’s Physics (Chapters 1-20)", status: "planned"},
+        {name: "Python (Basics, Numpy, Pandas)", status: "planned"}
+      ];
+      const ssPlansDiv = document.getElementById("ss-plans");
+      ssPlansDiv.innerHTML = "";
+      plans.forEach(p => {
+        let color = p.status === "completed" ? "green" : p.status === "ongoing" ? "orange" : "red";
+        ssPlansDiv.innerHTML += `<div style="margin-bottom:10px;"><span style="display:inline-block;width:15px;height:15px;background:${color};margin-right:8px;"></span>${p.name}</div>`;
       });
-    })
-    .catch(err => console.error("Failed to load study log JSON:", err));
+    } else {
+      selfStudyPage.style.opacity = "0";
+      selfStudyPage.style.pointerEvents = "none";
+    }
+  });
 });
 </script>
 
