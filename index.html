@@ -12,8 +12,12 @@ body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
 #content { flex: 1; padding: 20px; overflow-y: auto; position: relative; scroll-behavior: smooth; box-sizing: border-box; }
 
 .folder { margin-bottom: 12px; }
-.folder-title { cursor: pointer; margin-bottom: 6px; font-weight: bold; user-select: none; }
-.folder-content { display: block; margin-left: 6px; }
+.folder-title { cursor: pointer; margin-bottom: 6px; font-weight: bold; user-select: none; display: flex; align-items: center; }
+.folder-title::before { content: "►"; display: inline-block; width: 14px; margin-right: 6px; transition: transform 0.2s ease; }
+.folder.open .folder-title::before { transform: rotate(90deg); }
+.folder-content { display: none; margin-left: 6px; }
+.folder.open .folder-content { display: block; }
+
 .file-item { cursor: pointer; padding: 6px 8px; border-radius: 6px; margin-bottom: 6px; transition: background 0.14s, font-weight 0.14s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .file-item:hover { background: white; font-weight: bold; }
 
@@ -74,40 +78,46 @@ document.addEventListener("DOMContentLoaded", async () => {
     return "Unknown";
   }
 
-  // Sidebar: Study Log
-  const studyFolder = document.createElement("div");
-  studyFolder.className = "folder";
-  studyFolder.innerHTML = `<div class="folder-title" id="folder-study">Study Log</div><div class="folder-content" id="study-list"></div>`;
-  sidebar.appendChild(studyFolder);
-  const studyList = document.getElementById("study-list");
+  // Create folder in sidebar
+  function createFolder(titleText, listItemsFunc) {
+    const folder = document.createElement("div");
+    folder.className = "folder";
+    const title = document.createElement("div");
+    title.className = "folder-title";
+    title.textContent = titleText;
+    folder.appendChild(title);
+    const contentDiv = document.createElement("div");
+    contentDiv.className = "folder-content";
+    folder.appendChild(contentDiv);
+    sidebar.appendChild(folder);
 
-  // Sidebar: Flashcards
-  const flashFolder = document.createElement("div");
-  flashFolder.className = "folder";
-  flashFolder.innerHTML = `<div class="folder-title" id="folder-flash">Flashcards</div><div class="folder-content" id="flash-list"></div>`;
-  sidebar.appendChild(flashFolder);
-  const flashList = document.getElementById("flash-list");
+    title.addEventListener("click", () => folder.classList.toggle("open"));
 
-  // Populate study-list and flash-list
-  studyData.forEach(entry => {
-    const author = extractAuthor(entry.topics);
-    const sItem = document.createElement("div");
-    sItem.className = "file-item";
-    sItem.textContent = `Day ${entry.day} — ${entry.date}`;
-    sItem.addEventListener("click", () => {
-      showFullStudyLog();
-      scrollToDay(entry.day);
+    listItemsFunc(contentDiv);
+    return folder;
+  }
+
+  // Populate Study Log folder
+  createFolder("Study Log", (container) => {
+    studyData.forEach(entry => {
+      const item = document.createElement("div");
+      item.className = "file-item";
+      item.textContent = `Day ${entry.day} — ${entry.date}`;
+      item.addEventListener("click", () => { showFullStudyLog(); scrollToDay(entry.day); });
+      container.appendChild(item);
     });
-    studyList.appendChild(sItem);
+  });
 
-    const fItem = document.createElement("div");
-    fItem.className = "file-item";
-    fItem.textContent = `Day ${entry.day} (${author})`;
-    fItem.addEventListener("click", () => {
-      showFlashcardsIndex();
-      loadFlashcards(entry.day, true);
+  // Populate Flashcards folder
+  createFolder("Flashcards", (container) => {
+    studyData.forEach(entry => {
+      const author = extractAuthor(entry.topics);
+      const item = document.createElement("div");
+      item.className = "file-item";
+      item.textContent = `Day ${entry.day} (${author})`;
+      item.addEventListener("click", () => { showFlashcardsIndex(); loadFlashcards(entry.day, true); });
+      container.appendChild(item);
     });
-    flashList.appendChild(fItem);
   });
 
   // Full study log
@@ -126,11 +136,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
   content.appendChild(fullContainer);
 
-  function showFullStudyLog() {
-    content.innerHTML = "";
-    content.appendChild(fullContainer);
-    content.focus();
-  }
+  function showFullStudyLog() { content.innerHTML=""; content.appendChild(fullContainer); content.focus(); }
 
   function showFlashcardsIndex() {
     content.innerHTML = `<h2>Flashcards</h2><div id="flash-index" style="display:flex;flex-direction:column;gap:8px;"></div>`;
@@ -148,75 +154,71 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   function scrollToDay(dayNumber) {
     const section = document.getElementById(`day-${dayNumber}`);
-    if (!section) return;
+    if(!section) return;
     const contentRect = content.getBoundingClientRect();
     const sectionRect = section.getBoundingClientRect();
     const currentScroll = content.scrollTop;
     const sectionTop = sectionRect.top - contentRect.top + currentScroll;
     const scrollTarget = sectionTop - (content.clientHeight / 2) + (section.offsetHeight / 2);
-    content.scrollTo({ top: scrollTarget, behavior: "smooth" });
+    content.scrollTo({ top: scrollTarget, behavior:"smooth" });
   }
 
-  async function loadFlashcards(dayNumber, replaceContent = false) {
+  async function loadFlashcards(dayNumber, replaceContent=false) {
     const path = `flashcards/day${dayNumber}.txt`;
-    if (replaceContent) content.innerHTML = `<h2>Day ${dayNumber} Flashcards</h2>`;
+    if(replaceContent) content.innerHTML=`<h2>Day ${dayNumber} Flashcards</h2>`;
     const parent = replaceContent ? content : document.getElementById("flash-index") || content;
     try {
-      const res = await fetch(path);
-      if (!res.ok) throw 0;
+      const res = await fetch(path); if(!res.ok) throw 0;
       const txt = await res.text();
-      const lines = txt.split("\n").filter(l => l.trim() && !l.startsWith("#"));
-      if (!lines.length) { if (replaceContent) content.innerHTML += "<p>No flashcards for this day.</p>"; return; }
+      const lines = txt.split("\n").filter(l=>l.trim()&&!l.startsWith("#"));
+      if(!lines.length){ if(replaceContent) content.innerHTML+="<p>No flashcards for this day.</p>"; return; }
 
       const container = document.createElement("div");
-      container.style.display = "flex";
-      container.style.flexDirection = "column";
-      container.style.gap = "12px";
-      container.id = `flashcards-day-${dayNumber}`;
+      container.style.display="flex"; container.style.flexDirection="column"; container.style.gap="12px";
+      container.id=`flashcards-day-${dayNumber}`;
 
-      lines.forEach((line, i) => {
-        const [title, answer] = line.split("\t");
-        if (!title) return;
+      lines.forEach((line,i)=>{
+        const [title,answer] = line.split("\t");
+        if(!title) return;
         const card = document.createElement("div");
-        card.className = "flashcard-card";
-        card.innerHTML = `<div style="font-weight:700; margin-bottom:6px;">${i+1}) <span class="q">${title}</span></div><div class="a">${answer||""}</div>`;
-        card.addEventListener("click", () => {
+        card.className="flashcard-card";
+        card.innerHTML=`<div style="font-weight:700; margin-bottom:6px;">${i+1}) <span class="q">${title}</span></div><div class="a">${answer||""}</div>`;
+        card.addEventListener("click",()=>{
           const a = card.querySelector(".a");
           a.style.display = a.style.display==="block"?"none":"block";
-          renderMathInElement(a, { delimiters:[{left:"\\[",right:"\\]",display:true}] });
+          renderMathInElement(a,{delimiters:[{left:"\\[",right:"\\]",display:true}]});
         });
         container.appendChild(card);
-        renderMathInElement(card, { delimiters:[{left:"\\[",right:"\\]",display:true}] });
+        renderMathInElement(card,{delimiters:[{left:"\\[",right:"\\]",display:true}]});
       });
 
-      if (replaceContent) {
+      if(replaceContent){
         content.appendChild(container);
-        const rect = container.getBoundingClientRect();
-        const contentRect = content.getBoundingClientRect();
-        const scrollTop = content.scrollTop;
-        const elTop = rect.top - contentRect.top + scrollTop;
-        const target = elTop - (content.clientHeight / 2) + (container.offsetHeight / 2);
-        content.scrollTo({ top: target, behavior: "smooth" });
+        const rect=container.getBoundingClientRect();
+        const contentRect=content.getBoundingClientRect();
+        const scrollTop=content.scrollTop;
+        const elTop=rect.top - contentRect.top + scrollTop;
+        const target = elTop - (content.clientHeight/2) + (container.offsetHeight/2);
+        content.scrollTo({top:target,behavior:"smooth"});
       } else { parent.appendChild(container); }
-    } catch { if (replaceContent) content.innerHTML += "<p>No flashcards file.</p>"; }
+    } catch{ if(replaceContent) content.innerHTML+="<p>No flashcards file.</p>"; }
   }
 
-  document.getElementById("folder-study").addEventListener("click", () => showFullStudyLog());
-  document.getElementById("folder-flash").addEventListener("click", () => showFlashcardsIndex());
   showFullStudyLog();
 
-  selfStudyBtn.addEventListener("click", async () => {
+  selfStudyBtn.addEventListener("click", async ()=>{
     const visible = selfStudyPage.classList.toggle("visible");
-    selfStudyPage.setAttribute("aria-hidden", visible ? "false":"true");
+    selfStudyPage.setAttribute("aria-hidden", visible?"false":"true");
     if(visible){
       let flashcardDays=0,totalCards=0;
       for(const entry of studyData){
-        try{const r=await fetch(`flashcards/day${entry.day}.txt`);
+        try{
+          const r=await fetch(`flashcards/day${entry.day}.txt`);
           if(!r.ok) continue;
           const t=await r.text();
           const lines=t.split("\n").filter(l=>l.trim()&&!l.startsWith("#"));
           if(lines.length){flashcardDays++; totalCards+=lines.length;}
-        }catch{}
+        } catch{}
       }
       document.getElementById("ss-day-count").textContent=`Days self-studied: ${flashcardDays}`;
       document.getElementById("ss-total-cards").textContent=`Total flashcards: ${totalCards}`;
