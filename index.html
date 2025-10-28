@@ -21,9 +21,9 @@ body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
 .sidebar-day { cursor: pointer; margin-bottom: 3px; }
 
 .entry { margin-bottom: 30px; border-bottom: 1px solid #ccc; padding-bottom: 10px; }
-.flashcard-entry { margin-bottom: 15px; border: 1px solid #aaa; padding: 10px; border-radius: 5px; }
+.flashcard-entry { margin-bottom: 30px; border: 1px solid #aaa; padding: 15px; border-radius: 5px; background: #fafafa; }
 .flashcard-title { cursor: pointer; font-weight: bold; margin-bottom: 5px; }
-.flashcard-answer { display: none; margin-left: 15px; margin-bottom: 10px; }
+.flashcard-answer { display: none; margin-left: 15px; margin-bottom: 10px; font-style: italic; }
 </style>
 </head>
 <body>
@@ -123,23 +123,26 @@ document.addEventListener("DOMContentLoaded", () => {
           })
           .then(text => {
             const lines = text.split("\n").slice(2); // skip first 2 lines
+            let counter = 1;
             lines.forEach(line => {
               if(!line.trim()) return;
               const [title, answer] = line.split("\t");
               const card = document.createElement("div");
               const titleDiv = document.createElement("div");
               titleDiv.className = "flashcard-title";
-              titleDiv.textContent = title;
+              titleDiv.innerHTML = `${counter}) ${title}`;
               const answerDiv = document.createElement("div");
               answerDiv.className = "flashcard-answer";
-              answerDiv.textContent = answer;
+              answerDiv.innerHTML = answer;
               titleDiv.addEventListener("click", () => {
                 answerDiv.style.display = answerDiv.style.display === "block" ? "none" : "block";
                 renderMathInElement(answerDiv); // render LaTeX when expanded
               });
               card.appendChild(titleDiv);
               card.appendChild(answerDiv);
+              card.style.marginBottom = "20px"; // spacing between cards
               fcDiv.appendChild(card);
+              counter++;
             });
           })
           .catch(() => {
