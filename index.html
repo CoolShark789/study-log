@@ -3,13 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <title>Study Log & Flashcards</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
 <style>
 body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
 #sidebar { width: 200px; background: #f0f0f0; padding: 20px; overflow-y: auto; }
-#main { flex: 1; padding: 20px; overflow-y: auto; }
+#main { flex: 1; padding: 20px; overflow-y: auto; position: relative; }
 
 .sidebar-folder { cursor: pointer; margin-bottom: 10px; }
 .sidebar-folder:hover { font-weight: bold; }
@@ -20,29 +17,53 @@ body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
 .sidebar-day { cursor: pointer; margin-bottom: 3px; }
 
 .entry { margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
-.flashcard-entry { margin-bottom: 30px; border: 1px solid #aaa; padding: 15px; border-radius: 5px; }
-.flashcard-question { cursor: pointer; margin-bottom: 10px; font-weight: bold; }
-.flashcard-answer { display: none; margin-left: 15px; margin-bottom: 15px; }
+.flashcard-entry { margin-bottom: 15px; border: 1px solid #aaa; padding: 10px; border-radius: 5px; }
+
+.flashcard-question { cursor: pointer; margin-bottom: 5px; font-weight: bold; }
+.flashcard-answer { display: none; margin-bottom: 10px; margin-left: 15px; }
+
+#selfStudyBtn { position: absolute; top: 10px; right: 10px; padding: 8px 12px; background: #007bff; color: #fff; border: none; cursor: pointer; border-radius: 4px; }
+
+#self-study-page { display: none; text-align: center; padding: 50px; }
+.status-square { display: inline-block; width: 15px; height: 15px; margin-right: 8px; vertical-align: middle; }
 </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);"></script>
 </head>
 <body>
 
 <div id="sidebar">
-  <div class="sidebar-folder" data-target="days">
-    <span class="arrow">▶</span> Days
-    <div class="sidebar-sub" id="days-sub"></div>
-  </div>
-  <div class="sidebar-folder" data-target="flashcards">
-    <span class="arrow">▶</span> Flashcards
-    <div class="sidebar-sub" id="flashcards-sub"></div>
+  <div class="sidebar-folder" data-target="self-study">
+    <span class="arrow">▶</span> Self-Study
+    <div class="sidebar-sub" id="self-study-sub">
+      <div class="sidebar-folder" data-target="ss-days">
+        <span class="arrow">▶</span> Days
+        <div class="sidebar-sub" id="ss-days-sub"></div>
+      </div>
+      <div class="sidebar-folder" data-target="ss-flashcards">
+        <span class="arrow">▶</span> Flashcards
+        <div class="sidebar-sub" id="ss-flashcards-sub"></div>
+      </div>
+    </div>
   </div>
 </div>
 
-<div id="main"></div>
+<div id="main">
+  <button id="selfStudyBtn">Self-Study Summary</button>
+</div>
+
+<div id="self-study-page">
+  <h1 id="ss-day-count" style="font-size: 80px; margin-bottom: 40px;"></h1>
+  <div id="ss-plans"></div>
+</div>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const main = document.getElementById("main");
+  const selfStudyBtn = document.getElementById("selfStudyBtn");
+  const selfStudyPage = document.getElementById("self-study-page");
 
   function scrollToCenter(el) {
     const mainRect = main.getBoundingClientRect();
@@ -57,101 +78,87 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".sidebar-folder").forEach(folder => {
     const arrow = folder.querySelector(".arrow");
     const sub = folder.querySelector(".sidebar-sub");
-
     folder.addEventListener("click", e => {
       if (e.target !== folder) return;
       const isOpen = sub.style.display === "block";
       sub.style.display = isOpen ? "none" : "block";
       arrow.classList.toggle("open", !isOpen);
-      if(!isOpen) main.scrollTo({ top: 0, behavior: "smooth" });
     });
   });
 
-  fetch("study_log.json")
+  // Load flashcards for Self-Study
+  fetch("flashcards/study_log.json")
     .then(res => res.json())
     .then(studyData => {
-      const daysSub = document.getElementById("days-sub");
-      const flashcardsSub = document.getElementById("flashcards-sub");
+      const ssDaysSub = document.getElementById("ss-days-sub");
+      const ssFlashcardsSub = document.getElementById("ss-flashcards-sub");
 
-      studyData.forEach(dayEntry => {
-        // Main study log entry
-        const dayDiv = document.createElement("div");
-        dayDiv.className = "entry";
-        dayDiv.id = "day-" + dayEntry.day;
-        const topicsHtml = dayEntry.topics.map(t => `<li>${t}</li>`).join("");
-        dayDiv.innerHTML = `<h2>Day ${dayEntry.day} [${dayEntry.date}]</h2><ul>${topicsHtml}</ul>`;
-        main.appendChild(dayDiv);
-
-        // Sidebar day under "Days"
+      studyData.forEach((dayEntry, idx) => {
+        // Sidebar Days
         const sideDay = document.createElement("div");
         sideDay.className = "sidebar-day";
         sideDay.textContent = "Day " + dayEntry.day;
-        sideDay.addEventListener("click", () => {
-          scrollToCenter(document.getElementById("day-" + dayEntry.day));
-        });
-        daysSub.appendChild(sideDay);
+        sideDay.addEventListener("click", () => scrollToCenter(document.getElementById("fc-day-" + dayEntry.day)));
+        ssDaysSub.appendChild(sideDay);
 
-        // Sidebar day under "Flashcards"
+        // Sidebar Flashcards
         const sideCard = document.createElement("div");
         sideCard.className = "sidebar-day";
         sideCard.textContent = "Day " + dayEntry.day;
-        sideCard.addEventListener("click", () => {
-          const fc = document.getElementById("fc-day-" + dayEntry.day);
-          if(fc) scrollToCenter(fc);
-        });
-        flashcardsSub.appendChild(sideCard);
-      });
+        sideCard.addEventListener("click", () => scrollToCenter(document.getElementById("fc-day-" + dayEntry.day)));
+        ssFlashcardsSub.appendChild(sideCard);
 
-      // Flashcards section
-      const fcHeader = document.createElement("h1");
-      fcHeader.textContent = "Flashcards";
-      main.appendChild(fcHeader);
-
-      studyData.forEach(dayEntry => {
+        // Flashcard entries in main
         const fcDiv = document.createElement("div");
         fcDiv.className = "flashcard-entry";
         fcDiv.id = "fc-day-" + dayEntry.day;
-        const fcTitle = document.createElement("h3");
-        fcTitle.textContent = `Day ${dayEntry.day} Flashcards`;
-        fcDiv.appendChild(fcTitle);
-
-        fetch(`flashcards/day${dayEntry.day}.txt`)
-          .then(res => {
-            if(!res.ok) throw new Error("No flashcards for this day");
-            return res.text();
-          })
-          .then(txt => {
-            const lines = txt.split("\n").filter(line => line.trim() && !line.startsWith("#"));
-            lines.forEach((line, index) => {
-              const [title, answer] = line.split("\t");
-              if(!title || !answer) return;
-              const questionDiv = document.createElement("div");
-              questionDiv.className = "flashcard-question";
-              questionDiv.innerHTML = `${index + 1}) ${title}`;
-
-              const answerDiv = document.createElement("div");
-              answerDiv.className = "flashcard-answer";
-              answerDiv.innerHTML = answer;
-
-              questionDiv.addEventListener("click", () => {
-                answerDiv.style.display = answerDiv.style.display === "block" ? "none" : "block";
-              });
-
-              fcDiv.appendChild(questionDiv);
-              fcDiv.appendChild(answerDiv);
-
-              renderMathInElement(questionDiv, {delimiters: [{left:"\\[", right:"\\]"}]});
-              renderMathInElement(answerDiv, {delimiters: [{left:"\\[", right:"\\]"}]});
-            });
-          })
-          .catch(err => {
-            const msg = document.createElement("div");
-            msg.textContent = "No flashcards for this day.";
-            msg.style.fontStyle = "italic";
-            fcDiv.appendChild(msg);
+        let html = `<h3>Day ${dayEntry.day} Flashcards</h3>`;
+        if(dayEntry.flashcards && dayEntry.flashcards.length){
+          dayEntry.flashcards.forEach((fc, i) => {
+            html += `<div class="flashcard-question">${i+1}) ${fc.question}</div>
+                     <div class="flashcard-answer">${fc.answer}</div>`;
           });
-
+        } else {
+          html += `<div>No flashcards available for this day.</div>`;
+        }
+        fcDiv.innerHTML = html;
         main.appendChild(fcDiv);
+      });
+
+      // Enable expand/collapse for questions
+      document.querySelectorAll(".flashcard-question").forEach(q => {
+        q.addEventListener("click", () => {
+          const ans = q.nextElementSibling;
+          ans.style.display = ans.style.display === "block" ? "none" : "block";
+        });
+      });
+
+      // Self-study summary button
+      selfStudyBtn.addEventListener("click", () => {
+        main.style.display = "none";
+        selfStudyPage.style.display = "block";
+
+        // Count days with flashcards
+        const dayCount = studyData.filter(d => d.flashcards && d.flashcards.length).length;
+        document.getElementById("ss-day-count").textContent = dayCount;
+
+        const plans = [
+          {name: "Stewart's Calculus (Chapters 3-11)", status: "completed"},
+          {name: "Lay's Linear Algebra (Chapters 1-6.1)", status: "completed"},
+          {name: "Vellerman's Intro to Proofs", status: "ongoing"},
+          {name: "Abbott's Intro to Real Analysis", status: "planned"},
+          {name: "Friedberg's Real Analysis", status: "planned"},
+          {name: "Stewart's Calculus (Chapters 12-16)", status: "planned"},
+          {name: "Resnick's Physics (Chapters 1-20)", status: "planned"},
+          {name: "Python (Basics, Numpy, Pandas)", status: "planned"}
+        ];
+
+        const ssPlansDiv = document.getElementById("ss-plans");
+        ssPlansDiv.innerHTML = "";
+        plans.forEach(p => {
+          let color = p.status === "completed" ? "green" : p.status === "ongoing" ? "orange" : "red";
+          ssPlansDiv.innerHTML += `<div style="margin-bottom:10px;"><span class="status-square" style="background:${color}"></span>${p.name}</div>`;
+        });
       });
     })
     .catch(err => console.error("Failed to load study log JSON:", err));
