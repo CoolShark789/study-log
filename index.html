@@ -9,7 +9,7 @@
 <style>
 body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
 #sidebar { width: 200px; background: #f0f0f0; padding: 20px; overflow-y: auto; }
-#content { flex: 1; padding: 20px; overflow-y: auto; position: relative; }
+#content { flex: 1; padding: 20px; overflow-y: auto; position: relative; scroll-behavior: smooth; }
 
 .folder-title { cursor: pointer; margin-bottom: 8px; font-weight: bold; }
 .folder-content { display: none; margin-left: 15px; }
@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const studyData = await fetch("study_log.json").then(r => r.json());
 
-  // Study Log folder
+  // Build Study Log folder (single long page)
   const studyFolder = document.createElement("div");
   studyFolder.classList.add("folder");
   studyFolder.innerHTML = `<div class="folder-title">Study Log</div>`;
@@ -88,12 +88,39 @@ document.addEventListener("DOMContentLoaded", async () => {
     const div = document.createElement("div");
     div.textContent = `Day ${entry.day} — ${entry.date}`;
     div.classList.add("file-item");
-    div.addEventListener("click", () => showStudyLog(entry));
+    div.addEventListener("click", () => scrollToDay(entry.day));
     studyList.appendChild(div);
   });
-
   studyFolder.appendChild(studyList);
   sidebar.appendChild(studyFolder);
+
+  // Full study log rendered at once
+  const fullContainer = document.createElement("div");
+  fullContainer.id = "full-study-log";
+  studyData.forEach(entry => {
+    const section = document.createElement("section");
+    section.id = `day-${entry.day}`;
+    section.style.marginBottom = "40px";
+    section.innerHTML = `<h2>Day ${entry.day} — ${entry.date}</h2>`;
+    const ul = document.createElement("ul");
+    entry.topics.forEach(t => {
+      const li = document.createElement("li");
+      li.textContent = t;
+      ul.appendChild(li);
+    });
+    section.appendChild(ul);
+    fullContainer.appendChild(section);
+  });
+  content.appendChild(fullContainer);
+
+  function scrollToDay(dayNumber) {
+    const section = document.getElementById(`day-${dayNumber}`);
+    if (section) {
+      const rect = section.getBoundingClientRect();
+      const offset = rect.top + window.scrollY - (window.innerHeight / 2) + (rect.height / 2);
+      window.scrollTo({ top: offset, behavior: "smooth" });
+    }
+  }
 
   // Flashcards folder
   const flashFolder = document.createElement("div");
@@ -115,38 +142,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   flashFolder.appendChild(flashList);
   sidebar.appendChild(flashFolder);
 
-  // Self-study folder
-  const selfStudyFolder = document.createElement("div");
-  selfStudyFolder.classList.add("folder");
-  selfStudyFolder.innerHTML = `<div class="folder-title">Self-Study</div>`;
-  const selfStudyList = document.createElement("div");
-  selfStudyList.classList.add("folder-content");
-  ["Folder 1", "Folder 2"].forEach(name => {
-    const div = document.createElement("div");
-    div.textContent = name;
-    div.classList.add("file-item");
-    selfStudyList.appendChild(div);
-  });
-  selfStudyFolder.appendChild(selfStudyList);
-  sidebar.appendChild(selfStudyFolder);
-
-  // Folder toggles
   document.querySelectorAll(".folder-title").forEach(title => {
     title.addEventListener("click", () => {
       title.parentElement.classList.toggle("open");
     });
   });
-
-  function showStudyLog(entry) {
-    content.innerHTML = `<h2>Day ${entry.day} — ${entry.date}</h2>`;
-    const ul = document.createElement("ul");
-    entry.topics.forEach(t => {
-      const li = document.createElement("li");
-      li.textContent = t;
-      ul.appendChild(li);
-    });
-    content.appendChild(ul);
-  }
 
   async function loadFlashcards(dayNumber) {
     content.innerHTML = `<h2>Day ${dayNumber} Flashcards</h2>`;
@@ -184,6 +184,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  // Self-study stats popup
   selfStudyBtn.addEventListener("click", async () => {
     if (selfStudyPage.style.opacity === "0" || !selfStudyPage.style.opacity) {
       selfStudyPage.style.opacity = "1";
