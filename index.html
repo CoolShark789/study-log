@@ -40,17 +40,23 @@ document.addEventListener("DOMContentLoaded", () => {
   const sidebar = document.getElementById("sidebar");
   const main = document.getElementById("main");
 
+  function scrollToCenter(el) {
+    const rect = el.getBoundingClientRect();
+    const scrollTop = window.scrollY || window.pageYOffset;
+    const elCenter = rect.top + scrollTop - window.innerHeight / 2 + rect.height / 2;
+    window.scrollTo({ top: elCenter, behavior: "smooth" });
+  }
+
   // Collapsible folders
   document.querySelectorAll(".sidebar-folder").forEach(folder => {
     const arrow = folder.querySelector(".arrow");
     const sub = folder.querySelector(".sidebar-sub");
 
     folder.addEventListener("click", e => {
-      if (e.target !== folder) return; // Avoid triggering on sub-item click
+      if (e.target !== folder) return;
       const isOpen = sub.style.display === "block";
       sub.style.display = isOpen ? "none" : "block";
       arrow.classList.toggle("open", !isOpen);
-      // Scroll to top of folder section if folder clicked
       if(!isOpen) main.scrollTo({ top: 0, behavior: "smooth" });
     });
   });
@@ -75,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
         sideDay.className = "sidebar-day";
         sideDay.textContent = "Day " + dayEntry.day;
         sideDay.addEventListener("click", () => {
-          document.getElementById("day-" + dayEntry.day).scrollIntoView({ behavior: "smooth" });
+          scrollToCenter(document.getElementById("day-" + dayEntry.day));
         });
         daysSub.appendChild(sideDay);
 
@@ -84,14 +90,13 @@ document.addEventListener("DOMContentLoaded", () => {
         sideCard.className = "sidebar-day";
         sideCard.textContent = "Day " + dayEntry.day;
         sideCard.addEventListener("click", () => {
-          // Scroll to dummy flashcard entry
           const fc = document.getElementById("fc-day-" + dayEntry.day);
-          if(fc) fc.scrollIntoView({ behavior: "smooth" });
+          if(fc) scrollToCenter(fc);
         });
         flashcardsSub.appendChild(sideCard);
       });
 
-      // Create dummy flashcards page below main study log
+      // Dummy flashcards section
       const fcHeader = document.createElement("h1");
       fcHeader.textContent = "Flashcards";
       main.appendChild(fcHeader);
