@@ -2,18 +2,37 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Study Log</title>
+<title>Study Log & Flashcards</title>
 <style>
 body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
-#sidebar { width: 150px; background: #f0f0f0; padding: 20px; overflow-y: auto; }
+#sidebar { width: 200px; background: #f0f0f0; padding: 20px; overflow-y: auto; }
 #main { flex: 1; padding: 20px; overflow-y: auto; }
-.sidebar-day { margin-bottom: 5px; cursor: pointer; }
+
+.sidebar-folder { cursor: pointer; margin-bottom: 10px; }
+.sidebar-folder:hover { font-weight: bold; }
+.sidebar-folder .arrow { display: inline-block; width: 12px; transition: transform 0.2s; }
+.sidebar-folder .arrow.open { transform: rotate(90deg); }
+
+.sidebar-sub { display: none; margin-left: 15px; margin-bottom: 10px; }
+.sidebar-day { cursor: pointer; margin-bottom: 3px; }
+
 .entry { margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+.flashcard-entry { margin-bottom: 15px; border: 1px solid #aaa; padding: 10px; border-radius: 5px; }
 </style>
 </head>
 <body>
 
-<div id="sidebar"><h3>Days</h3></div>
+<div id="sidebar">
+  <div class="sidebar-folder" data-target="days">
+    <span class="arrow">▶</span> Days
+    <div class="sidebar-sub" id="days-sub"></div>
+  </div>
+  <div class="sidebar-folder" data-target="flashcards">
+    <span class="arrow">▶</span> Flashcards
+    <div class="sidebar-sub" id="flashcards-sub"></div>
+  </div>
+</div>
+
 <div id="main"></div>
 
 <script>
@@ -21,11 +40,29 @@ document.addEventListener("DOMContentLoaded", () => {
   const sidebar = document.getElementById("sidebar");
   const main = document.getElementById("main");
 
+  // Collapsible folders
+  document.querySelectorAll(".sidebar-folder").forEach(folder => {
+    const arrow = folder.querySelector(".arrow");
+    const sub = folder.querySelector(".sidebar-sub");
+
+    folder.addEventListener("click", e => {
+      if (e.target !== folder) return; // Avoid triggering on sub-item click
+      const isOpen = sub.style.display === "block";
+      sub.style.display = isOpen ? "none" : "block";
+      arrow.classList.toggle("open", !isOpen);
+      // Scroll to top of folder section if folder clicked
+      if(!isOpen) main.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  });
+
   fetch("study_log.json")
     .then(res => res.json())
     .then(studyData => {
+      const daysSub = document.getElementById("days-sub");
+      const flashcardsSub = document.getElementById("flashcards-sub");
+
       studyData.forEach(dayEntry => {
-        // Create main entry
+        // Main study log entry
         const dayDiv = document.createElement("div");
         dayDiv.className = "entry";
         dayDiv.id = "day-" + dayEntry.day;
@@ -33,14 +70,43 @@ document.addEventListener("DOMContentLoaded", () => {
         dayDiv.innerHTML = `<h2>Day ${dayEntry.day} [${dayEntry.date}]</h2><ul>${topicsHtml}</ul>`;
         main.appendChild(dayDiv);
 
-        // Create sidebar link
-        const sideLink = document.createElement("div");
-        sideLink.className = "sidebar-day";
-        sideLink.textContent = "Day " + dayEntry.day;
-        sideLink.addEventListener("click", () => {
+        // Sidebar day under "Days"
+        const sideDay = document.createElement("div");
+        sideDay.className = "sidebar-day";
+        sideDay.textContent = "Day " + dayEntry.day;
+        sideDay.addEventListener("click", () => {
           document.getElementById("day-" + dayEntry.day).scrollIntoView({ behavior: "smooth" });
         });
-        sidebar.appendChild(sideLink);
+        daysSub.appendChild(sideDay);
+
+        // Sidebar day under "Flashcards"
+        const sideCard = document.createElement("div");
+        sideCard.className = "sidebar-day";
+        sideCard.textContent = "Day " + dayEntry.day;
+        sideCard.addEventListener("click", () => {
+          // Scroll to dummy flashcard entry
+          const fc = document.getElementById("fc-day-" + dayEntry.day);
+          if(fc) fc.scrollIntoView({ behavior: "smooth" });
+        });
+        flashcardsSub.appendChild(sideCard);
+      });
+
+      // Create dummy flashcards page below main study log
+      const fcHeader = document.createElement("h1");
+      fcHeader.textContent = "Flashcards";
+      main.appendChild(fcHeader);
+
+      studyData.forEach(dayEntry => {
+        const fcDiv = document.createElement("div");
+        fcDiv.className = "flashcard-entry";
+        fcDiv.id = "fc-day-" + dayEntry.day;
+        fcDiv.innerHTML = `<h3>Day ${dayEntry.day} Flashcards</h3>
+          <ul>
+            <li>Dummy flashcard 1</li>
+            <li>Dummy flashcard 2</li>
+            <li>Dummy flashcard 3</li>
+          </ul>`;
+        main.appendChild(fcDiv);
       });
     })
     .catch(err => console.error("Failed to load study log JSON:", err));

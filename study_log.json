@@ -9,7 +9,6 @@
       "Implicit Differentiation",
       "Derivatives of Logarithms"
     ],
-    "flashcards": []
   },
   {
     "day": 2,
@@ -23,7 +22,6 @@
       "Hyperbolic Identities/exponential forms",
       "Log forms of Inverse Hyperbolic Functions"
     ],
-    "flashcards": []
   },
   {
     "day": 3,
@@ -32,7 +30,6 @@
       "Stewart: Sections 4.4",
       "l'Hospital's Rule and indeterminate forms"
     ],
-    "flashcards": []
   },
   {
     "day": 4,
@@ -47,7 +44,6 @@
       "Substitution Rule: technique, boundaries, symmetrical functions",
       "Boundaries when differentiating nested integrals"
     ],
-    "flashcards": []
   },
   {
     "day": 5,
@@ -60,7 +56,6 @@
       "Average value of a Function",
       "Integration by Parts"
     ],
-    "flashcards": []
   },
   {
     "day": 6,
@@ -74,7 +69,6 @@
       "Half angle identity and derivation",
       "Partial fractions and different cases to solve them"
     ],
-    "flashcards": []
   },
   {
     "day": 7,
@@ -87,7 +81,6 @@
       "Mean Value Theorem",
       "Arc Length and derivation"
     ],
-    "flashcards": []
   },
   {
     "day": 8,
@@ -101,7 +94,6 @@
       "GitHub and LaTeX setup",
       "Logistic and separable differential equations"
     ],
-    "flashcards": []
   },
   {
     "day": 9,
@@ -115,7 +107,6 @@
       "Predator-prey systems",
       "Parametric curve: first and second derivatives, arc length, surface area, velocity and distance traveled of a particle through those curves"
     ],
-    "flashcards": []
   },
   {
     "day": 10,
@@ -129,7 +120,6 @@
       "Arc Length of a polar curve with derivation",
       "Tangent of polar curves"
     ],
-    "flashcards": []
   },
   {
     "day": 11,
@@ -143,13 +133,11 @@
       "r^n sequence convergence, n!/n^n sequence",
       "bounded sequence definition"
     ],
-    "flashcards": []
   },
   {
     "day": 12,
     "date": "08.10.2025",
     "topics": ["Rest"],
-    "flashcards": []
   },
   {
     "day": 13,
@@ -163,7 +151,6 @@
       "Integral and P-Series Tests",
       "Remainder estimate of the Integral Test and approximating Series value through it"
     ],
-    "flashcards": []
   },
   {
     "day": 14,
@@ -176,7 +163,6 @@
       "Ratio Test and Root Test",
       "Power Series: Form, Interval and Radius of Convergence"
     ],
-    "flashcards": []
   },
   {
     "day": 15,
@@ -187,7 +173,6 @@
       "Taylor and Maclaurin Series",
       "Maclaurin Series of sinx, cosx, arctanx, e^x, ln(1+x), 1/(1-x)"
     ],
-    "flashcards": []
   },
   {
     "day": 16,
@@ -202,7 +187,6 @@
       "Multiplying matrix by vector (matrix equation)",
       "Properties of the Matrix-Vector product"
     ],
-    "flashcards": []
   },
   {
     "day": 17,
@@ -217,7 +201,6 @@
       "Range, Image, Transformation (Mapping), Domain, Codomain",
       "Linear Transformation"
     ],
-    "flashcards": []
   },
   {
     "day": 18,
@@ -232,7 +215,6 @@
       "Elementary Matrices",
       "Characterizations of Invertible Matrices"
     ],
-    "flashcards": []
   },
   {
     "day": 19,
@@ -242,7 +224,6 @@
       "Partitioned Matrices",
       "Matrix Factorization/LU Factorization algorithm (solve Ax=b, what it means, how to factor..)"
     ],
-    "flashcards": []
   },
   {
     "day": 20,
@@ -255,7 +236,6 @@
       "Determinant of an inverse matrix",
       "Categorizing/searching for more theoretical textbooks"
     ],
-    "flashcards": []
   },
   {
     "day": 21,
@@ -269,7 +249,6 @@
       "Null Space, Column Space",
       "Basis of a Subspace, Basis of Col(A) and Nul(A); Spanning Set Theorem"
     ],
-    "flashcards": []
   },
   {
     "day": 22,
@@ -285,7 +264,6 @@
       "Change of Basis, Change-of-coordinate matrix for B and C bases (P_{B->C})",
       "Change-of-coordinate method through standard basis"
     ],
-    "flashcards": []
   },
   {
     "day": 23,
@@ -296,13 +274,11 @@
       "The Characteristic Equation, Similar Matrices",
       "Diagonal Matrix, Diagonalization, The Diagonalization Theorem"
     ],
-    "flashcards": []
   },
   {
     "day": 24,
     "date": "20.10.2025",
     "topics": ["Rest"],
-    "flashcards": []
   },
   {
     "day": 25,
@@ -313,7 +289,6 @@
       "Diagonal Matrix Representation Theorem",
       "Matrix in another base conversion"
     ],
-    "flashcards": []
   },
   {
     "day": 26,
@@ -324,7 +299,6 @@
       "Orthogonal vectors, Orthogonal complement, Orthogonal relation between Null, Row and Column spaces",
       "Angles and vectors"
     ],
-    "flashcards": []
   },
   {
     "day": 27,
@@ -341,7 +315,6 @@
       "Union, Intersection and Difference of Sets; Venn Diagrams",
       "Subset, Disjoint sets"
     ],
-    "flashcards": []
   },
   {
     "day": 28,
@@ -354,7 +327,6 @@
       "Quantifier Negation Laws, Abbreviations; Distributive Laws for Quantifiers",
       "Power Set, Family of Sets; Definitions of the union and intersection of family sets"
     ],
-    "flashcards": []
   },
   {
     "day": 29,
@@ -367,7 +339,6 @@
       "Prove a goal and given of the form ¬P; Proof by contradiction - method and why it works",
       "Proof of a given of the form P→Q and its contrapositive form"
     ],
-    "flashcards": []
   },
   {
     "day": 30,
@@ -382,7 +353,6 @@
       "Prove a goal and given of the form P∧Q, P∨Q, P↔Q",
       "Help is no longer needed, I have transcended"
     ],
-    "flashcards": []
   },
   {
     "day": 31,
@@ -393,9 +363,9 @@
       "Prove a goal and use a given of the form P∨Q",
       "Prove Uniqueness, prove Existence - prove a goal of the form ∃! x P(x)",
       "Use a given of the form ∃! x P(x)",
-      "Cartesian product, truth set of P(x,y)"
+      "Cartesian product, truth set of P(x,y)",
+      "Static Github website for study log"
     ],
-    "flashcards": []
   },
   {
     "day": 32,
@@ -405,7 +375,6 @@
       "Pages 225-???",
       "???"
     ],
-    "flashcards": []
   }
 ]
 
