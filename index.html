@@ -23,11 +23,11 @@ body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
 <body>
 
 <div id="sidebar">
-  <div class="sidebar-folder">
+  <div class="sidebar-folder" data-target="days">
     <span class="arrow">▶</span> Days
     <div class="sidebar-sub" id="days-sub"></div>
   </div>
-  <div class="sidebar-folder">
+  <div class="sidebar-folder" data-target="flashcards">
     <span class="arrow">▶</span> Flashcards
     <div class="sidebar-sub" id="flashcards-sub"></div>
   </div>
@@ -37,16 +37,8 @@ body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
+  const sidebar = document.getElementById("sidebar");
   const main = document.getElementById("main");
-
-  function scrollToCenter(el) {
-    const mainRect = main.getBoundingClientRect();
-    const elRect = el.getBoundingClientRect();
-    const scrollTop = main.scrollTop;
-    const elTop = elRect.top - mainRect.top + scrollTop;
-    const scrollTarget = elTop - main.clientHeight / 2 + el.offsetHeight / 2;
-    main.scrollTo({ top: scrollTarget, behavior: "smooth" });
-  }
 
   // Collapsible folders
   document.querySelectorAll(".sidebar-folder").forEach(folder => {
@@ -54,10 +46,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const sub = folder.querySelector(".sidebar-sub");
 
     folder.addEventListener("click", e => {
-      if (e.target !== folder) return;
+      if (e.target !== folder) return; // Avoid triggering on sub-item click
       const isOpen = sub.style.display === "block";
       sub.style.display = isOpen ? "none" : "block";
       arrow.classList.toggle("open", !isOpen);
+      // Scroll to top of folder section if folder clicked
       if(!isOpen) main.scrollTo({ top: 0, behavior: "smooth" });
     });
   });
@@ -82,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
         sideDay.className = "sidebar-day";
         sideDay.textContent = "Day " + dayEntry.day;
         sideDay.addEventListener("click", () => {
-          scrollToCenter(document.getElementById("day-" + dayEntry.day));
+          document.getElementById("day-" + dayEntry.day).scrollIntoView({ behavior: "smooth" });
         });
         daysSub.appendChild(sideDay);
 
@@ -91,13 +84,14 @@ document.addEventListener("DOMContentLoaded", () => {
         sideCard.className = "sidebar-day";
         sideCard.textContent = "Day " + dayEntry.day;
         sideCard.addEventListener("click", () => {
+          // Scroll to dummy flashcard entry
           const fc = document.getElementById("fc-day-" + dayEntry.day);
-          if(fc) scrollToCenter(fc);
+          if(fc) fc.scrollIntoView({ behavior: "smooth" });
         });
         flashcardsSub.appendChild(sideCard);
       });
 
-      // Dummy flashcards section
+      // Create dummy flashcards page below main study log
       const fcHeader = document.createElement("h1");
       fcHeader.textContent = "Flashcards";
       main.appendChild(fcHeader);
