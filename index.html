@@ -26,7 +26,13 @@ body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
 
 #selfStudyBtn { position: absolute; top: 10px; right: 10px; padding: 8px 12px; background: #007bff; color: #fff; border: none; cursor: pointer; border-radius: 4px; z-index: 100; }
 
-#self-study-page { display: none; text-align: center; padding: 50px; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #fff; overflow-y: auto; z-index: 99; }
+#self-study-page {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: #fff; padding: 50px; text-align: center; overflow-y: auto;
+  opacity: 0; pointer-events: none; transition: opacity 0.5s ease; z-index: 99;
+}
+#self-study-page.visible { opacity: 1; pointer-events: auto; }
+
 .status-square { display: inline-block; width: 15px; height: 15px; margin-right: 8px; vertical-align: middle; }
 </style>
 </head>
@@ -48,8 +54,7 @@ body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
 </div>
 
 <div id="self-study-page">
-  <button id="closeSelfStudy" style="position:absolute; top:10px; right:10px;">Close</button>
-  <h1 id="ss-day-count" style="font-size: 80px; margin-bottom: 40px;"></h1>
+  <h1 id="ss-day-count" style="font-size: 60px; margin-bottom: 40px;"></h1>
   <div id="ss-plans"></div>
 </div>
 
@@ -58,7 +63,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const main = document.getElementById("main");
   const selfStudyBtn = document.getElementById("selfStudyBtn");
   const selfStudyPage = document.getElementById("self-study-page");
-  const closeBtn = document.getElementById("closeSelfStudy");
 
   function scrollToCenter(el) {
     const mainRect = main.getBoundingClientRect();
@@ -69,7 +73,6 @@ document.addEventListener("DOMContentLoaded", () => {
     main.scrollTo({ top: scrollTarget, behavior: "smooth" });
   }
 
-  // Collapsible folders
   document.querySelectorAll(".sidebar-folder").forEach(folder => {
     const arrow = folder.querySelector(".arrow");
     const sub = folder.querySelector(".sidebar-sub");
@@ -84,12 +87,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
   fetch("study_log.json")
     .then(res => res.json())
-    .then(studyData => {
+    .then(async studyData => {
       const daysSub = document.getElementById("days-sub");
       const flashcardsSub = document.getElementById("flashcards-sub");
 
-      studyData.forEach(dayEntry => {
-        // Main study log entry
+      // Helper to check if flashcard file exists
+      async function fileExists(url) {
+        try {
+          const res = await fetch(url, { method: "HEAD" });
+          return res.ok;
+        } catch {
+          return false;
+        }
+      }
+
+      // Sidebar & main entries
+      for (let dayEntry of studyData) {
         const dayDiv = document.createElement("div");
         dayDiv.className = "entry";
         dayDiv.id = "day-" + dayEntry.day;
@@ -97,32 +110,29 @@ document.addEventListener("DOMContentLoaded", () => {
         dayDiv.innerHTML = `<h2>Day ${dayEntry.day} [${dayEntry.date}]</h2><ul>${topicsHtml}</ul>`;
         main.appendChild(dayDiv);
 
-        // Sidebar day under "Days"
         const sideDay = document.createElement("div");
         sideDay.className = "sidebar-day";
         sideDay.textContent = "Day " + dayEntry.day;
-        sideDay.addEventListener("click", () => {
-          scrollToCenter(document.getElementById("day-" + dayEntry.day));
-        });
+        sideDay.addEventListener("click", () => scrollToCenter(dayDiv));
         daysSub.appendChild(sideDay);
 
-        // Sidebar day under "Flashcards"
         const sideCard = document.createElement("div");
         sideCard.className = "sidebar-day";
         sideCard.textContent = "Day " + dayEntry.day;
-        sideCard.addEventListener("click", () => {
+        sideCard.addEventListener("click", async () => {
           const fc = document.getElementById("fc-day-" + dayEntry.day);
           if(fc) scrollToCenter(fc);
         });
         flashcardsSub.appendChild(sideCard);
-      });
+      }
 
       // Flashcards section
       const fcHeader = document.createElement("h1");
       fcHeader.textContent = "Flashcards";
       main.appendChild(fcHeader);
 
-      studyData.forEach(dayEntry => {
+      const flashcardDays = [];
+      for (let dayEntry of studyData) {
         const fcDiv = document.createElement("div");
         fcDiv.className = "flashcard-entry";
         fcDiv.id = "fc-day-" + dayEntry.day;
@@ -130,81 +140,71 @@ document.addEventListener("DOMContentLoaded", () => {
         fcTitle.textContent = `Day ${dayEntry.day} Flashcards`;
         fcDiv.appendChild(fcTitle);
 
-        fetch(`flashcards/day${dayEntry.day}.txt`)
-          .then(res => {
-            if(!res.ok) throw new Error("No flashcards for this day");
-            return res.text();
-          })
-          .then(txt => {
-            const lines = txt.split("\n").filter(line => line.trim() && !line.startsWith("#"));
-            lines.forEach((line, index) => {
-              const [title, answer] = line.split("\t");
-              if(!title || !answer) return;
-              const questionDiv = document.createElement("div");
-              questionDiv.className = "flashcard-question";
-              questionDiv.innerHTML = `${index + 1}) ${title}`;
+        const path = `flashcards/day${dayEntry.day}.txt`;
+        if(await fileExists(path)) flashcardDays.push(dayEntry.day);
 
-              const answerDiv = document.createElement("div");
-              answerDiv.className = "flashcard-answer";
-              answerDiv.innerHTML = answer;
+        try {
+          const txt = await fetch(path).then(r => { if(!r.ok) throw 0; return r.text(); });
+          const lines = txt.split("\n").filter(l => l.trim() && !l.startsWith("#"));
+          lines.forEach((line, index) => {
+            const [title, answer] = line.split("\t");
+            if(!title || !answer) return;
 
-              questionDiv.addEventListener("click", () => {
-                answerDiv.style.display = answerDiv.style.display === "block" ? "none" : "block";
-              });
+            const questionDiv = document.createElement("div");
+            questionDiv.className = "flashcard-question";
+            questionDiv.innerHTML = `${index+1}) ${title}`;
 
-              fcDiv.appendChild(questionDiv);
-              fcDiv.appendChild(answerDiv);
+            const answerDiv = document.createElement("div");
+            answerDiv.className = "flashcard-answer";
+            answerDiv.innerHTML = answer;
 
-              renderMathInElement(questionDiv, {delimiters: [{left:"\\[", right:"\\]"}]});
-              renderMathInElement(answerDiv, {delimiters: [{left:"\\[", right:"\\]"}]});
+            questionDiv.addEventListener("click", () => {
+              answerDiv.style.display = answerDiv.style.display === "block" ? "none" : "block";
             });
-          })
-          .catch(err => {
-            const msg = document.createElement("div");
-            msg.textContent = "No flashcards for this day.";
-            msg.style.fontStyle = "italic";
-            fcDiv.appendChild(msg);
+
+            fcDiv.appendChild(questionDiv);
+            fcDiv.appendChild(answerDiv);
+
+            renderMathInElement(questionDiv, {delimiters: [{left:"\\[", right:"\\]"}]});
+            renderMathInElement(answerDiv, {delimiters: [{left:"\\[", right:"\\]"}]});
           });
+        } catch {
+          const msg = document.createElement("div");
+          msg.textContent = "No flashcards for this day.";
+          msg.style.fontStyle = "italic";
+          fcDiv.appendChild(msg);
+        }
 
         main.appendChild(fcDiv);
-      });
+      }
 
-      // Self-study summary button
+      // Self-study toggle button
       selfStudyBtn.addEventListener("click", () => {
-        selfStudyPage.style.display = "block";
+        selfStudyPage.classList.toggle("visible");
+        if(selfStudyPage.classList.contains("visible")) {
+          document.getElementById("ss-day-count").textContent = `Days self-studied: ${flashcardDays.length}`;
 
-        // Count days with flashcards
-        const dayCount = studyData.filter(d => {
-          // Check if corresponding txt exists? For simplicity, count all days
-          return true;
-        }).length;
-        document.getElementById("ss-day-count").textContent = dayCount;
+          const plans = [
+            {name: "Stewart's Calculus (Chapters 3-11)", status: "completed"},
+            {name: "Lay's Linear Algebra (Chapters 1-6.1)", status: "completed"},
+            {name: "Vellerman's Intro to Proofs", status: "ongoing"},
+            {name: "Abbott's Intro to Real Analysis", status: "planned"},
+            {name: "Friedberg's Real Analysis", status: "planned"},
+            {name: "Stewart's Calculus (Chapters 12-16)", status: "planned"},
+            {name: "Resnick's Physics (Chapters 1-20)", status: "planned"},
+            {name: "Python (Basics, Numpy, Pandas)", status: "planned"}
+          ];
 
-        const plans = [
-          {name: "Stewart's Calculus (Chapters 3-11)", status: "completed"},
-          {name: "Lay's Linear Algebra (Chapters 1-6.1)", status: "completed"},
-          {name: "Vellerman's Intro to Proofs", status: "ongoing"},
-          {name: "Abbott's Intro to Real Analysis", status: "planned"},
-          {name: "Friedberg's Real Analysis", status: "planned"},
-          {name: "Stewart's Calculus (Chapters 12-16)", status: "planned"},
-          {name: "Resnick's Physics (Chapters 1-20)", status: "planned"},
-          {name: "Python (Basics, Numpy, Pandas)", status: "planned"}
-        ];
-
-        const ssPlansDiv = document.getElementById("ss-plans");
-        ssPlansDiv.innerHTML = "";
-        plans.forEach(p => {
-          let color = p.status === "completed" ? "green" : p.status === "ongoing" ? "orange" : "red";
-          ssPlansDiv.innerHTML += `<div style="margin-bottom:10px;"><span class="status-square" style="background:${color}"></span>${p.name}</div>`;
-        });
+          const ssPlansDiv = document.getElementById("ss-plans");
+          ssPlansDiv.innerHTML = "";
+          plans.forEach(p => {
+            let color = p.status === "completed" ? "green" : p.status === "ongoing" ? "orange" : "red";
+            ssPlansDiv.innerHTML += `<div style="margin-bottom:10px;"><span class="status-square" style="background:${color}"></span>${p.name}</div>`;
+          });
+        }
       });
 
-      closeBtn.addEventListener("click", () => {
-        selfStudyPage.style.display = "none";
-      });
-
-    })
-    .catch(err => console.error("Failed to load study log JSON:", err));
+    }).catch(err => console.error("Failed to load study log JSON:", err));
 });
 </script>
 
