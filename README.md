@@ -11,3 +11,4 @@ Each day lists the topics studied and short summary by topics
 ---
 
 https://coolshark789.github.io/study-log/
+(In case someone stumbles upon this - I have no life and have an obsession with studying, so I wouldn't recommend actually studying in that pace if you want to enjoy your free time)
