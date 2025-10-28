@@ -9,108 +9,75 @@
 <style>
 body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
 #sidebar { width: 200px; background: #f0f0f0; padding: 20px; overflow-y: auto; }
-#main { flex: 1; padding: 20px; overflow-y: auto; position: relative; }
+#content { flex: 1; padding: 20px; overflow-y: auto; position: relative; }
 
-.sidebar-folder { cursor: pointer; margin-bottom: 10px; }
-.sidebar-folder .arrow { display: inline-block; width: 12px; transition: transform 0.2s; }
-.sidebar-folder .arrow.open { transform: rotate(90deg); }
+.folder-title { cursor: pointer; margin-bottom: 8px; font-weight: bold; }
+.folder-content { display: none; margin-left: 15px; }
+.folder.open .folder-content { display: block; }
 
-.sidebar-sub { display: none; margin-left: 15px; margin-bottom: 10px; }
-.sidebar-day { cursor: pointer; margin-bottom: 3px; padding: 2px 5px; border-radius: 3px; }
-.sidebar-day:hover { background: white; font-weight: bold; }
+.file-item { cursor: pointer; padding: 5px; border-radius: 4px; margin-bottom: 3px; transition: background 0.2s, font-weight 0.2s; }
+.file-item:hover { background: white; font-weight: bold; }
 
-.entry { margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
-.flashcard-entry { margin-bottom: 30px; border: 1px solid #aaa; padding: 15px; border-radius: 5px; }
-.flashcard-question { cursor: pointer; margin-bottom: 10px; font-weight: bold; }
-.flashcard-answer { display: none; margin-left: 15px; margin-bottom: 15px; }
-
-#selfStudyBtn {
-  position: fixed; top: 10px; right: 10px;
-  padding: 8px 12px; background: #007bff; color: #fff;
-  border: none; cursor: pointer; border-radius: 4px; z-index: 1000;
+#self-study-btn {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: #222;
+  color: white;
+  border: 1px solid #555;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 1000;
 }
 
 #self-study-page {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: #fff; padding: 50px; text-align: center; overflow-y: auto;
-  opacity: 0; pointer-events: none; transition: opacity 0.5s ease; z-index: 999;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.95);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  z-index: 999;
 }
-#self-study-page.visible { opacity: 1; pointer-events: auto; }
 
-.status-square { display: inline-block; width: 15px; height: 15px; margin-right: 8px; vertical-align: middle; }
+.status-square {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
 </style>
 </head>
 <body>
 
-<div id="sidebar">
-  <div class="sidebar-folder" data-target="days">
-    <span class="arrow">▶</span> Days
-    <div class="sidebar-sub" id="days-sub"></div>
-  </div>
-  <div class="sidebar-folder" data-target="flashcards">
-    <span class="arrow">▶</span> Flashcards
-    <div class="sidebar-sub" id="flashcards-sub"></div>
-  </div>
-</div>
-
-<div id="main">
-  <button id="selfStudyBtn">Self-Study Summary</button>
-</div>
+<div id="sidebar"></div>
+<div id="content"></div>
+<button id="self-study-btn">Self-Study Stats</button>
 
 <div id="self-study-page">
-  <h1 id="ss-day-count" style="font-size: 60px; margin-bottom: 40px;"></h1>
-  <div id="ss-plans"></div>
+  <h1 id="ss-day-count" style="font-size:50px;margin-bottom:30px;"></h1>
+  <div id="ss-total-cards" style="font-size:40px;margin-bottom:40px;"></div>
+  <div id="ss-plans" style="font-size:20px;"></div>
 </div>
 
 <script>
 document.addEventListener("DOMContentLoaded", async () => {
   const sidebar = document.getElementById("sidebar");
   const content = document.getElementById("content");
-  const selfStudyBtn = document.createElement("button");
-  selfStudyBtn.id = "self-study-btn";
-  selfStudyBtn.textContent = "Self-Study Stats";
-  document.body.appendChild(selfStudyBtn);
-
-  Object.assign(selfStudyBtn.style, {
-    position: "fixed",
-    top: "10px",
-    right: "10px",
-    background: "#222",
-    color: "white",
-    border: "1px solid #555",
-    padding: "10px 15px",
-    borderRadius: "8px",
-    cursor: "pointer",
-    zIndex: "1000"
-  });
-
-  const selfStudyPage = document.createElement("div");
-  selfStudyPage.id = "self-study-page";
-  Object.assign(selfStudyPage.style, {
-    position: "fixed",
-    top: "0",
-    left: "0",
-    width: "100%",
-    height: "100%",
-    background: "rgba(0,0,0,0.95)",
-    color: "white",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    opacity: "0",
-    pointerEvents: "none",
-    transition: "opacity 0.4s ease"
-  });
-  document.body.appendChild(selfStudyPage);
-
-  selfStudyPage.innerHTML = `
-    <h1 id="ss-day-count" style="font-size:50px;margin-bottom:30px;"></h1>
-    <div id="ss-total-cards" style="font-size:40px;margin-bottom:40px;"></div>
-    <div id="ss-plans" style="font-size:20px;"></div>
-  `;
+  const selfStudyBtn = document.getElementById("self-study-btn");
+  const selfStudyPage = document.getElementById("self-study-page");
 
   const studyData = await fetch("study_log.json").then(r => r.json());
+
+  // Days folder
   const daysFolder = document.createElement("div");
   daysFolder.classList.add("folder");
   daysFolder.innerHTML = `<div class="folder-title">Days</div>`;
@@ -126,10 +93,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     item.onclick = () => loadFlashcards(entry.day);
     dayList.appendChild(item);
   }
-
   daysFolder.appendChild(dayList);
   sidebar.appendChild(daysFolder);
 
+  // Self-study folder
   const selfStudyFolder = document.createElement("div");
   selfStudyFolder.classList.add("folder");
   selfStudyFolder.innerHTML = `<div class="folder-title">Self-Study</div>`;
@@ -144,15 +111,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   selfStudyFolder.appendChild(selfStudyList);
   sidebar.appendChild(selfStudyFolder);
 
+  // Toggle folders
   document.querySelectorAll(".folder-title").forEach(title => {
     title.addEventListener("click", () => {
       title.parentElement.classList.toggle("open");
     });
-  });
-
-  document.querySelectorAll(".file-item").forEach(item => {
-    item.addEventListener("mouseenter", () => item.style.background = "#333");
-    item.addEventListener("mouseleave", () => item.style.background = "transparent");
   });
 
   async function loadFlashcards(dayNumber) {
@@ -180,56 +143,55 @@ document.addEventListener("DOMContentLoaded", async () => {
         div.addEventListener("click", () => {
           const ans = div.querySelector(".answer");
           ans.style.display = ans.style.display === "none" ? "block" : "none";
-          MathJax.typesetPromise([ans]);
+          renderMathInElement(ans, { delimiters: [{left: "\\[", right: "\\]", display: true}] });
         });
         container.appendChild(div);
       });
       content.appendChild(container);
-      MathJax.typesetPromise();
+      renderMathInElement(content, { delimiters: [{left: "\\[", right: "\\]", display: true}] });
     } catch {
       content.innerHTML += "<p>Error loading flashcards.</p>";
     }
   }
 
+  // Self-study summary
   selfStudyBtn.addEventListener("click", async () => {
-    if (selfStudyPage.style.opacity === "0") {
+    if (selfStudyPage.style.opacity === "0" || !selfStudyPage.style.opacity) {
       selfStudyPage.style.opacity = "1";
       selfStudyPage.style.pointerEvents = "auto";
-      const flashcardDays = [];
-      for (let dayEntry of studyData) {
-        try {
-          const txt = await fetch(`flashcards/day${dayEntry.day}.txt`).then(r => { if (!r.ok) throw 0; return r.text(); });
-          const lines = txt.split("\n").filter(l => l.trim() && !l.startsWith("#"));
-          if (lines.length) flashcardDays.push(dayEntry.day);
-        } catch {}
-      }
-      document.getElementById("ss-day-count").textContent = `Days self-studied: ${flashcardDays.length}`;
 
+      const flashcardDays = [];
       let totalFlashcards = 0;
       for (let dayEntry of studyData) {
         try {
           const txt = await fetch(`flashcards/day${dayEntry.day}.txt`).then(r => { if (!r.ok) throw 0; return r.text(); });
           const lines = txt.split("\n").filter(l => l.trim() && !l.startsWith("#"));
-          totalFlashcards += lines.length;
+          if (lines.length) {
+            flashcardDays.push(dayEntry.day);
+            totalFlashcards += lines.length;
+          }
         } catch {}
       }
+
+      document.getElementById("ss-day-count").textContent = `Days self-studied: ${flashcardDays.length}`;
       document.getElementById("ss-total-cards").textContent = `Total flashcards: ${totalFlashcards}`;
 
       const plans = [
-        {name: "Stewart's Calculus (Chapters 3-11)", status: "completed"},
-        {name: "Lay's Linear Algebra (Chapters 1-6.1)", status: "completed"},
+        {name: "Stewart's Calculus (Chapters 3–11)", status: "completed"},
+        {name: "Lay's Linear Algebra (Chapters 1–6.1)", status: "completed"},
         {name: "Velleman’s Intro to Proofs", status: "ongoing"},
         {name: "Abbott’s Intro to Real Analysis", status: "planned"},
         {name: "Friedberg’s Real Analysis", status: "planned"},
-        {name: "Stewart’s Calculus (Chapters 12-16)", status: "planned"},
-        {name: "Resnick’s Physics (Chapters 1-20)", status: "planned"},
+        {name: "Stewart’s Calculus (Chapters 12–16)", status: "planned"},
+        {name: "Resnick’s Physics (Chapters 1–20)", status: "planned"},
         {name: "Python (Basics, Numpy, Pandas)", status: "planned"}
       ];
+
       const ssPlansDiv = document.getElementById("ss-plans");
       ssPlansDiv.innerHTML = "";
       plans.forEach(p => {
-        let color = p.status === "completed" ? "green" : p.status === "ongoing" ? "orange" : "red";
-        ssPlansDiv.innerHTML += `<div style="margin-bottom:10px;"><span style="display:inline-block;width:15px;height:15px;background:${color};margin-right:8px;"></span>${p.name}</div>`;
+        const color = p.status === "completed" ? "green" : p.status === "ongoing" ? "orange" : "red";
+        ssPlansDiv.innerHTML += `<div style="margin-bottom:10px;"><span class="status-square" style="background:${color};"></span>${p.name}</div>`;
       });
     } else {
       selfStudyPage.style.opacity = "0";
