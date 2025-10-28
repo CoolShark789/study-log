@@ -7,65 +7,44 @@
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
 <style>
-body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
-#sidebar { width: 200px; background: #f0f0f0; padding: 20px; overflow-y: auto; }
-#content { flex: 1; padding: 20px; overflow-y: auto; position: relative; scroll-behavior: smooth; }
+  body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
+  #sidebar { width: 220px; background: #f0f0f0; padding: 16px; overflow-y: auto; box-sizing: border-box; }
+  #content { flex: 1; padding: 20px; overflow-y: auto; position: relative; scroll-behavior: smooth; box-sizing: border-box; }
 
-.folder-title { cursor: pointer; margin-bottom: 8px; font-weight: bold; }
-.folder-content { display: none; margin-left: 15px; }
-.folder.open .folder-content { display: block; }
+  .folder { margin-bottom: 12px; }
+  .folder-title { cursor: pointer; margin-bottom: 6px; font-weight: bold; user-select: none; }
+  .folder-content { display: block; margin-left: 6px; }
+  .file-item { cursor: pointer; padding: 6px 8px; border-radius: 6px; margin-bottom: 6px; transition: background 0.14s, font-weight 0.14s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .file-item:hover { background: white; font-weight: bold; }
 
-.file-item { cursor: pointer; padding: 5px; border-radius: 4px; margin-bottom: 3px; transition: background 0.2s, font-weight 0.2s; }
-.file-item:hover { background: white; font-weight: bold; }
+  #self-study-btn {
+    position: fixed; top: 12px; right: 12px;
+    background: #222; color: #fff; border: 1px solid #555;
+    padding: 8px 12px; border-radius: 6px; cursor: pointer; z-index: 1000;
+  }
 
-#self-study-btn {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  background: #222;
-  color: white;
-  border: 1px solid #555;
-  padding: 10px 15px;
-  border-radius: 8px;
-  cursor: pointer;
-  z-index: 1000;
-}
-
-#self-study-page {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.95);
-  color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.4s ease;
-  z-index: 999;
-}
-
-.status-square {
-  display: inline-block;
-  width: 15px;
-  height: 15px;
-  margin-right: 8px;
-  vertical-align: middle;
-}
+  #self-study-page {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.95); color: white;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.32s ease; z-index: 999;
+    padding: 40px; box-sizing: border-box; text-align: center;
+  }
+  #self-study-page.visible { opacity: 1; pointer-events: auto; }
+  .status-square { display:inline-block; width:15px; height:15px; margin-right:8px; vertical-align:middle; }
+  section.day-section { margin-bottom: 40px; padding-bottom: 10px; border-bottom: 1px solid #ddd; }
 </style>
 </head>
 <body>
 
 <div id="sidebar"></div>
-<div id="content"></div>
+<div id="content" tabindex="0"></div>
 <button id="self-study-btn">Self-Study Stats</button>
 
-<div id="self-study-page">
-  <h1 id="ss-day-count" style="font-size:50px;margin-bottom:30px;"></h1>
-  <div id="ss-total-cards" style="font-size:40px;margin-bottom:40px;"></div>
-  <div id="ss-plans" style="font-size:20px;"></div>
+<div id="self-study-page" aria-hidden="true">
+  <h1 id="ss-day-count" style="font-size:48px; margin-bottom:18px;"></h1>
+  <h2 id="ss-total-cards" style="font-size:32px; margin-bottom:28px;"></h2>
+  <div id="ss-plans" style="font-size:18px; max-width:760px;"></div>
 </div>
 
 <script>
@@ -77,157 +56,223 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const studyData = await fetch("study_log.json").then(r => r.json());
 
-  // Build Study Log folder (single long page)
+  // Utility: extract author robustly
+  function extractAuthor(topics) {
+    for (const t of topics) {
+      const m = t.match(/^\s*([^:]+)\s*:/); // "Author: rest"
+      if (m && m[1]) return m[1].trim();
+    }
+    // fallback: search known names anywhere
+    const known = ["Stewart","Lay","Vellerman","Velleman","Vellerman:","Abbott","Friedberg","Resnick"];
+    for (const t of topics) {
+      for (const k of known) {
+        const re = new RegExp("\\b" + k.replace(/[:]/g,"") + "\\b","i");
+        if (re.test(t)) return t.match(re)[0];
+      }
+    }
+    return "Unknown";
+  }
+
+  // Build sidebar folders
+  // 1) Study Log (renders full log in content)
   const studyFolder = document.createElement("div");
-  studyFolder.classList.add("folder");
-  studyFolder.innerHTML = `<div class="folder-title">Study Log</div>`;
-  const studyList = document.createElement("div");
-  studyList.classList.add("folder-content");
-
-  studyData.forEach(entry => {
-    const div = document.createElement("div");
-    div.textContent = `Day ${entry.day} — ${entry.date}`;
-    div.classList.add("file-item");
-    div.addEventListener("click", () => scrollToDay(entry.day));
-    studyList.appendChild(div);
-  });
-  studyFolder.appendChild(studyList);
+  studyFolder.className = "folder";
+  studyFolder.innerHTML = `<div class="folder-title" id="folder-study">Study Log</div><div class="folder-content" id="study-list"></div>`;
   sidebar.appendChild(studyFolder);
+  const studyList = document.getElementById("study-list");
 
-  // Full study log rendered at once
+  // 2) Flashcards (index + items)
+  const flashFolder = document.createElement("div");
+  flashFolder.className = "folder";
+  flashFolder.innerHTML = `<div class="folder-title" id="folder-flash">Flashcards</div><div class="folder-content" id="flash-list"></div>`;
+  sidebar.appendChild(flashFolder);
+  const flashList = document.getElementById("flash-list");
+
+  // Populate study-list and flash-list
+  studyData.forEach(entry => {
+    const author = extractAuthor(entry.topics);
+    // study list item (navigates to section in full log)
+    const sItem = document.createElement("div");
+    sItem.className = "file-item";
+    sItem.textContent = `Day ${entry.day} — ${entry.date}`;
+    sItem.addEventListener("click", () => {
+      showFullStudyLog(); // ensure full log is visible
+      scrollToDay(entry.day);
+    });
+    studyList.appendChild(sItem);
+
+    // flash list item (loads that day's flashcards view)
+    const fItem = document.createElement("div");
+    fItem.className = "file-item";
+    fItem.textContent = `Day ${entry.day} (${author})`;
+    fItem.addEventListener("click", () => {
+      showFlashcardsIndex(); // switch to flashcards context
+      loadFlashcards(entry.day, true); // load and center inside content
+    });
+    flashList.appendChild(fItem);
+  });
+
+  // Default: render full study log into content
   const fullContainer = document.createElement("div");
   fullContainer.id = "full-study-log";
+  fullContainer.style.paddingRight = "8px"; // give space for scrollbar
   studyData.forEach(entry => {
     const section = document.createElement("section");
+    section.className = "day-section";
     section.id = `day-${entry.day}`;
-    section.style.marginBottom = "40px";
     section.innerHTML = `<h2>Day ${entry.day} — ${entry.date}</h2>`;
     const ul = document.createElement("ul");
-    entry.topics.forEach(t => {
-      const li = document.createElement("li");
-      li.textContent = t;
-      ul.appendChild(li);
-    });
+    entry.topics.forEach(t => { const li = document.createElement("li"); li.textContent = t; ul.appendChild(li); });
     section.appendChild(ul);
     fullContainer.appendChild(section);
   });
   content.appendChild(fullContainer);
 
+  // Show full study log (replace content)
+  function showFullStudyLog() {
+    content.innerHTML = "";
+    content.appendChild(fullContainer);
+    // focus for keyboard scroll & accessibility
+    content.focus();
+  }
+
+  // Show flashcards index (list with click to open each day's flashcards)
+  function showFlashcardsIndex() {
+    content.innerHTML = `<h2>Flashcards</h2><div id="flash-index" style="display:flex;flex-direction:column;gap:8px;"></div>`;
+    const idx = document.getElementById("flash-index");
+    studyData.forEach(entry => {
+      const author = extractAuthor(entry.topics);
+      const div = document.createElement("div");
+      div.className = "file-item";
+      div.style.padding = "8px";
+      div.textContent = `Day ${entry.day} (${author})`;
+      div.addEventListener("click", () => loadFlashcards(entry.day, true));
+      idx.appendChild(div);
+    });
+  }
+
+  // Smoothly scroll content to center the day section
   function scrollToDay(dayNumber) {
     const section = document.getElementById(`day-${dayNumber}`);
-    if (section) {
-      const rect = section.getBoundingClientRect();
-      const offset = rect.top + window.scrollY - (window.innerHeight / 2) + (rect.height / 2);
-      window.scrollTo({ top: offset, behavior: "smooth" });
-    }
+    if (!section) return;
+    const contentRect = content.getBoundingClientRect();
+    const sectionRect = section.getBoundingClientRect();
+    const currentScroll = content.scrollTop;
+    const sectionTop = sectionRect.top - contentRect.top + currentScroll;
+    const scrollTarget = sectionTop - (content.clientHeight / 2) + (section.offsetHeight / 2);
+    content.scrollTo({ top: scrollTarget, behavior: "smooth" });
   }
 
-  // Flashcards folder
-  const flashFolder = document.createElement("div");
-  flashFolder.classList.add("folder");
-  flashFolder.innerHTML = `<div class="folder-title">Flashcards</div>`;
-  const flashList = document.createElement("div");
-  flashList.classList.add("folder-content");
-
-  for (let entry of studyData) {
-    const authorMatch = entry.topics.find(t => t.match(/Stewart|Lay|Velleman|Abbott|Friedberg|Resnick/i));
-    const author = authorMatch ? authorMatch.match(/(Stewart|Lay|Velleman|Abbott|Friedberg|Resnick)/i)[0] : "Unknown";
-    const item = document.createElement("div");
-    item.textContent = `Day ${entry.day} (${author})`;
-    item.classList.add("file-item");
-    item.onclick = () => loadFlashcards(entry.day);
-    flashList.appendChild(item);
-  }
-
-  flashFolder.appendChild(flashList);
-  sidebar.appendChild(flashFolder);
-
-  document.querySelectorAll(".folder-title").forEach(title => {
-    title.addEventListener("click", () => {
-      title.parentElement.classList.toggle("open");
-    });
-  });
-
-  async function loadFlashcards(dayNumber) {
-    content.innerHTML = `<h2>Day ${dayNumber} Flashcards</h2>`;
+  // Load flashcards for a day. if replaceContent true, we replace content with flashcards view and center the day's flashcards container
+  async function loadFlashcards(dayNumber, replaceContent = false) {
+    const path = `flashcards/day${dayNumber}.txt`;
+    if (replaceContent) content.innerHTML = `<h2>Day ${dayNumber} Flashcards</h2>`;
+    const parent = replaceContent ? content : document.getElementById("flash-index") || content;
     try {
-      const txt = await fetch(`flashcards/day${dayNumber}.txt`).then(r => { if (!r.ok) throw 0; return r.text(); });
+      const res = await fetch(path);
+      if (!res.ok) throw 0;
+      const txt = await res.text();
       const lines = txt.split("\n").filter(l => l.trim() && !l.startsWith("#"));
       if (!lines.length) {
-        content.innerHTML += "<p>No flashcards found for this day.</p>";
+        if (replaceContent) content.innerHTML += "<p>No flashcards for this day.</p>";
         return;
       }
-      let container = document.createElement("div");
+
+      const container = document.createElement("div");
       container.style.display = "flex";
       container.style.flexDirection = "column";
-      container.style.gap = "15px";
+      container.style.gap = "12px";
+      container.id = `flashcards-day-${dayNumber}`;
 
       lines.forEach((line, i) => {
-        const [q, a] = line.split("\t");
-        const div = document.createElement("div");
-        div.style.border = "1px solid #444";
-        div.style.padding = "10px";
-        div.style.borderRadius = "8px";
-        div.style.cursor = "pointer";
-        div.innerHTML = `<b>${i + 1})</b> <span class="question">${q}</span><div class="answer" style="display:none;margin-top:5px;">${a}</div>`;
-        div.addEventListener("click", () => {
-          const ans = div.querySelector(".answer");
-          ans.style.display = ans.style.display === "none" ? "block" : "none";
-          renderMathInElement(ans, { delimiters: [{left: "\\[", right: "\\]", display: true}] });
+        const [title, answer] = line.split("\t");
+        if (!title) return;
+        const card = document.createElement("div");
+        card.style.border = "1px solid #ccc";
+        card.style.padding = "10px";
+        card.style.borderRadius = "6px";
+        card.style.background = "#fff";
+        card.style.cursor = "pointer";
+        card.innerHTML = `<div style="font-weight:700; margin-bottom:6px;">${i+1}) <span class="q">${title}</span></div><div class="a" style="display:none;margin-top:6px;">${answer || ""}</div>`;
+        card.addEventListener("click", () => {
+          const a = card.querySelector(".a");
+          a.style.display = a.style.display === "block" ? "none" : "block";
+          renderMathInElement(a, { delimiters: [{left:"\\\\[", right:"\\\\]"}] });
         });
-        container.appendChild(div);
+        // render question now so KaTeX shows
+        container.appendChild(card);
+        renderMathInElement(card, { delimiters: [{left:"\\\\[", right:"\\\\]"}] });
       });
-      content.appendChild(container);
-      renderMathInElement(content, { delimiters: [{left: "\\[", right: "\\]", display: true}] });
+
+      if (replaceContent) {
+        content.appendChild(container);
+        // center the container in content
+        const rect = container.getBoundingClientRect();
+        const contentRect = content.getBoundingClientRect();
+        const scrollTop = content.scrollTop;
+        const elTop = rect.top - contentRect.top + scrollTop;
+        const target = elTop - (content.clientHeight / 2) + (container.offsetHeight / 2);
+        content.scrollTo({ top: target, behavior: "smooth" });
+      } else {
+        parent.appendChild(container);
+      }
     } catch {
-      content.innerHTML += "<p>Error loading flashcards.</p>";
+      if (replaceContent) content.innerHTML += "<p>No flashcards file.</p>";
     }
   }
+
+  // Sidebar interactions: folder title click shows content pages
+  document.getElementById("folder-study").addEventListener("click", () => {
+    showFullStudyLog();
+  });
+  document.getElementById("folder-flash").addEventListener("click", () => {
+    showFlashcardsIndex();
+  });
+
+  // Start with full study log visible
+  showFullStudyLog();
 
   // Self-study stats popup
   selfStudyBtn.addEventListener("click", async () => {
-    if (selfStudyPage.style.opacity === "0" || !selfStudyPage.style.opacity) {
-      selfStudyPage.style.opacity = "1";
-      selfStudyPage.style.pointerEvents = "auto";
-
-      const flashcardDays = [];
-      let totalFlashcards = 0;
-      for (let dayEntry of studyData) {
+    const visible = selfStudyPage.classList.toggle("visible");
+    selfStudyPage.setAttribute("aria-hidden", visible ? "false" : "true");
+    if (visible) {
+      // compute days with flashcards and total flashcards
+      let flashcardDays = 0;
+      let totalCards = 0;
+      for (const entry of studyData) {
         try {
-          const txt = await fetch(`flashcards/day${dayEntry.day}.txt`).then(r => { if (!r.ok) throw 0; return r.text(); });
-          const lines = txt.split("\n").filter(l => l.trim() && !l.startsWith("#"));
-          if (lines.length) {
-            flashcardDays.push(dayEntry.day);
-            totalFlashcards += lines.length;
-          }
+          const r = await fetch(`flashcards/day${entry.day}.txt`);
+          if (!r.ok) continue;
+          const t = await r.text();
+          const lines = t.split("\n").filter(l => l.trim() && !l.startsWith("#"));
+          if (lines.length) { flashcardDays++; totalCards += lines.length; }
         } catch {}
       }
-
-      document.getElementById("ss-day-count").textContent = `Days self-studied: ${flashcardDays.length}`;
-      document.getElementById("ss-total-cards").textContent = `Total flashcards: ${totalFlashcards}`;
-
+      document.getElementById("ss-day-count").textContent = `Days self-studied: ${flashcardDays}`;
+      document.getElementById("ss-total-cards").textContent = `Total flashcards: ${totalCards}`;
       const plans = [
-        {name: "Stewart's Calculus (Chapters 3–11)", status: "completed"},
-        {name: "Lay's Linear Algebra (Chapters 1–6.1)", status: "completed"},
-        {name: "Velleman’s Intro to Proofs", status: "ongoing"},
-        {name: "Abbott’s Intro to Real Analysis", status: "planned"},
-        {name: "Friedberg’s Real Analysis", status: "planned"},
-        {name: "Stewart’s Calculus (Chapters 12–16)", status: "planned"},
-        {name: "Resnick’s Physics (Chapters 1–20)", status: "planned"},
+        {name: "Stewart's Calculus (Chapters 3-11)", status: "completed"},
+        {name: "Lay's Linear Algebra (Chapters 1-6.1)", status: "completed"},
+        {name: "Vellerman's Intro to Proofs", status: "ongoing"},
+        {name: "Abbott's Intro to Real Analysis", status: "planned"},
+        {name: "Friedberg's Real Analysis", status: "planned"},
+        {name: "Stewart's Calculus (Chapters 12-16)", status: "planned"},
+        {name: "Resnick's Physics (Chapters 1-20)", status: "planned"},
         {name: "Python (Basics, Numpy, Pandas)", status: "planned"}
       ];
-
       const ssPlansDiv = document.getElementById("ss-plans");
       ssPlansDiv.innerHTML = "";
       plans.forEach(p => {
         const color = p.status === "completed" ? "green" : p.status === "ongoing" ? "orange" : "red";
-        ssPlansDiv.innerHTML += `<div style="margin-bottom:10px;"><span class="status-square" style="background:${color};"></span>${p.name}</div>`;
+        const row = document.createElement("div");
+        row.style.marginBottom = "10px";
+        row.innerHTML = `<span class="status-square" style="background:${color}"></span>${p.name}`;
+        ssPlansDiv.appendChild(row);
       });
-    } else {
-      selfStudyPage.style.opacity = "0";
-      selfStudyPage.style.pointerEvents = "none";
     }
   });
+
 });
 </script>
 
