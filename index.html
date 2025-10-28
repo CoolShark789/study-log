@@ -11,13 +11,28 @@ body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
 #sidebar { width: 200px; background: #f0f0f0; padding: 20px; overflow-y: auto; }
 #main { flex: 1; padding: 20px; overflow-y: auto; position: relative; }
 
-.sidebar-folder { cursor: pointer; margin-bottom: 10px; }
-.sidebar-folder:hover { font-weight: bold; }
+.sidebar-folder {
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: background 0.2s;
+}
+.sidebar-folder:hover {
+  background: #e0e0e0;
+}
 .sidebar-folder .arrow { display: inline-block; width: 12px; transition: transform 0.2s; }
 .sidebar-folder .arrow.open { transform: rotate(90deg); }
 
 .sidebar-sub { display: none; margin-left: 15px; margin-bottom: 10px; }
-.sidebar-day { cursor: pointer; margin-bottom: 3px; }
+.sidebar-day {
+  cursor: pointer;
+  margin-bottom: 3px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+.sidebar-day:hover {
+  background: #ddd;
+}
 
 .entry { margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
 .flashcard-entry { margin-bottom: 30px; border: 1px solid #aaa; padding: 15px; border-radius: 5px; }
@@ -76,9 +91,8 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".sidebar-folder").forEach(folder => {
     const arrow = folder.querySelector(".arrow");
     const sub = folder.querySelector(".sidebar-sub");
-
     folder.addEventListener("click", e => {
-      if(e.target !== folder) return;
+      if (e.target !== folder) return;
       const isOpen = sub.style.display === "block";
       sub.style.display = isOpen ? "none" : "block";
       arrow.classList.toggle("open", !isOpen);
@@ -91,7 +105,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const daysSub = document.getElementById("days-sub");
       const flashcardsSub = document.getElementById("flashcards-sub");
 
-      // Helper to check if flashcard file exists
       async function fileExists(url) {
         try {
           const res = await fetch(url, { method: "HEAD" });
@@ -101,7 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
-      // Sidebar & main entries
+      const flashcardDays = [];
       for (let dayEntry of studyData) {
         const dayDiv = document.createElement("div");
         dayDiv.className = "entry";
@@ -110,9 +123,16 @@ document.addEventListener("DOMContentLoaded", () => {
         dayDiv.innerHTML = `<h2>Day ${dayEntry.day} [${dayEntry.date}]</h2><ul>${topicsHtml}</ul>`;
         main.appendChild(dayDiv);
 
+        // extract author from first topic
+        let author = "";
+        const firstTopic = dayEntry.topics[0];
+        if (firstTopic && firstTopic.includes(":")) {
+          author = firstTopic.split(":")[0].trim();
+        }
+
         const sideDay = document.createElement("div");
         sideDay.className = "sidebar-day";
-        sideDay.textContent = "Day " + dayEntry.day;
+        sideDay.textContent = "Day " + dayEntry.day + (author ? ` (${author})` : "");
         sideDay.addEventListener("click", () => scrollToCenter(dayDiv));
         daysSub.appendChild(sideDay);
 
@@ -121,17 +141,15 @@ document.addEventListener("DOMContentLoaded", () => {
         sideCard.textContent = "Day " + dayEntry.day;
         sideCard.addEventListener("click", async () => {
           const fc = document.getElementById("fc-day-" + dayEntry.day);
-          if(fc) scrollToCenter(fc);
+          if (fc) scrollToCenter(fc);
         });
         flashcardsSub.appendChild(sideCard);
       }
 
-      // Flashcards section
       const fcHeader = document.createElement("h1");
       fcHeader.textContent = "Flashcards";
       main.appendChild(fcHeader);
 
-      const flashcardDays = [];
       for (let dayEntry of studyData) {
         const fcDiv = document.createElement("div");
         fcDiv.className = "flashcard-entry";
@@ -141,18 +159,18 @@ document.addEventListener("DOMContentLoaded", () => {
         fcDiv.appendChild(fcTitle);
 
         const path = `flashcards/day${dayEntry.day}.txt`;
-        if(await fileExists(path)) flashcardDays.push(dayEntry.day);
+        if (await fileExists(path)) flashcardDays.push(dayEntry.day);
 
         try {
-          const txt = await fetch(path).then(r => { if(!r.ok) throw 0; return r.text(); });
+          const txt = await fetch(path).then(r => { if (!r.ok) throw 0; return r.text(); });
           const lines = txt.split("\n").filter(l => l.trim() && !l.startsWith("#"));
           lines.forEach((line, index) => {
             const [title, answer] = line.split("\t");
-            if(!title || !answer) return;
+            if (!title || !answer) return;
 
             const questionDiv = document.createElement("div");
             questionDiv.className = "flashcard-question";
-            questionDiv.innerHTML = `${index+1}) ${title}`;
+            questionDiv.innerHTML = `${index + 1}) ${title}`;
 
             const answerDiv = document.createElement("div");
             answerDiv.className = "flashcard-answer";
@@ -165,8 +183,8 @@ document.addEventListener("DOMContentLoaded", () => {
             fcDiv.appendChild(questionDiv);
             fcDiv.appendChild(answerDiv);
 
-            renderMathInElement(questionDiv, {delimiters: [{left:"\\[", right:"\\]"}]});
-            renderMathInElement(answerDiv, {delimiters: [{left:"\\[", right:"\\]"}]});
+            renderMathInElement(questionDiv, { delimiters: [{ left: "\\[", right: "\\]" }] });
+            renderMathInElement(answerDiv, { delimiters: [{ left: "\\[", right: "\\]" }] });
           });
         } catch {
           const msg = document.createElement("div");
@@ -178,10 +196,9 @@ document.addEventListener("DOMContentLoaded", () => {
         main.appendChild(fcDiv);
       }
 
-      // Self-study toggle button
       selfStudyBtn.addEventListener("click", () => {
         selfStudyPage.classList.toggle("visible");
-        if(selfStudyPage.classList.contains("visible")) {
+        if (selfStudyPage.classList.contains("visible")) {
           document.getElementById("ss-day-count").textContent = `Days self-studied: ${flashcardDays.length}`;
 
           const plans = [
@@ -203,8 +220,8 @@ document.addEventListener("DOMContentLoaded", () => {
           });
         }
       });
-
-    }).catch(err => console.error("Failed to load study log JSON:", err));
+    })
+    .catch(err => console.error("Failed to load study log JSON:", err));
 });
 </script>
 
