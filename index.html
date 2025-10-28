@@ -220,7 +220,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           if(lines.length){flashcardDays++; totalCards+=lines.length;}
         } catch{}
       }
-      document.getElementById("ss-day-count").textContent=`Days self-studied: ${flashcardDays}`;
+      document.getElementById("ss-day-count").textContent=`Days self-studied: ${flashcardDays} / ${studyData.length}`;
       document.getElementById("ss-total-cards").textContent=`Total flashcards: ${totalCards}`;
       const plans=[
         {name:"Stewart's Calculus (Chapters 3-11)", status:"completed"},
