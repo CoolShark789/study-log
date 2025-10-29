@@ -378,6 +378,19 @@
       "Relation's domain, range, inverse; Composition of relations",
       "Properties of relations and their proofs"
     ]
+  },
+  {
+    "day": 33,
+    "date": "29.10.2025",
+    "topics": [
+      "Vellerman: Sections 4.3, 4.4 (first half)",
+      "Pages 236-252",
+      "Alternate notation for (x,y)\in R; Visual representation of R",
+      "Identity, Reflexive, Symmetric and Transitive Relations and their conditions (proofs for some)",
+      "Exercise 18 in section 4.3 made me lose faith with how nested it is",
+      "Antisymmetric relation, Partial and Total Orders",
+      "Smallest and minimal elements of a relation R on A"
+    ]
   }
 ]
 
