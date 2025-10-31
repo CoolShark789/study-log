@@ -407,6 +407,19 @@
       " ",
       "Happy birthday, me"
     ]
+  },
+  {
+    "day": 35,
+    "date": "31.10.2025",
+    "topics": [
+      "Abbott: Sections 1.1, 1.2, 1.3",
+      "Pages 1-20",
+      "Irrationality of sqrt(2); Complement of a set",
+      "Function's definition, its domain and range",
+      "Absolute value function definition, properties of absolute values",
+      "Axiom of Completeness; Definitions for bounded sets",
+      "Supremum and Infimum; Maximum and minimum of the set"
+    ]
   }
 ]
 
