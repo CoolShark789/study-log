@@ -89,11 +89,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     contentDiv.className = "folder-content";
     folder.appendChild(contentDiv);
     sidebar.appendChild(folder);
-
     title.addEventListener("click", () => folder.classList.toggle("open"));
-
     listItemsFunc(contentDiv);
-    return folder;
   }
 
   createFolder("Study Log", (container) => {
@@ -172,26 +169,52 @@ document.addEventListener("DOMContentLoaded", async () => {
       const container = document.createElement("div");
       container.style.display="flex"; container.style.flexDirection="column"; container.style.gap="12px";
       container.id=`flashcards-day-${dayNumber}`;
-      parent.appendChild(container); // append before rendering
+      parent.appendChild(container);
 
       lines.forEach((line,i)=>{
-        const [title,answer] = line.split("\t");
+        const [title, answer] = line.split("\t");
         if(!title) return;
+
         const card = document.createElement("div");
         card.className="flashcard-card";
-        card.innerHTML=`<div style="font-weight:700; margin-bottom:6px;">${i+1}) <span class="q">${title}</span></div><div class="a">${answer||""}</div>`;
+
+        // Question
+        const qDiv = document.createElement("div");
+        qDiv.style.fontWeight="700";
+        qDiv.style.marginBottom="6px";
+        qDiv.textContent = `${i+1}) ${title}`;
+        card.appendChild(qDiv);
+
+        // Answer
+        const aDiv = document.createElement("div");
+        aDiv.className="a";
+        aDiv.textContent = answer || "";
+        card.appendChild(aDiv);
+
         container.appendChild(card);
 
-        const a = card.querySelector(".a");
-        // temporarily show hidden answer for rendering
-        a.style.display="block";
-        renderMathInElement(card, { delimiters:[{left:"\\[",right:"\\]",display:true}] });
-        a.style.display="none";
+        // Render question LaTeX
+        renderMathInElement(qDiv, { delimiters:[{left:"\\[", right:"\\]", display:true}] });
 
-        card.addEventListener("click",()=>{
-          a.style.display = a.style.display==="block"?"none":"block";
+        // Click to toggle answer
+        card.addEventListener("click", ()=>{
+          if(aDiv.style.display==="block"){
+            aDiv.style.display="none";
+          } else {
+            aDiv.style.display="block";
+            renderMathInElement(aDiv, { delimiters:[{left:"\\[", right:"\\]", display:true}] });
+          }
         });
       });
+
+      if(replaceContent){
+        const rect=container.getBoundingClientRect();
+        const contentRect=content.getBoundingClientRect();
+        const scrollTop=content.scrollTop;
+        const elTop=rect.top - contentRect.top + scrollTop;
+        const target = elTop - (content.clientHeight/2) + (container.offsetHeight/2);
+        content.scrollTo({top:target,behavior:"smooth"});
+      }
 
     } catch { if(replaceContent) content.innerHTML+="<p>No flashcards file.</p>"; }
   }
