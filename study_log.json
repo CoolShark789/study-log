@@ -420,6 +420,18 @@
       "Axiom of Completeness; Definitions for bounded sets",
       "Supremum and Infimum; Maximum and minimum of the set"
     ]
+  },
+  {
+    "day": 36,
+    "date": "01.11.2025",
+    "topics": [
+      "Abbott: Sections 1.4, 1.5, 2.1, 2.2",
+      "Pages 20-27, 39-48",
+      "Nested Interval Property, Archimedean Property, Density Theorem of the Rationals and their proofs",
+      "One-to-one and onto functions; Cardinality",
+      "Countable and Uncountable sets (Skipped the proofs on countability of Q and R)",
+      "Sequence, Convergence of a Sequence, Divergence; Uniqueness of Limits for Sequences"
+    ]
   }
 ]
 
