@@ -78,7 +78,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     return "Unknown";
   }
 
-  // Create folder in sidebar
   function createFolder(titleText, listItemsFunc) {
     const folder = document.createElement("div");
     folder.className = "folder";
@@ -97,7 +96,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     return folder;
   }
 
-  // Populate Study Log folder
   createFolder("Study Log", (container) => {
     studyData.forEach(entry => {
       const item = document.createElement("div");
@@ -108,7 +106,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
-  // Populate Flashcards folder
   createFolder("Flashcards", (container) => {
     studyData.forEach(entry => {
       const author = extractAuthor(entry.topics);
@@ -120,7 +117,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
-  // Full study log
   const fullContainer = document.createElement("div");
   fullContainer.id = "full-study-log";
   fullContainer.style.paddingRight = "8px";
@@ -176,6 +172,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const container = document.createElement("div");
       container.style.display="flex"; container.style.flexDirection="column"; container.style.gap="12px";
       container.id=`flashcards-day-${dayNumber}`;
+      parent.appendChild(container); // append before rendering
 
       lines.forEach((line,i)=>{
         const [title,answer] = line.split("\t");
@@ -183,25 +180,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         const card = document.createElement("div");
         card.className="flashcard-card";
         card.innerHTML=`<div style="font-weight:700; margin-bottom:6px;">${i+1}) <span class="q">${title}</span></div><div class="a">${answer||""}</div>`;
-        card.addEventListener("click",()=>{
-          const a = card.querySelector(".a");
-          a.style.display = a.style.display==="block"?"none":"block";
-          renderMathInElement(a,{delimiters:[{left:"\\[",right:"\\]",display:true}]});
-        });
         container.appendChild(card);
-        renderMathInElement(card,{delimiters:[{left:"\\[",right:"\\]",display:true}]});
+
+        const a = card.querySelector(".a");
+        // temporarily show hidden answer for rendering
+        a.style.display="block";
+        renderMathInElement(card, { delimiters:[{left:"\\[",right:"\\]",display:true}] });
+        a.style.display="none";
+
+        card.addEventListener("click",()=>{
+          a.style.display = a.style.display==="block"?"none":"block";
+        });
       });
 
-      if(replaceContent){
-        content.appendChild(container);
-        const rect=container.getBoundingClientRect();
-        const contentRect=content.getBoundingClientRect();
-        const scrollTop=content.scrollTop;
-        const elTop=rect.top - contentRect.top + scrollTop;
-        const target = elTop - (content.clientHeight/2) + (container.offsetHeight/2);
-        content.scrollTo({top:target,behavior:"smooth"});
-      } else { parent.appendChild(container); }
-    } catch{ if(replaceContent) content.innerHTML+="<p>No flashcards file.</p>"; }
+    } catch { if(replaceContent) content.innerHTML+="<p>No flashcards file.</p>"; }
   }
 
   showFullStudyLog();
