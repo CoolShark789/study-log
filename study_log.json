@@ -446,6 +446,11 @@
       "Language Proficiency exam is tomorrow..."
     ]
   }
+  {
+    "day": 38,
+    "date": "03.11.2025",
+    "topics": ["Rest"]
+  },
 ]
 
 
