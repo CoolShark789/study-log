@@ -14,6 +14,5 @@
 \[\text{Absolute Module Theorem for Sequences}\]	\[\text{If}\quad \lim_{n\to\infty}|a_n|=0,\quad\text{then}\lim_{n\to\infty}a_n=0\]
 \[\text{How to prove that the sequence}\; a_n = \frac{n!}{n^n}\quad\text{approaches 0?}\]	\[a_n = \frac{1}{n}\left[\frac{1\cdot 2\cdot 3 \;...\;  n}{n\cdot n\cdot n\; ... \;n}\right]\implies 0<a_n \le\frac{1}{n},\quad\quad\quad\lim_{n\to\infty}\frac{1}{n}=0\]\[\text{According to Squeeze Theorem:}\quad\lim_{n\to\infty}a_n = 0\]
 \[\text{For which values of r is the sequence}\;{r^n}\;\text{convergent?}\]	\[\text{Convergent for}\; -1<r\le 1,\quad\quad\text{Divergent for every other value}\]
-\[\text{What are the three types of Series?}\]	\[\text{Increasing:}\; a_{n+1}>a_n \quad\quad\quad\text{Decreasing:}\; a_{n+1}<a_n \quad\quad\quad\text{Monotonic: neither}\]
 \[\text{What does it mean for a Sequence to be bounded?}\]	\[\text{It means there are such numbers M and m that:}\quad a_n \le M \;\text{and}\; a_n \ge m\]
 \[\text{What is Monotonic Sequence Theorem?}\]	\[\text{It states that every bounded Monotonic Sequence is convergent}\]
