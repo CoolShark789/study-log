@@ -450,6 +450,17 @@
     "day": 38,
     "date": "03.11.2025",
     "topics": ["Rest"]
+  },
+  {
+    "day": 39,
+    "date": "04.11.2025",
+    "topics": [
+      "Abbott: Sections 2.4",
+      "Pages 56-62",
+      "Types of Sequences, Monotone Convergence Theorem and its proof",
+      "1/n and 1/n^2 bounded\unbounded",
+      "limit of the recursive sequence"
+    ]
   }
 ]
 
