@@ -461,6 +461,17 @@
       "1/n and 1/n^2 as examples for showing bounded/unbounded",
       "limit of the recursive sequence"
     ]
+  },
+  {
+    "day": 40,
+    "date": "05.11.2025",
+    "topics": [
+      "Abbott: Sections 2.5, 2.6, 2.7",
+      "Pages 62-77",
+      "Subsequence and its convergence, Bolzano-Weierstrass Theorem proof",
+      "Cauchy Sequence and its properties, Cauchy Criterion for Sequences and Series",
+      "Different Convergence Tests, proofs for some"
+    ]
   }
 ]
 
