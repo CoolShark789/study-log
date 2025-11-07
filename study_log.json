@@ -484,6 +484,17 @@
       "Limit point of a set, Isolated point",
       "Closed sets, Closure, Complements relation to Sets"
     ]
+  },
+  {
+    "day": 42,
+    "date": "07.11.2025",
+    "topics": [
+      "Abbott: Sections 3.3, 3.4",
+      "Pages 96-106",
+      "Compact Set, Bounded Set, Characterization of Compactness in R; Nested Compact Set Property",
+      "Open Cover, finite subcover; Heine-Borel Theorem",
+      "Perfect Set; Separated, Disconnected and Connected Sets"
+    ]
   }
 ]
 

@@ -1,0 +1,15 @@
+#separator:tab
+#html:false
+\[\text{What is a Compact Set?}\]	\[\text{A set}\;K\subseteq\mathbb{R}\;\text{is a Compact Set if every sequence in}\;K\;\text{has a subsequence that converges to a limit in}\; K\]
+\[\text{When is the set Bounded?}\]	\[\text{A set}\;A\subseteq\mathbb{R}\;\text{is Bounded if}\;\exists M>0\;\text{s.t.}\;\forall a\in A\;\;( |a|\le M)\]
+\[\text{What does the Characterization of Compactness in}\;\mathbb{R}\;\text{say?}\]	\[\text{A set}\;K\subseteq\mathbb{R}\;\text{is compact}\iff K\;\text{is closed and bounded}\]\[\text{Examples of a closed unbounded set:}\;\mathbb{R},\;[0,\infty)\]
+\[\text{What is an Open Cover of some set}\;A?\]	\[\text{It is a collection of open sets}\;\{O_{\lambda}:\lambda\in\Lambda\}\;\text{whose union contains the set}\;A\]\[A\subseteq\bigcup_{\lambda\in\Lambda}O_{\lambda}\]
+\[\text{What is a finite subcover?}\]	\[\text{A finite subcover is a finite subcollection of open sets from the open cover whose union still contains}\;A\]
+\[\text{What does Heine-Borel Theorem say?}\]	\[\text{Let}\;K\subseteq\mathbb{R}\;\text{then all of the 3 following statements are equivalent}\]\[1.\;K\;\text{is compact}\quad\quad\quad 2.\;K\;\text{is closed and bounded}\]\[\text{3. Every Open Cover of}\;K\;\text{has a finite subcover}\]
+\[\text{What is a Perfect Set?}\]	\[\text{A set}\;P\subseteq R\;\text{is perfect if it is closed and contains no isolated points}\]
+\[\text{What is known about a nonempty perfect set?}\]	\[\text{This set is uncountable}\]
+\[\text{What does the Nested Compact Set Property say?}\]	\[\text{If}\;K_1\supseteq K_2\supseteq K_3\supseteq\cdots\;\text{is a nested sequence of nonempty compact sets then}\;\bigcap_{n=1}^{\infty}K_n\ne\emptyset\]
+\[\text{What are Separated Sets?}\]	\[\text{Two nonempty sets}\;A,B\in\mathbb{R}\;\text{s.t.}\;\overline A\cap B=\emptyset\;\text{and}\;A\cap\overline B=\emptyset\]
+\[\text{What are Disconnected Sets?}\]	\[E=A\cup B\;\text{where}\;A,B\subseteq\mathbb{R}\;\text{and}\;A, B\;\text{are nonempty separated sets}\]
+\[\text{What are Connected Sets?}\]	\[\text{Sets that aren't disconnected}\]
+\[\text{When is a set}\;E\;\text{connected? (related to its terms)}\]	\[E\;\text{is connected}\iff(a<c<b,\;a,b\in E\rightarrow c\in E)\]
