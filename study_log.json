@@ -495,7 +495,19 @@
       "Open Cover, finite subcover; Heine-Borel Theorem",
       "Perfect Set; Separated, Disconnected and Connected Sets"
     ]
+  },
+  {
+    "day": 43,
+    "date": "08.11.2025",
+    "topics": [
+      "Abbott: Sections 4.1, 4.2, 4.3",
+      "Pages 111-129",
+      "Functional Limit Definition (standard and topological)",
+      "Sequential Criterion and Divergence Criterion for Functional Limits",
+      "Continuity, Characterization of Continuity, Criterion for Discontinuity; Composition of Continuous Functions"
+    ]
   }
+
 ]
 
 
