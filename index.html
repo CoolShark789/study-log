@@ -63,13 +63,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const studyData = await fetch("study_log.json").then(r => r.json());
 
-  // Extract only known authors
+  // Strict known-author extraction
   function extractAuthors(topics) {
     const authors = new Set();
     const known = ["Stewart","Lay","Velleman","Vellerman","Abbott","Friedberg","Kleppner"];
     for (const t of topics) {
       for (const k of known) {
-        const re = new RegExp("\\b" + k.replace(/[:]/g,"") + "\\b","i");
+        const re = new RegExp("\\b" + k + "\\b", "i");
         if (re.test(t)) authors.add(k);
       }
     }
@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     listItemsFunc(contentDiv);
   }
 
-  // Study log
+  // Study Log folder
   createFolder("Study Log", (container) => {
     studyData.forEach(entry => {
       const item = document.createElement("div");
@@ -102,15 +102,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
-  // Flashcards sidebar: display authors now, Rest Day set when loading flashcards
+  // Flashcards folder: only show authors (no fetch, fast)
   createFolder("Flashcards", (container) => {
     studyData.forEach(entry => {
       const author = extractAuthors(entry.topics);
       const item = document.createElement("div");
       item.className = "file-item";
-      item.style.whiteSpace = "normal";  // allow wrapping
+      item.style.whiteSpace = "normal";  // allow multi-line
       item.textContent = `Day ${entry.day} (${author})`;
-      item.addEventListener("click", () => { showFlashcardsIndex(); loadFlashcards(entry.day, true); });
+      item.addEventListener("click", () => loadFlashcards(entry.day, true));
       container.appendChild(item);
     });
   });
@@ -131,21 +131,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   content.appendChild(fullContainer);
 
   function showFullStudyLog() { content.innerHTML=""; content.appendChild(fullContainer); content.focus(); }
-
-  async function showFlashcardsIndex() {
-    content.innerHTML = `<h2>Flashcards</h2><div id="flash-index" style="display:flex;flex-direction:column;gap:8px;"></div>`;
-    const idx = document.getElementById("flash-index");
-    studyData.forEach(entry => {
-      const author = extractAuthors(entry.topics);
-      const div = document.createElement("div");
-      div.className = "file-item";
-      div.style.whiteSpace = "normal";
-      div.style.padding = "8px";
-      div.textContent = `Day ${entry.day} (${author})`; // always show authors here
-      div.addEventListener("click", () => loadFlashcards(entry.day, true));
-      idx.appendChild(div);
-    });
-  }
 
   function scrollToDay(dayNumber) {
     const section = document.getElementById(`day-${dayNumber}`);
@@ -216,46 +201,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   showFullStudyLog();
-
-  selfStudyBtn.addEventListener("click", async ()=>{
-    const visible = selfStudyPage.classList.toggle("visible");
-    selfStudyPage.setAttribute("aria-hidden", visible?"false":"true");
-    if(visible){
-      let flashcardDays=0,totalCards=0;
-      for(const entry of studyData){
-        try{
-          const r=await fetch(`flashcards/day${entry.day}.txt`);
-          if(!r.ok) continue;
-          const t=await r.text();
-          const lines=t.split("\n").filter(l=>l.trim()&&!l.startsWith("#"));
-          if(lines.length){flashcardDays++; totalCards+=lines.length;}
-        } catch{}
-      }
-      document.getElementById("ss-day-count").textContent=`Days self-studied: ${flashcardDays} / ${studyData.length}`;
-      document.getElementById("ss-total-cards").textContent=`Total flashcards: ${totalCards}`;
-      const plans=[
-        {name:"Stewart's Calculus (Chapters 3-11.10)", status:"completed"},
-        {name:"Lay's Linear Algebra (Chapters 1-6.1)", status:"completed"},
-        {name:"Vellerman's Intro to Proofs (Chapters 1-4.5)", status:"completed"},
-        {name:"Abbott's Intro to Real Analysis", status:"ongoing"},
-        {name:"Friedberg's Linear Algebra", status:"planned"},
-        {name:"Stewart's Calculus (Chapters 12-16)", status:"planned"},
-        {name:"Kleppner's Physics", status:"planned"},
-        {name:"Python (Basics, Numpy, Pandas)", status:"planned"}
-      ];
-      const ssPlansDiv=document.getElementById("ss-plans");
-      ssPlansDiv.innerHTML="";
-      plans.forEach(p=>{
-        const color=p.status==="completed"?"green":p.status==="ongoing"?"orange":"red";
-        const row=document.createElement("div");
-        row.style.marginBottom="10px";
-        row.innerHTML=`<span class="status-square" style="background:${color}"></span>${p.name}`;
-        ssPlansDiv.appendChild(row);
-      });
-    }
-  });
 });
 </script>
+
 
 </body>
 </html>
