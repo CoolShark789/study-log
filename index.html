@@ -63,25 +63,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const studyData = await fetch("study_log.json").then(r => r.json());
 
-  async function hasFlashcards(dayNumber) {
-    try {
-      const r = await fetch(`flashcards/day${dayNumber}.txt`);
-      if (!r.ok) return false;
-      const t = await r.text();
-      const lines = t.split("\n").filter(l => l.trim() && !l.startsWith("#"));
-      return lines.length > 0;
-    } catch { return false; }
-  }
-
+  // Only extract known authors, ignore extra words
   function extractAuthors(topics) {
     const authors = new Set();
     const known = ["Stewart","Lay","Velleman","Vellerman","Abbott","Friedberg","Kleppner"];
     for (const t of topics) {
-      const m = t.match(/^\s*([^:]+)\s*:/);
-      if (m && m[1]) authors.add(m[1].trim());
       for (const k of known) {
         const re = new RegExp("\\b" + k.replace(/[:]/g,"") + "\\b","i");
-        if (re.test(t)) authors.add(t.match(re)[0]);
+        if (re.test(t)) authors.add(k);
       }
     }
     return authors.size ? [...authors].join("+") : "Unknown";
@@ -102,6 +91,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     listItemsFunc(contentDiv);
   }
 
+  // Study log folder
   createFolder("Study Log", (container) => {
     studyData.forEach(entry => {
       const item = document.createElement("div");
@@ -112,21 +102,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
-  // Flashcards sidebar folder
-  createFolder("Flashcards", async (container) => {
-    for (const entry of studyData) {
-      const hasFC = await hasFlashcards(entry.day);
+  // Flashcards folder: show authors immediately (no fetch), Rest Day marked later when loading flashcards
+  createFolder("Flashcards", (container) => {
+    studyData.forEach(entry => {
       const author = extractAuthors(entry.topics);
       const item = document.createElement("div");
       item.className = "file-item";
-      if (hasFC) {
-        item.textContent = `Day ${entry.day} (${author})`;
-        item.addEventListener("click", () => { showFlashcardsIndex(); loadFlashcards(entry.day, true); });
-      } else {
-        item.innerHTML = `Day ${entry.day} (<b>Rest Day</b>)`;
-      }
+      item.style.whiteSpace = "normal";  // allow multi-line if authors are long
+      item.textContent = `Day ${entry.day} (${author})`;
+      item.addEventListener("click", () => { showFlashcardsIndex(); loadFlashcards(entry.day, true); });
       container.appendChild(item);
-    }
+    });
   });
 
   const fullContainer = document.createElement("div");
@@ -149,20 +135,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function showFlashcardsIndex() {
     content.innerHTML = `<h2>Flashcards</h2><div id="flash-index" style="display:flex;flex-direction:column;gap:8px;"></div>`;
     const idx = document.getElementById("flash-index");
-    for (const entry of studyData) {
-      const hasFC = await hasFlashcards(entry.day);
+    studyData.forEach(entry => {
       const author = extractAuthors(entry.topics);
       const div = document.createElement("div");
       div.className = "file-item";
+      div.style.whiteSpace = "normal"; // allow wrapping for long author strings
       div.style.padding = "8px";
-      if (hasFC) {
-        div.textContent = `Day ${entry.day} (${author})`;
-        div.addEventListener("click", () => loadFlashcards(entry.day, true));
-      } else {
-        div.innerHTML = `Day ${entry.day} (<b>Rest Day</b>)`;
-      }
+      div.textContent = `Day ${entry.day} (${author})`;
+      div.addEventListener("click", () => loadFlashcards(entry.day, true));
       idx.appendChild(div);
-    }
+    });
   }
 
   function scrollToDay(dayNumber) {
@@ -181,10 +163,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     if(replaceContent) content.innerHTML=`<h2>Day ${dayNumber} Flashcards</h2>`;
     const parent = replaceContent ? content : document.getElementById("flash-index") || content;
     try {
-      const res = await fetch(path); if(!res.ok) throw 0;
+      const res = await fetch(path);
+      if(!res.ok) throw 0;
       const txt = await res.text();
       const lines = txt.split("\n").filter(l=>l.trim()&&!l.startsWith("#"));
-      if(!lines.length){ if(replaceContent) content.innerHTML+="<p><b>Rest Day</b></p>"; return; }
+      if(!lines.length){ 
+        if(replaceContent) content.innerHTML+="<p><b>Rest Day</b></p>"; 
+        return; 
+      }
 
       const container = document.createElement("div");
       container.style.display="flex"; container.style.flexDirection="column"; container.style.gap="12px";
