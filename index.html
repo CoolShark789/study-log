@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const m = t.match(/^\s*([^:]+)\s*:/);
       if (m && m[1]) return m[1].trim();
     }
-    const known = ["Stewart","Lay","Velleman","Vellerman","Abbott","Friedberg","Resnick"];
+    const known = ["Stewart","Lay","Velleman","Vellerman","Abbott","Friedberg","Kleppner"];
     for (const t of topics) {
       for (const k of known) {
         const re = new RegExp("\\b" + k.replace(/[:]/g,"") + "\\b","i");
@@ -244,7 +244,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         {name:"Abbott's Intro to Real Analysis", status:"ongoing"},
         {name:"Friedberg's Linear Algebra", status:"planned"},
         {name:"Stewart's Calculus (Chapters 12-16)", status:"planned"},
-        {name:"Resnick's Physics (Chapters 1-20)", status:"planned"},
+        {name:"Kleppner's Physics (Chapters 1-20)", status:"planned"},
         {name:"Python (Basics, Numpy, Pandas)", status:"planned"}
       ];
       const ssPlansDiv=document.getElementById("ss-plans");

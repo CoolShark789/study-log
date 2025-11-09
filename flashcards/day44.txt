@@ -1,0 +1,7 @@
+#separator:tab
+#html:false
+\[\text{What does the Preservation of Compact Sets state?}\]	\[\text{Let}\;f:A\rightarrow\mathbb{R}\;\text{be continuous on}\;A.\;\text{If}\;K\subseteq A\;\text{is compact then}\;f(K)\;\text{is compact}\]
+\[\text{What does the Extreme Value Theorem state?}\]	\[\text{If}\;f:K\rightarrow\mathbb{R}\;\text{is continuous on a compact set}\;K\subseteq\mathbb{R}\;\text{then}\;f\;\text{has}\;\max\;\text{and}\;\min\;\text{values}\]\[\forall x\in K\;\exists x_0,x_1\in K\;\text{s.t.}\;f(x_0)\le f(x)\le f(x_1)\]
+\[\text{What does Uniform Continuity state?}\]	\[\text{A function}\;f:A\rightarrow\mathbb{R}\;\text{is uniformly continuous on}\;A\;\text{if:}\]\[\forall\epsilon >0\;\exists\delta >0\;\text{s.t.}\;\forall x,y\in A\;|x-y|<\delta\rightarrow |f(x)-f(y)|<\epsilon\]
+\[\text{Prove that}\;f(x)=x^2\;\text{is continuous on}\;\mathbb{R}\]	\[\text{Let}\;c\in\mathbb{R}\;\text{be arbitrary.}\;\forall\epsilon >0\;\exists\delta >0\;\text{s.t.}\;|x-c|<\delta\rightarrow |f(x)-f(c)|<\epsilon\]\[\delta\le 1\Rightarrow x\in (c-1,c+1)\implies |x+c|\le |x|+|c|\le |c|+1+|c|=2|c|+1\]\[\text{Let}\;\delta =\frac{\epsilon}{2|c|+1}\;\text{then}\;|f(x)-f(c)|=|x+c||x-c|<\frac{\epsilon}{2|c|+1}(2|c|+1)=\epsilon\]\[\hspace{35em}\square\]
+\[\text{What does Sequential Criterion for Absence of Uniform Continuity state?}\]	\[f:A\rightarrow\mathbb{R}\;\text{isn't continuous on}\;A\iff\exists\epsilon_0,\;\exists x_n,y_n\in A\;\text{s.t.}\;|x_n-y_n|\rightarrow0\;\text{but}\;|f(x_n)-f(y_n)|\ge\epsilon_0\]
