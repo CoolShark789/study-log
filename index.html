@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const studyData = await fetch("study_log.json").then(r => r.json());
 
-  // Only extract known authors, ignore extra words
+  // Extract only known authors
   function extractAuthors(topics) {
     const authors = new Set();
     const known = ["Stewart","Lay","Velleman","Vellerman","Abbott","Friedberg","Kleppner"];
@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     listItemsFunc(contentDiv);
   }
 
-  // Study log folder
+  // Study log
   createFolder("Study Log", (container) => {
     studyData.forEach(entry => {
       const item = document.createElement("div");
@@ -102,13 +102,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
-  // Flashcards folder: show authors immediately (no fetch), Rest Day marked later when loading flashcards
+  // Flashcards sidebar: display authors now, Rest Day set when loading flashcards
   createFolder("Flashcards", (container) => {
     studyData.forEach(entry => {
       const author = extractAuthors(entry.topics);
       const item = document.createElement("div");
       item.className = "file-item";
-      item.style.whiteSpace = "normal";  // allow multi-line if authors are long
+      item.style.whiteSpace = "normal";  // allow wrapping
       item.textContent = `Day ${entry.day} (${author})`;
       item.addEventListener("click", () => { showFlashcardsIndex(); loadFlashcards(entry.day, true); });
       container.appendChild(item);
@@ -139,9 +139,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       const author = extractAuthors(entry.topics);
       const div = document.createElement("div");
       div.className = "file-item";
-      div.style.whiteSpace = "normal"; // allow wrapping for long author strings
+      div.style.whiteSpace = "normal";
       div.style.padding = "8px";
-      div.textContent = `Day ${entry.day} (${author})`;
+      div.textContent = `Day ${entry.day} (${author})`; // always show authors here
       div.addEventListener("click", () => loadFlashcards(entry.day, true));
       idx.appendChild(div);
     });
@@ -256,7 +256,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 });
 </script>
-
 
 </body>
 </html>
