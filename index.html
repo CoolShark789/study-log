@@ -63,19 +63,28 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const studyData = await fetch("study_log.json").then(r => r.json());
 
-  function extractAuthor(topics) {
-    for (const t of topics) {
-      const m = t.match(/^\s*([^:]+)\s*:/);
-      if (m && m[1]) return m[1].trim();
-    }
+  async function hasFlashcards(dayNumber) {
+    try {
+      const r = await fetch(`flashcards/day${dayNumber}.txt`);
+      if (!r.ok) return false;
+      const t = await r.text();
+      const lines = t.split("\n").filter(l => l.trim() && !l.startsWith("#"));
+      return lines.length > 0;
+    } catch { return false; }
+  }
+
+  function extractAuthors(topics) {
+    const authors = new Set();
     const known = ["Stewart","Lay","Velleman","Vellerman","Abbott","Friedberg","Kleppner"];
     for (const t of topics) {
+      const m = t.match(/^\s*([^:]+)\s*:/);
+      if (m && m[1]) authors.add(m[1].trim());
       for (const k of known) {
         const re = new RegExp("\\b" + k.replace(/[:]/g,"") + "\\b","i");
-        if (re.test(t)) return t.match(re)[0];
+        if (re.test(t)) authors.add(t.match(re)[0]);
       }
     }
-    return "Unknown";
+    return authors.size ? [...authors].join("+") : "Unknown";
   }
 
   function createFolder(titleText, listItemsFunc) {
@@ -103,15 +112,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
-  createFolder("Flashcards", (container) => {
-    studyData.forEach(entry => {
-      const author = extractAuthor(entry.topics);
+  // Flashcards sidebar folder
+  createFolder("Flashcards", async (container) => {
+    for (const entry of studyData) {
+      const hasFC = await hasFlashcards(entry.day);
+      const author = extractAuthors(entry.topics);
       const item = document.createElement("div");
       item.className = "file-item";
-      item.textContent = `Day ${entry.day} (${author})`;
-      item.addEventListener("click", () => { showFlashcardsIndex(); loadFlashcards(entry.day, true); });
+      if (hasFC) {
+        item.textContent = `Day ${entry.day} (${author})`;
+        item.addEventListener("click", () => { showFlashcardsIndex(); loadFlashcards(entry.day, true); });
+      } else {
+        item.innerHTML = `Day ${entry.day} (<b>Rest Day</b>)`;
+      }
       container.appendChild(item);
-    });
+    }
   });
 
   const fullContainer = document.createElement("div");
@@ -131,18 +146,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   function showFullStudyLog() { content.innerHTML=""; content.appendChild(fullContainer); content.focus(); }
 
-  function showFlashcardsIndex() {
+  async function showFlashcardsIndex() {
     content.innerHTML = `<h2>Flashcards</h2><div id="flash-index" style="display:flex;flex-direction:column;gap:8px;"></div>`;
     const idx = document.getElementById("flash-index");
-    studyData.forEach(entry => {
-      const author = extractAuthor(entry.topics);
+    for (const entry of studyData) {
+      const hasFC = await hasFlashcards(entry.day);
+      const author = extractAuthors(entry.topics);
       const div = document.createElement("div");
       div.className = "file-item";
       div.style.padding = "8px";
-      div.textContent = `Day ${entry.day} (${author})`;
-      div.addEventListener("click", () => loadFlashcards(entry.day, true));
+      if (hasFC) {
+        div.textContent = `Day ${entry.day} (${author})`;
+        div.addEventListener("click", () => loadFlashcards(entry.day, true));
+      } else {
+        div.innerHTML = `Day ${entry.day} (<b>Rest Day</b>)`;
+      }
       idx.appendChild(div);
-    });
+    }
   }
 
   function scrollToDay(dayNumber) {
@@ -164,7 +184,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const res = await fetch(path); if(!res.ok) throw 0;
       const txt = await res.text();
       const lines = txt.split("\n").filter(l=>l.trim()&&!l.startsWith("#"));
-      if(!lines.length){ if(replaceContent) content.innerHTML+="<p>No flashcards for this day.</p>"; return; }
+      if(!lines.length){ if(replaceContent) content.innerHTML+="<p><b>Rest Day</b></p>"; return; }
 
       const container = document.createElement("div");
       container.style.display="flex"; container.style.flexDirection="column"; container.style.gap="12px";
@@ -174,29 +194,19 @@ document.addEventListener("DOMContentLoaded", async () => {
       lines.forEach((line,i)=>{
         const [title, answer] = line.split("\t");
         if(!title) return;
-
         const card = document.createElement("div");
         card.className="flashcard-card";
-
-        // Question
         const qDiv = document.createElement("div");
         qDiv.style.fontWeight="700";
         qDiv.style.marginBottom="6px";
         qDiv.textContent = `${i+1}) ${title}`;
         card.appendChild(qDiv);
-
-        // Answer
         const aDiv = document.createElement("div");
         aDiv.className="a";
         aDiv.textContent = answer || "";
         card.appendChild(aDiv);
-
         container.appendChild(card);
-
-        // Render question LaTeX
         renderMathInElement(qDiv, { delimiters:[{left:"\\[", right:"\\]", display:true}] });
-
-        // Click to toggle answer
         card.addEventListener("click", ()=>{
           if(aDiv.style.display==="block"){
             aDiv.style.display="none";
@@ -216,7 +226,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         content.scrollTo({top:target,behavior:"smooth"});
       }
 
-    } catch { if(replaceContent) content.innerHTML+="<p>No flashcards file.</p>"; }
+    } catch { if(replaceContent) content.innerHTML+="<p><b>Rest Day</b></p>"; }
   }
 
   showFullStudyLog();
@@ -244,7 +254,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         {name:"Abbott's Intro to Real Analysis", status:"ongoing"},
         {name:"Friedberg's Linear Algebra", status:"planned"},
         {name:"Stewart's Calculus (Chapters 12-16)", status:"planned"},
-        {name:"Kleppner's Physics (Chapters 1-20)", status:"planned"},
+        {name:"Kleppner's Physics", status:"planned"},
         {name:"Python (Basics, Numpy, Pandas)", status:"planned"}
       ];
       const ssPlansDiv=document.getElementById("ss-plans");
@@ -258,9 +268,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
     }
   });
-
 });
 </script>
+
 
 </body>
 </html>
