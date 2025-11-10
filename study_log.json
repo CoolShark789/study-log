@@ -516,6 +516,21 @@
       "Preservation of Compact Sets, Extreme Value Theorem",
       "Uniform Continuity, Sequential Criterion for Absence of Uniform Continuity; Uniform Continuity on Compact Sets"
     ]
+  },
+  {
+    "day": 45,
+    "date": "10.11.2025",
+    "topics": [
+      "Abbott: Sections 4.5",
+      "Pages 136-140",
+      "The Intermediate Value Theorem, Preservation of Connected Sets; Characterization of Connected Sets",
+      "Intermediate Value Property",
+      "",
+      "Stewart: Sections 12.1, 12.2, 12.3",
+      "Pages 829-855",
+      "3D space: distance, sphere equation, vectors basics",
+      "Dot product, Direction angles and cosines (+relation to unit vectors), Scalar and Vector projections"
+    ]
   }
 ]
 
