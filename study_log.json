@@ -531,6 +531,22 @@
       "3D space: distance, sphere equation, vectors basics",
       "Dot product, Direction angles and cosines (+relation to unit vectors), Scalar and Vector projections"
     ]
+  },
+  {
+    "day": 46,
+    "date": "11.11.2025",
+    "topics": [
+      "Stewart: Sections 12.4",
+      "Pages 855-864",
+      "- Cross Product: formula, meaning, length, properties...",
+      "",
+      "Kleppner: Sections 1.1-1.11.3",
+      "Pages 1-31",
+      "Vectors review; Position vector",
+      "Average and Instantaneous Velocity, Instantaneous Acceleration",
+      "Motion in several dimensions, constant and non constant acceleration formulas",
+      "Rotation vector derivation; Polar coordinates with vectors"
+    ]
   }
 ]
 
