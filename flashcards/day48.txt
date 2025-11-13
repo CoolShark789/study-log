@@ -1,0 +1,12 @@
+#separator:tab
+#html:false
+\[\text{What does the Gravitational Force between two objects equal to?}\]	\[|\mathbf{F}_{b,a}|=\frac{GM_aM_b}{r^2}\]
+\[\text{What does Gravitational Force equal to in the vector form?}\]	\[\mathbf{F}_{a,b}=-\frac{GM_1M_2}{r^2}\hat{\mathbf{r}}_{a,b}\]\[\mathbf{F}_{a,b}\;\text{is the force on}\;b\;\text{due to}\;a\;\text{and}\;\hat{\mathbf{r}}_{a,b}\;\text{points from}\;a\;\text{to}\;b\]
+\[\text{What does}\;\mathbf{g}\;\text{equal to?}\]	\[\mathbf{a}=\frac{\mathbf{F}}{m}=\frac{-\frac{GM_Em}{R_E ^2}\hat{\mathbf{r}}}{m}=-\frac{GM_E}{R_E ^2}\hat{\mathbf{r}}=\mathbf{g}\]
+\[\text{What is the Gravitational Force on the object inside the hollow sphere and why?}\]	\[\text{Take some arbitrary point inside, make two cones with apex at this point with bases being really small}\]\[\text{Then we can consider those surfaces to be disks with area being}\;A=\pi r^2=\pi x^2\tan^2 \theta\;\text{where}\;x\;\text{is the distance from the point}\]\[\text{Because area increases quadratically and gravitational force decreases quadratically, they cancel out}\implies \boxed{0}\]
+\[\text{How does}\;g\;\text{decrease with height?}\]	\[\text{For small values of}\;h:\quad \frac{dg}{dr}\approx \frac{g(R_E+h)-g(R_E)}{h}\Rightarrow \Delta g=g(R_E+h)-g(R_E)\approx h\frac{dg}{dr}\]\[\frac{dg}{dr}=\frac{d}{dr}\left(\frac{GM_E}{R_E ^2}\right)=-2\frac{GM_E}{R_E ^3}\Rightarrow\Delta g\approx -2h\frac{GM_E}{R_E ^3}=-2g\frac{h}{R_E}\]
+\[\text{What does Weight equal to in vector form?}\]	\[\mathbf{W}=-\frac{GM_Em}{R_E ^2}\hat{\mathbf{r}}=m\mathbf{g}\]
+\[\text{What is the Hooke's Law?}\]	\[F_s=-k(x-x_0)\]
+\[\text{What is the simple harmonic motion?}\]	\[\text{Motion of a mass on a spring that is displaced from equilibrium and released}\]
+\[\text{What is the formula of a Harmonic Oscillator and why?}\]	\[\text{Mass}\;M\;\text{in equilibrium position:}\quad M\frac{d^2x}{dt^2}=-kx\Rightarrow\frac{d^2x}{dt^2}=-\frac{k}{M}x\implies x(t)=A\sin(\omega t+\phi)\]\[\frac{d^2x}{dt^2}=-\omega^2 x(t)=-\frac{k}{M}x\Rightarrow\omega =\sqrt{\frac{k}{M}}\implies\boxed{\frac{d^2x}{dt^2}+\omega ^2x=0}\]
+\[\text{What is the relation between angular frequency and period?}\]	\[\omega T=2\pi\]
