@@ -166,13 +166,20 @@ document.addEventListener("DOMContentLoaded", async () => {
             card.className="flashcard-card";
             const qDiv=document.createElement("div");
             qDiv.style.fontWeight="700"; qDiv.style.marginBottom="6px";
-            qDiv.textContent=`${i+1}) Day ${fc.day}: ${fc.title}`;
+            qDiv.innerHTML=`${i+1}) Day ${fc.day}: ${fc.title}`;
             card.appendChild(qDiv);
             const aDiv=document.createElement("div");
             aDiv.className="a";
-            aDiv.textContent=fc.answer;
+            aDiv.innerHTML=fc.answer || "";
             card.appendChild(aDiv);
-            renderMathInElement(qDiv, { delimiters:[{left:"\\[", right:"\\]", display:true}] });
+            renderMathInElement(qDiv, { delimiters:[
+              {left:"\\[", right:"\\]", display:true},
+              {left:"\\(", right:"\\)", display:false}
+            ] });
+            renderMathInElement(aDiv, { delimiters:[
+              {left:"\\[", right:"\\]", display:true},
+              {left:"\\(", right:"\\)", display:false}
+            ] });
             card.addEventListener("click", ()=>aDiv.style.display=(aDiv.style.display==="block"?"none":"block"));
             containerDiv.appendChild(card);
           });
@@ -249,13 +256,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         card.className="flashcard-card";
         const qDiv = document.createElement("div");
         qDiv.style.fontWeight="700"; qDiv.style.marginBottom="6px";
-        qDiv.textContent = `${i+1}) ${title}`;
+        qDiv.innerHTML = `${i+1}) ${title}`;
         card.appendChild(qDiv);
         const aDiv = document.createElement("div");
         aDiv.className="a";
-        aDiv.textContent = answer || "";
+        aDiv.innerHTML = answer || "";
         card.appendChild(aDiv);
-        renderMathInElement(qDiv, { delimiters:[{left:"\\[", right:"\\]", display:true}] });
+        renderMathInElement(qDiv, { delimiters: [
+          {left:"\\[", right:"\\]", display:true},
+          {left:"\\(", right:"\\)", display:false}
+        ] });
+        renderMathInElement(aDiv, { delimiters: [
+          {left:"\\[", right:"\\]", display:true},
+          {left:"\\(", right:"\\)", display:false}
+        ] });
         card.addEventListener("click", ()=>aDiv.style.display=(aDiv.style.display==="block"?"none":"block"));
         container.appendChild(card);
       });
