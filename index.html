@@ -344,7 +344,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   function generateCalendar() {
     if(calendarContainer.children.length) return;
     if(!studyData.length) return;
-    const firstStudyDate = new Date(studyData[0].date);
+    const firstStudyDate = new Date(studyData[0].date.split(".").reverse().join("-"));
     firstStudyDate.setDate(1);
     const today = new Date();
     let current = new Date(firstStudyDate);
@@ -375,7 +375,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         const cell = document.createElement("div");
         cell.style.width="32px"; cell.style.height="32px"; cell.style.lineHeight="32px";
         cell.style.textAlign="center"; cell.style.borderRadius="50%"; cell.style.fontWeight="700";
-        const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+        // generate dateStr in DD.MM.YYYY
+        const dayStr = String(day).padStart(2,"0");
+        const monthStr = String(month+1).padStart(2,"0");
+        const dateStr = `${dayStr}.${monthStr}.${year}`;
         const entry = studyData.find(e=>e.date===dateStr);
         if(entry){ cell.style.background="lightgreen"; cell.style.color="#000"; cell.addEventListener("click",()=>scrollToDay(entry.day)); }
         else{ cell.style.background="red"; cell.style.color="#fff"; }
