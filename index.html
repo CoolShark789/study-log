@@ -376,7 +376,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     calendarContainer.style.display = "grid";
     calendarContainer.style.gridTemplateColumns = "repeat(3, 200px)";
     calendarContainer.style.justifyItems = "center";
-    calendarContainer.style.gap = "240px";
+    calendarContainer.style.gap = "200px";
   
     months.forEach(monthDate=>{
       const monthBlock = document.createElement("div");
@@ -386,7 +386,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   
       const title = document.createElement("div");
       title.style.fontWeight="bold";
-      title.style.marginBottom="16px";
+      title.style.marginBottom="64px";
       title.textContent = monthDate.toLocaleString('default',{ month:'long', year:'numeric' });
       monthBlock.appendChild(title);
   
@@ -455,6 +455,3 @@ document.addEventListener("DOMContentLoaded", async () => {
 </script>
 </body>
 </html>
-
-
-
