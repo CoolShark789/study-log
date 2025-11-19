@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const calendarContainer = document.getElementById("calendar-container");
 
   const studyData = await fetch("study_log.json").then(r => r.json());
-  const knownAuthors = ["Stewart","Lay","Velleman","Vellerman","Abbott","Friedberg","Kleppner"];
+  const knownAuthors = ["Stewart","Lay","Velleman","Abbott","Friedberg","Kleppner"];
   const authorSplitExceptions = { "Day16": [4], "Day45": [4], "Day46": [10] };
 
   // --- Preload all flashcards at once ---
@@ -190,8 +190,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     wrapper.appendChild(document.createElement("br"));
     wrapper.appendChild(document.createElement("br"));
   
+    // Use authors from authorMap (only authors with flashcards)
     const authorDiv = document.createElement("div");
-    knownAuthors.forEach(author => {
+    Object.keys(authorMap).forEach(author => {
       const label = document.createElement("label");
       label.style.display = "block";
       const checkbox = document.createElement("input");
@@ -216,16 +217,18 @@ document.addEventListener("DOMContentLoaded", async () => {
       const selectedNumber = parseInt(numberSelect.value);
       const selectedAuthors = Array.from(authorDiv.querySelectorAll("input:checked")).map(c => c.value);
       let allFlashcards = [];
-      for (const entry of studyData) {
+      studyData.forEach(entry => {
         const authorsOfDay = extractAuthors(entry.topics).split("+").map(a => a.trim());
-        if (selectedAuthors.length && !authorsOfDay.some(a => selectedAuthors.includes(a))) continue;
+        if (selectedAuthors.length && !authorsOfDay.some(a => selectedAuthors.includes(a))) return;
         allFlashcards.push(...flashcardsCache[entry.day]);
-      }
+      });
+  
       // shuffle
       for (let i = allFlashcards.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [allFlashcards[i], allFlashcards[j]] = [allFlashcards[j], allFlashcards[i]];
       }
+  
       const selected = allFlashcards.slice(0, selectedNumber);
       const box = document.createElement("div");
       box.style.display = "flex";
@@ -471,3 +474,4 @@ document.addEventListener("DOMContentLoaded", async () => {
 </script>
 </body>
 </html>
+
