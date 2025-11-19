@@ -21,34 +21,38 @@ body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
 .file-item { cursor: pointer; padding: 6px 8px; border-radius: 6px; margin-bottom: 6px; transition: background 0.14s, font-weight 0.14s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .file-item:hover { background: white; font-weight: bold; }
 
-#self-study-btn, #calendar-btn {
+#self-study-btn {
   position: fixed; top: 12px; right: 12px;
   background: #222; color: #fff; border: 1px solid #555;
   padding: 8px 12px; border-radius: 6px; cursor: pointer; z-index: 1000;
 }
-#calendar-btn { top: 50px; }
 
-#self-study-page, #calendar-page {
+#self-study-page {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
   background: rgba(0,0,0,0.95); color: white;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   opacity: 0; pointer-events: none; transition: opacity 0.32s ease; z-index: 999;
-  padding: 40px; box-sizing: border-box; overflow-y: auto;
+  padding: 40px; box-sizing: border-box; text-align: center;
 }
-#self-study-page.visible, #calendar-page.visible { opacity: 1; pointer-events: auto; }
+#self-study-page.visible { opacity: 1; pointer-events: auto; }
 
 .status-square { display:inline-block; width:15px; height:15px; margin-right:8px; vertical-align:middle; }
 section.day-section { margin-bottom: 40px; padding-bottom: 10px; border-bottom: 1px solid #ddd; }
 .flashcard-card { border:1px solid #ccc; padding:10px; border-radius:6px; background:#fff; cursor:pointer; }
 .flashcard-card .a { display:none; margin-top:6px; }
 
-.calendar-month { margin-bottom: 20px; width:100%; max-width:960px; }
-.calendar-month h3 { margin-bottom:8px; }
-.calendar-grid { display: grid; grid-template-columns: repeat(7, 28px); gap:4px; }
-.calendar-day { width:28px; height:28px; display:flex; align-items:center; justify-content:center; border-radius:50%; font-size:12px; cursor:pointer; }
-.calendar-day.gold { background: gold; color: black; }
-.calendar-day.green { background: lightgreen; color: black; }
-.calendar-day.red { background: #ff5c5c; color: white; }
+/* Calendar styles */
+#study-calendar { display: flex; flex-wrap: nowrap; overflow-x: auto; padding: 12px; margin-top: 20px; }
+.month-container { display: flex; flex-direction: column; border: 1px solid #ccc; margin-right: 12px; border-radius: 6px; background:#fff; min-width: 220px; }
+.month-header { text-align: center; font-weight: bold; padding: 6px 0; background: #f5f5f5; border-bottom: 1px solid #ccc; }
+.weekdays { display: flex; justify-content: space-between; padding: 4px 6px; font-size: 12px; background:#eee; }
+.weekdays div { width: 28px; text-align: center; }
+.days-grid { display: flex; flex-wrap: wrap; padding: 4px; }
+.day-cell { width: 28px; height: 28px; margin: 1px; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; border-radius:4px; transition: transform 0.1s; }
+.day-cell:hover { transform: scale(1.15); }
+.day-cell.flashcard { background: orange; color: #fff; font-weight: bold; }
+.day-cell.rest { background: lightgray; color: #333; }
+.day-cell.today { border: 2px solid green; }
 </style>
 </head>
 <body>
@@ -56,17 +60,12 @@ section.day-section { margin-bottom: 40px; padding-bottom: 10px; border-bottom: 
 <div id="sidebar"></div>
 <div id="content" tabindex="0"></div>
 <button id="self-study-btn">Self-Study Stats</button>
-<button id="calendar-btn">Calendar</button>
 
 <div id="self-study-page" aria-hidden="true">
   <h1 id="ss-day-count" style="font-size:48px; margin-bottom:18px;"></h1>
   <h2 id="ss-total-cards" style="font-size:32px; margin-bottom:28px;"></h2>
   <div id="ss-plans" style="font-size:18px; max-width:760px;"></div>
-</div>
-
-<div id="calendar-page" aria-hidden="true">
-  <h1 style="margin-bottom:24px;">Study Calendar</h1>
-  <div id="calendar-container"></div>
+  <div id="study-calendar"></div>
 </div>
 
 <script>
@@ -75,9 +74,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const content = document.getElementById("content");
   const selfStudyBtn = document.getElementById("self-study-btn");
   const selfStudyPage = document.getElementById("self-study-page");
-  const calendarBtn = document.getElementById("calendar-btn");
-  const calendarPage = document.getElementById("calendar-page");
-  const calendarContainer = document.getElementById("calendar-container");
+  const calendarDiv = document.getElementById("study-calendar");
 
   const studyData = await fetch("study_log.json").then(r => r.json());
   const knownAuthors = ["Stewart","Lay","Velleman","Vellerman","Abbott","Friedberg","Kleppner"];
@@ -107,6 +104,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     listItemsFunc(contentDiv);
   }
 
+  // Study Log
   createFolder("Study Log", container => {
     studyData.forEach(entry => {
       const item = document.createElement("div");
@@ -117,6 +115,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
+  // Flashcards
   createFolder("Flashcards", container => {
     studyData.forEach(entry => {
       const author = extractAuthors(entry.topics);
@@ -130,12 +129,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
-  const authorSplitExceptions = {
-    "Day16": [4],
-    "Day45": [4],
-    "Day46": [10]
-  };
-
+  // Authors (unchanged)
+  const authorSplitExceptions = {"Day16":[4],"Day45":[4],"Day46":[10]};
   createFolder("Authors", container => {
     const authorMap = {};
     async function processAuthor(dayEntry){
@@ -153,14 +148,13 @@ document.addEventListener("DOMContentLoaded", async () => {
           const count = splitCounts?.[i] ?? (i===authors.length-1 ? lines.length-startIdx : 0);
           for(let j=startIdx;j<startIdx+count;j++){
             if(!authorMap[author]) authorMap[author]=[];
-            const [title, answer] = lines[j]?.split("\t") || ["", ""];
-            if(title) authorMap[author].push({day: dayEntry.day, title, answer});
+            const [title, answer] = lines[j]?.split("\t") || ["",""];
+            if(title) authorMap[author].push({day: dayEntry.day,title,answer});
           }
           startIdx+=count;
         }
       }catch{}
     }
-
     (async ()=>{
       for(const entry of studyData) await processAuthor(entry);
       Object.keys(authorMap).forEach(author=>{
@@ -194,6 +188,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     })();
   });
 
+  // Full Study Log container
   const fullContainer = document.createElement("div");
   fullContainer.id = "full-study-log";
   fullContainer.style.paddingRight = "8px";
@@ -285,6 +280,64 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   showFullStudyLog();
 
+  function buildCalendar() {
+    calendarDiv.innerHTML = "";
+    if(!studyData.length) return;
+    const dateMap = {};
+    studyData.forEach(d=>{ dateMap[d.date] = d.day; });
+    const todayStr = new Date().toISOString().split("T")[0];
+
+    let startDate = new Date(studyData[0].date);
+    let endDate = new Date(studyData[studyData.length-1].date);
+    const numMonths = 4;
+    let monthDate = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
+
+    for(let m=0; m<numMonths; m++){
+      const monthContainer = document.createElement("div");
+      monthContainer.className="month-container";
+      const header = document.createElement("div");
+      header.className="month-header";
+      header.textContent = monthDate.toLocaleString('default',{month:'long',year:'numeric'});
+      monthContainer.appendChild(header);
+
+      const weekdaysDiv = document.createElement("div");
+      weekdaysDiv.className="weekdays";
+      ["Su","Mo","Tu","We","Th","Fr","Sa"].forEach(d=>{
+        const wd=document.createElement("div"); wd.textContent=d; weekdaysDiv.appendChild(wd);
+      });
+      monthContainer.appendChild(weekdaysDiv);
+
+      const daysGrid = document.createElement("div");
+      daysGrid.className="days-grid";
+
+      const firstDay = new Date(monthDate.getFullYear(), monthDate.getMonth(),1).getDay();
+      const daysInMonth = new Date(monthDate.getFullYear(), monthDate.getMonth()+1,0).getDate();
+
+      for(let i=0;i<firstDay;i++){
+        const emptyCell=document.createElement("div");
+        emptyCell.className="day-cell";
+        daysGrid.appendChild(emptyCell);
+      }
+
+      for(let d=1;d<=daysInMonth;d++){
+        const dateStr=`${monthDate.getFullYear()}-${String(monthDate.getMonth()+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+        const cell=document.createElement("div");
+        cell.className="day-cell";
+        cell.textContent=d;
+        if(dateMap[dateStr]) cell.classList.add("flashcard");
+        else cell.classList.add("rest");
+        if(dateStr===todayStr) cell.classList.add("today");
+        cell.addEventListener("click",()=>{ if(dateMap[dateStr]) scrollToDay(dateMap[dateStr]); });
+        daysGrid.appendChild(cell);
+      }
+
+      monthContainer.appendChild(daysGrid);
+      calendarDiv.appendChild(monthContainer);
+
+      monthDate.setMonth(monthDate.getMonth()+1);
+    }
+  }
+
   selfStudyBtn.addEventListener("click", async ()=>{
     const visible = selfStudyPage.classList.toggle("visible");
     selfStudyPage.setAttribute("aria-hidden", visible?"false":"true");
@@ -320,44 +373,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         row.innerHTML=`<span class="status-square" style="background:${color}"></span>${p.name}`;
         ssPlansDiv.appendChild(row);
       });
-    }
-  });
-
-  // Calendar toggle
-  calendarBtn.addEventListener("click", ()=>{
-    const visible = calendarPage.classList.toggle("visible");
-    calendarPage.setAttribute("aria-hidden", visible?"false":"true");
-    if(!visible) return;
-
-    calendarContainer.innerHTML = "";
-    const studyMap = {};
-    studyData.forEach(d=>{ studyMap[d.date] = d.day; });
-    const firstDay = new Date(studyData[0].date);
-    const lastDay = new Date();
-    let current = new Date(firstDay.getFullYear(), firstDay.getMonth(), 1);
-    const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-    while(current <= lastDay){
-      const monthDiv = document.createElement("div");
-      monthDiv.className = "calendar-month";
-      const header = document.createElement("h3");
-      header.textContent = `${monthNames[current.getMonth()]} ${current.getFullYear()}`;
-      monthDiv.appendChild(header);
-      const grid = document.createElement("div");
-      grid.className = "calendar-grid";
-      const totalDays = new Date(current.getFullYear(), current.getMonth()+1,0).getDate();
-      for(let d=1; d<=totalDays; d++){
-        const dayDiv = document.createElement("div");
-        dayDiv.className = "calendar-day";
-        const dateStr = `${current.getFullYear()}-${String(current.getMonth()+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
-        dayDiv.textContent = d;
-        if(dateStr === studyData[0].date) dayDiv.classList.add("gold");
-        else if(studyMap[dateStr]) dayDiv.classList.add("green");
-        else dayDiv.classList.add("red");
-        grid.appendChild(dayDiv);
-      }
-      monthDiv.appendChild(grid);
-      calendarContainer.appendChild(monthDiv);
-      current.setMonth(current.getMonth()+1);
+      buildCalendar();
     }
   });
 });
