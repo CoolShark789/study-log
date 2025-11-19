@@ -463,9 +463,22 @@ document.addEventListener("DOMContentLoaded", async () => {
           cell.style.background = hasFlashcards ? "lightgreen" : "red";
           cell.style.color = hasFlashcards ? "#000" : "#fff";
           cell.style.cursor="pointer";
-          cell.addEventListener("click", ()=>{ scrollToDay(entry.day); calendarPage.style.display="none"; });
+          cell.addEventListener("click", ()=>{
+              showFullStudyLog();
+              scrollToDay(entry.day);
+              calendarPage.style.display = "none";
+          });
         } else { cell.style.background="#fff"; cell.style.color="#000"; }
-        if(dateStr===studyData[0].date){ cell.style.background="gold"; cell.style.color="#000"; cell.style.cursor="pointer"; cell.addEventListener("click", ()=>{ scrollToDay(studyData[0].day); calendarPage.style.display="none"; }); }
+        if(dateStr === studyData[0].date) {
+            cell.style.background = "gold";
+            cell.style.color = "#000";
+            cell.style.cursor = "pointer";
+            cell.addEventListener("click", () => {
+                showFullStudyLog();
+                scrollToDay(studyData[0].day);
+                calendarPage.style.display = "none";
+            });
+        }
         daysGrid.appendChild(cell);
       }
       monthBlock.appendChild(daysGrid);
@@ -477,3 +490,4 @@ document.addEventListener("DOMContentLoaded", async () => {
 </script>
 </body>
 </html>
+
