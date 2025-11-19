@@ -189,6 +189,85 @@ document.addEventListener("DOMContentLoaded", async () => {
     })();
   });
 
+  // Study Calendar
+  createFolder("Study Calendar", container => {
+    const calendarContainer = document.createElement("div");
+    calendarContainer.style.display = "flex";
+    calendarContainer.style.flexWrap = "wrap";
+    calendarContainer.style.gap = "12px";
+    container.appendChild(calendarContainer);
+  
+    const firstDay = new Date(studyData[0].date);
+    const today = new Date();
+    let year = firstDay.getFullYear();
+    let month = firstDay.getMonth(); // 0-indexed
+  
+    function daysInMonth(y, m) { return new Date(y, m + 1, 0).getDate(); }
+  
+    while (year < today.getFullYear() || (year === today.getFullYear() && month <= today.getMonth())) {
+      const monthDiv = document.createElement("div");
+      monthDiv.style.border = "1px solid #ccc";
+      monthDiv.style.padding = "6px";
+      monthDiv.style.borderRadius = "6px";
+      monthDiv.style.flex = "1 0 calc(25% - 12px)";
+      monthDiv.style.boxSizing = "border-box";
+      monthDiv.style.minWidth = "180px";
+  
+      const monthTitle = document.createElement("div");
+      monthTitle.style.textAlign = "center";
+      monthTitle.style.fontWeight = "bold";
+      monthTitle.style.marginBottom = "6px";
+      monthTitle.textContent = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric" }).format(new Date(year, month));
+      monthDiv.appendChild(monthTitle);
+  
+      const daysContainer = document.createElement("div");
+      daysContainer.style.display = "grid";
+      daysContainer.style.gridTemplateColumns = "repeat(7, 1fr)";
+      daysContainer.style.gap = "4px";
+  
+      const numDays = daysInMonth(year, month);
+      for (let d = 1; d <= numDays; d++) {
+        const dayCircle = document.createElement("div");
+        dayCircle.textContent = d;
+        dayCircle.style.width = "24px";
+        dayCircle.style.height = "24px";
+        dayCircle.style.borderRadius = "50%";
+        dayCircle.style.display = "flex";
+        dayCircle.style.alignItems = "center";
+        dayCircle.style.justifyContent = "center";
+        dayCircle.style.fontSize = "12px";
+        dayCircle.style.cursor = "pointer";
+        dayCircle.style.border = "1px solid #555";
+  
+        const dayStr = `${year}-${String(month+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+        const studyEntry = studyData.find(e => e.date === dayStr);
+        if (dayStr === studyData[0].date) {
+          dayCircle.style.background = "gold";
+          dayCircle.style.color = "#000";
+        } else if (studyEntry) {
+          dayCircle.style.background = "lightgreen";
+          dayCircle.style.color = "#000";
+        } else {
+          dayCircle.style.background = "red";
+          dayCircle.style.color = "#fff";
+        }
+  
+        dayCircle.addEventListener("click", () => {
+          const entry = studyData.find(e => e.date === dayStr);
+          if(entry) { showFullStudyLog(); scrollToDay(entry.day); }
+        });
+  
+        daysContainer.appendChild(dayCircle);
+      }
+  
+      monthDiv.appendChild(daysContainer);
+      calendarContainer.appendChild(monthDiv);
+  
+      month++;
+      if (month > 11) { month = 0; year++; }
+    }
+  });   
+  
   // Full Study Log container
   const fullContainer = document.createElement("div");
   fullContainer.id = "full-study-log";
@@ -329,3 +408,4 @@ document.addEventListener("DOMContentLoaded", async () => {
 </script>
 </body>
 </html>
+
