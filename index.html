@@ -21,8 +21,19 @@ body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
 .file-item { cursor: pointer; padding: 6px 8px; border-radius: 6px; margin-bottom: 6px; transition: background 0.14s, font-weight 0.14s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .file-item:hover { background: white; font-weight: bold; }
 
-#self-study-btn { position: fixed; top: 12px; right: 12px; background: #222; color: #fff; border: 1px solid #555; padding: 8px 12px; border-radius: 6px; cursor: pointer; z-index: 1000; }
-#self-study-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.32s ease; z-index: 999; padding: 40px; box-sizing: border-box; text-align: center; }
+#self-study-btn {
+  position: fixed; top: 12px; right: 12px;
+  background: #222; color: #fff; border: 1px solid #555;
+  padding: 8px 12px; border-radius: 6px; cursor: pointer; z-index: 1000;
+}
+
+#self-study-page {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.95); color: white;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity 0.32s ease; z-index: 999;
+  padding: 40px; box-sizing: border-box; text-align: center;
+}
 #self-study-page.visible { opacity: 1; pointer-events: auto; }
 
 .status-square { display:inline-block; width:15px; height:15px; margin-right:8px; vertical-align:middle; }
@@ -31,9 +42,30 @@ section.day-section { margin-bottom: 40px; padding-bottom: 10px; border-bottom: 
 .flashcard-card .a { display:none; margin-top:6px; }
 
 /* Calendar button and page */
-#study-calendar-btn { position: fixed; bottom: 24px; left: 24px; padding: 12px 18px; font-size: 14px; border: none; border-radius: 12px; background: #222; color: #fff; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.4); transition: transform 0.15s, box-shadow 0.15s, background 0.15s; z-index: 1000; }
-#study-calendar-btn:hover { background: #444; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.5); }
-#study-calendar-btn:active { transform: translateY(0); box-shadow: 0 4px 8px rgba(0,0,0,0.4); }
+#study-calendar-btn {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  padding: 12px 18px;
+  font-size: 14px;
+  border: none;
+  border-radius: 12px;
+  background: #222;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+  transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+  z-index: 1000;
+}
+#study-calendar-btn:hover {
+  background: #444;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.5);
+}
+#study-calendar-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+}
 #study-calendar-page { display:none; position:absolute; top:0; left:0; width:100%; height:100%; background:#fff; overflow-y:auto; padding:20px; box-sizing:border-box; z-index:998; }
 #study-calendar-page h2 { margin-bottom:16px; text-align: center;}
 #calendar-container { display:grid; grid-template-columns: repeat(3, 200px); justify-content: center; gap: 24px; }
@@ -97,51 +129,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     listItemsFunc(contentDiv);
   }
 
-  // Flashcards preloading
-  const flashcardsByDay = {};
-  await Promise.all(studyData.map(async entry => {
-    try {
-      const res = await fetch(`flashcards/day${entry.day}.txt`);
-      if(!res.ok) return;
-      const txt = await res.text();
-      const lines = txt.split("\n").filter(l=>l.trim()&&!l.startsWith("#"));
-      flashcardsByDay[entry.day] = lines.map(l=>{
-        const [title, answer] = l.split("\t");
-        return title ? { title, answer } : null;
-      }).filter(Boolean);
-    } catch {}
-  }));
-
-  const authorsByDay = {};
-  studyData.forEach(entry => {
-    authorsByDay[entry.day] = extractAuthors(entry.topics).split("+").map(a=>a.trim());
-  });
-
-  function renderFlashcards(cards){
-    const box = document.createElement("div");
-    box.style.display="flex";
-    box.style.flexDirection="column";
-    box.style.gap="12px";
-    cards.forEach((fc,i)=>{
-      const card=document.createElement("div");
-      card.className="flashcard-card";
-      const qDiv=document.createElement("div");
-      qDiv.style.fontWeight="700"; qDiv.style.marginBottom="6px";
-      qDiv.innerHTML=`${i+1}) ${fc.title}`;
-      card.appendChild(qDiv);
-      const aDiv=document.createElement("div");
-      aDiv.className="a";
-      aDiv.innerHTML=fc.answer||"";
-      card.appendChild(aDiv);
-      renderMathInElement(qDiv,{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}]});
-      renderMathInElement(aDiv,{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false}]});
-      card.addEventListener("click",()=>aDiv.style.display=aDiv.style.display==="block"?"none":"block");
-      box.appendChild(card);
-    });
-    content.appendChild(box);
-  }
-
-  // Study Log Folder
+  // Study Log
   createFolder("Study Log", container => {
     studyData.forEach(entry => {
       const item = document.createElement("div");
@@ -152,7 +140,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
-  // Flashcards Folder
+  // Flashcards
   createFolder("Flashcards", container => {
     studyData.forEach(entry => {
       const author = extractAuthors(entry.topics);
@@ -166,114 +154,318 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
-  // Random Flashcards Folder
+  // Random Flashcards
   createFolder("Random Flashcards", container => {
-    const btn = document.createElement("div");
-    btn.className = "file-item";
-    btn.textContent = "Shuffle & Show";
-    btn.addEventListener("click", async () => {
-      content.innerHTML = "<h2>Random Flashcards</h2>";
-      let all = [];
-      for (const entry of studyData) {
-        all.push(...(flashcardsByDay[entry.day]||[]));
-      }
-      for(let i=all.length-1;i>0;i--){
-        const j=Math.floor(Math.random()*(i+1));
-        [all[i], all[j]]=[all[j], all[i]];
-      }
-      renderFlashcards(all);
+    const wrapper = document.createElement("div");
+  
+    // Number dropdown
+    const numberLabel = document.createElement("label");
+    numberLabel.textContent = "Number of flashcards: ";
+    const numberSelect = document.createElement("select");
+    for (let i = 1; i <= 10; i++) {
+      const opt = document.createElement("option");
+      opt.value = i;
+      opt.textContent = i;
+      numberSelect.appendChild(opt);
+    }
+    numberLabel.appendChild(numberSelect);
+    wrapper.appendChild(numberLabel);
+  
+    wrapper.appendChild(document.createElement("br"));
+    wrapper.appendChild(document.createElement("br"));
+  
+    // Author checkboxes
+    const authorDiv = document.createElement("div");
+    knownAuthors.forEach(author => {
+      const label = document.createElement("label");
+      label.style.display = "block";
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.value = author;
+      label.appendChild(checkbox);
+      label.appendChild(document.createTextNode(" " + author));
+      authorDiv.appendChild(label);
     });
-    container.appendChild(btn);
+    wrapper.appendChild(authorDiv);
+  
+    wrapper.appendChild(document.createElement("br"));
+  
+    // Generate button
+    const genBtn = document.createElement("button");
+    genBtn.textContent = "Generate Random Flashcards";
+    genBtn.style.padding = "6px 12px";
+    genBtn.style.cursor = "pointer";
+    wrapper.appendChild(genBtn);
+  
+    container.appendChild(wrapper);
+  
+    genBtn.addEventListener("click", async () => {
+      content.innerHTML = "<h2>Random Flashcards</h2>";
+      const selectedNumber = parseInt(numberSelect.value);
+      const selectedAuthors = Array.from(authorDiv.querySelectorAll("input:checked")).map(c => c.value);
+  
+      const allFlashcards = [];
+  
+      for (const entry of studyData) {
+        const authorsOfDay = extractAuthors(entry.topics).split("+").map(a => a.trim());
+        // skip if authors are selected and this day has none of them
+        if (selectedAuthors.length && !authorsOfDay.some(a => selectedAuthors.includes(a))) continue;
+  
+        try {
+          const res = await fetch(`flashcards/day${entry.day}.txt`);
+          if (!res.ok) continue;
+          const txt = await res.text();
+          const lines = txt.split("\n").filter(l => l.trim() && !l.startsWith("#"));
+          for (const line of lines) {
+            const [title, answer] = line.split("\t");
+            if (title) allFlashcards.push({ title, answer });
+          }
+        } catch {}
+      }
+  
+      // if no authors selected, pull from all
+      if (!selectedAuthors.length && allFlashcards.length === 0) {
+        for (const entry of studyData) {
+          try {
+            const res = await fetch(`flashcards/day${entry.day}.txt`);
+            if (!res.ok) continue;
+            const txt = await res.text();
+            const lines = txt.split("\n").filter(l => l.trim() && !l.startsWith("#"));
+            for (const line of lines) {
+              const [title, answer] = line.split("\t");
+              if (title) allFlashcards.push({ title, answer });
+            }
+          } catch {}
+        }
+      }
+  
+      // shuffle and pick requested number
+      for (let i = allFlashcards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [allFlashcards[i], allFlashcards[j]] = [allFlashcards[j], allFlashcards[i]];
+      }
+  
+      const selected = allFlashcards.slice(0, selectedNumber);
+  
+      const box = document.createElement("div");
+      box.style.display = "flex";
+      box.style.flexDirection = "column";
+      box.style.gap = "12px";
+  
+      selected.forEach((fc, i) => {
+        const card = document.createElement("div");
+        card.className = "flashcard-card";
+  
+        const q = document.createElement("div");
+        q.style.fontWeight = "700";
+        q.style.marginBottom = "6px";
+        q.innerHTML = `${i + 1}) ${fc.title}`;
+        card.appendChild(q);
+  
+        const a = document.createElement("div");
+        a.className = "a";
+        a.innerHTML = fc.answer || "";
+        card.appendChild(a);
+  
+        renderMathInElement(q, { delimiters:[
+          {left:"\\[", right:"\\]", display:true},
+          {left:"\\(", right:"\\)", display:false}
+        ]});
+        renderMathInElement(a, { delimiters:[
+          {left:"\\[", right:"\\]", display:true},
+          {left:"\\(", right:"\\)", display:false}
+        ]});
+  
+        card.addEventListener("click", () =>
+          a.style.display = a.style.display === "block" ? "none" : "block"
+        );
+  
+        box.appendChild(card);
+      });
+  
+      content.appendChild(box);
+    });
   });
 
-  // Authors Folder
+
+  // Authors
   createFolder("Authors", container => {
     const authorMap = {};
-    studyData.forEach(entry=>{
-      const authors = authorsByDay[entry.day];
-      const lines = flashcardsByDay[entry.day]||[];
-      let splitCounts = authorSplitExceptions[`Day${entry.day}`];
-      let startIdx=0;
-      for(let i=0;i<authors.length;i++){
-        const a=authors[i];
-        const count = splitCounts?.[i] ?? (i===authors.length-1?lines.length-startIdx:0);
-        for(let j=startIdx;j<startIdx+count;j++){
-          if(!lines[j]) continue;
-          authorMap[a]=authorMap[a]||[];
-          authorMap[a].push({day:entry.day, title:lines[j].title, answer:lines[j].answer});
+    async function processAuthor(dayEntry){
+      try{
+        const res = await fetch(`flashcards/day${dayEntry.day}.txt`);
+        if(!res.ok) return;
+        const txt = await res.text();
+        const lines = txt.split("\n").filter(l=>l.trim()&&!l.startsWith("#"));
+        if(!lines.length) return;
+        const authors = [...extractAuthors(dayEntry.topics).split("+")];
+        let splitCounts = authorSplitExceptions[`Day${dayEntry.day}`];
+        let startIdx = 0;
+        for(let i=0;i<authors.length;i++){
+          const author = authors[i];
+          const count = splitCounts?.[i] ?? (i===authors.length-1 ? lines.length-startIdx : 0);
+          for(let j=startIdx;j<startIdx+count;j++){
+            if(!authorMap[author]) authorMap[author]=[];
+            const [title, answer] = lines[j]?.split("\t") || ["", ""];
+            if(title) authorMap[author].push({day: dayEntry.day, title, answer});
+          }
+          startIdx+=count;
         }
-        startIdx+=count;
-      }
-    });
-    Object.keys(authorMap).forEach(author=>{
-      const item=document.createElement("div");
-      item.className="file-item";
-      item.style.whiteSpace="normal";
-      item.textContent=author;
-      item.addEventListener("click", ()=>{
-        content.innerHTML=`<h2>Flashcards for ${author}</h2>`;
-        renderFlashcards(authorMap[author]);
+      }catch{}
+    }
+
+    (async ()=>{
+      for(const entry of studyData) await processAuthor(entry);
+      Object.keys(authorMap).forEach(author=>{
+        const item = document.createElement("div");
+        item.className="file-item";
+        item.style.whiteSpace="normal";
+        item.textContent=author;
+        item.addEventListener("click", ()=>{
+          content.innerHTML=`<h2>Flashcards for ${author}</h2>`;
+          const containerDiv=document.createElement("div");
+          containerDiv.style.display="flex"; containerDiv.style.flexDirection="column"; containerDiv.style.gap="12px";
+          content.appendChild(containerDiv);
+          authorMap[author].forEach((fc,i)=>{
+            const card=document.createElement("div");
+            card.className="flashcard-card";
+            const qDiv=document.createElement("div");
+            qDiv.style.fontWeight="700"; qDiv.style.marginBottom="6px";
+            qDiv.innerHTML=`${i+1}) Day ${fc.day}: ${fc.title}`;
+            card.appendChild(qDiv);
+            const aDiv=document.createElement("div");
+            aDiv.className="a";
+            aDiv.innerHTML=fc.answer || "";
+            card.appendChild(aDiv);
+            renderMathInElement(qDiv, { delimiters:[
+              {left:"\\[", right:"\\]", display:true},
+              {left:"\\(", right:"\\)", display:false}
+            ] });
+            renderMathInElement(aDiv, { delimiters:[
+              {left:"\\[", right:"\\]", display:true},
+              {left:"\\(", right:"\\)", display:false}
+            ] });
+            card.addEventListener("click", ()=>aDiv.style.display=(aDiv.style.display==="block"?"none":"block"));
+            containerDiv.appendChild(card);
+          });
+        });
+        container.appendChild(item);
       });
-      container.appendChild(item);
-    });
+    })();
   });
 
-  // Full Study Log
-  const fullContainer=document.createElement("div");
-  fullContainer.id="full-study-log"; fullContainer.style.paddingRight="8px";
-  studyData.forEach(entry=>{
-    const section=document.createElement("section");
-    section.className="day-section"; section.id=`day-${entry.day}`;
-    section.innerHTML=`<h2>Day ${entry.day} — ${entry.date}</h2>`;
-    const ul=document.createElement("ul");
-    entry.topics.forEach(t=>{ const li=document.createElement("li"); li.textContent=t; ul.appendChild(li); });
+  const fullContainer = document.createElement("div");
+  fullContainer.id = "full-study-log";
+  fullContainer.style.paddingRight = "8px";
+  studyData.forEach(entry => {
+    const section = document.createElement("section");
+    section.className = "day-section";
+    section.id = `day-${entry.day}`;
+    section.innerHTML = `<h2>Day ${entry.day} — ${entry.date}</h2>`;
+    const ul = document.createElement("ul");
+    entry.topics.forEach(t => { const li = document.createElement("li"); li.textContent = t; ul.appendChild(li); });
     section.appendChild(ul);
     fullContainer.appendChild(section);
   });
   content.appendChild(fullContainer);
 
-  function showFullStudyLog(){ content.innerHTML=""; content.appendChild(fullContainer); content.focus(); }
+  function showFullStudyLog() { content.innerHTML=""; content.appendChild(fullContainer); content.focus(); }
 
   async function showFlashcardsIndex() {
-    content.innerHTML=`<h2>Flashcards</h2><div id="flash-index" style="display:flex;flex-direction:column;gap:8px;"></div>`;
-    const idx=document.getElementById("flash-index");
-    studyData.forEach(entry=>{
-      const author=extractAuthors(entry.topics);
-      const div=document.createElement("div");
-      div.className="file-item"; div.style.whiteSpace="normal"; div.style.padding="8px";
-      div.innerHTML=`Day ${entry.day} (${author})`;
-      div.addEventListener("click",()=>loadFlashcards(entry.day,true));
+    content.innerHTML = `<h2>Flashcards</h2><div id="flash-index" style="display:flex;flex-direction:column;gap:8px;"></div>`;
+    const idx = document.getElementById("flash-index");
+    studyData.forEach(entry => {
+      const author = extractAuthors(entry.topics);
+      const div = document.createElement("div");
+      div.className = "file-item";
+      div.style.whiteSpace = "normal";
+      div.style.padding = "8px";
+      div.innerHTML = `Day ${entry.day} (${author})`;
+      div.addEventListener("click", () => loadFlashcards(entry.day, true));
       idx.appendChild(div);
     });
   }
 
-  function scrollToDay(dayNumber){
-    const section=document.getElementById(`day-${dayNumber}`);
+  function scrollToDay(dayNumber) {
+    const section = document.getElementById(`day-${dayNumber}`);
     if(!section) return;
-    const contentRect=content.getBoundingClientRect();
-    const sectionRect=section.getBoundingClientRect();
-    const currentScroll=content.scrollTop;
-    const sectionTop=sectionRect.top - contentRect.top + currentScroll;
-    const scrollTarget=sectionTop - (content.clientHeight/2) + (section.offsetHeight/2);
-    content.scrollTo({top:scrollTarget,behavior:"smooth"});
+    const contentRect = content.getBoundingClientRect();
+    const sectionRect = section.getBoundingClientRect();
+    const currentScroll = content.scrollTop;
+    const sectionTop = sectionRect.top - contentRect.top + currentScroll;
+    const scrollTarget = sectionTop - (content.clientHeight / 2) + (section.offsetHeight / 2);
+    content.scrollTo({ top: scrollTarget, behavior:"smooth" });
   }
 
-  async function loadFlashcards(dayNumber, replaceContent=false){
+  async function loadFlashcards(dayNumber, replaceContent=false) {
+    const path = `flashcards/day${dayNumber}.txt`;
     if(replaceContent) content.innerHTML=`<h2>Day ${dayNumber} Flashcards</h2>`;
-    const lines=flashcardsByDay[dayNumber]||[];
-    if(!lines.length){ if(replaceContent) content.innerHTML+="<p><b>Rest Day</b></p>"; return; }
-    renderFlashcards(lines.map((fc,i)=>({title:`Day ${dayNumber}: ${fc.title}`,answer:fc.answer})));
+    const parent = replaceContent ? content : document.getElementById("flash-index") || content;
+    try {
+      const res = await fetch(path);
+      if(!res.ok) throw 0;
+      const txt = await res.text();
+      const lines = txt.split("\n").filter(l=>l.trim()&&!l.startsWith("#"));
+      if(!lines.length){ if(replaceContent) content.innerHTML+="<p><b>Rest Day</b></p>"; return; }
+
+      const container = document.createElement("div");
+      container.style.display="flex"; container.style.flexDirection="column"; container.style.gap="12px";
+      container.id=`flashcards-day-${dayNumber}`;
+      parent.appendChild(container);
+
+      lines.forEach((line,i)=>{
+        const [title, answer] = line.split("\t");
+        if(!title) return;
+        const card = document.createElement("div");
+        card.className="flashcard-card";
+        const qDiv = document.createElement("div");
+        qDiv.style.fontWeight="700"; qDiv.style.marginBottom="6px";
+        qDiv.innerHTML = `${i+1}) ${title}`;
+        card.appendChild(qDiv);
+        const aDiv = document.createElement("div");
+        aDiv.className="a";
+        aDiv.innerHTML = answer || "";
+        card.appendChild(aDiv);
+        renderMathInElement(qDiv, { delimiters: [
+          {left:"\\[", right:"\\]", display:true},
+          {left:"\\(", right:"\\)", display:false}
+        ] });
+        renderMathInElement(aDiv, { delimiters: [
+          {left:"\\[", right:"\\]", display:true},
+          {left:"\\(", right:"\\)", display:false}
+        ] });
+        card.addEventListener("click", ()=>aDiv.style.display=(aDiv.style.display==="block"?"none":"block"));
+        container.appendChild(card);
+      });
+
+      if(replaceContent){
+        const rect=container.getBoundingClientRect();
+        const contentRect=content.getBoundingClientRect();
+        const scrollTop=content.scrollTop;
+        const elTop=rect.top - contentRect.top + scrollTop;
+        const target = elTop - (content.clientHeight/2) + (container.offsetHeight/2);
+        content.scrollTo({top:target,behavior:"smooth"});
+      }
+
+    } catch { if(replaceContent) content.innerHTML+="<p><b>Rest Day</b></p>"; }
   }
 
   showFullStudyLog();
 
-  // Self-Study Stats
   selfStudyBtn.addEventListener("click", async ()=>{
-    const visible=selfStudyPage.classList.toggle("visible");
-    selfStudyPage.setAttribute("aria-hidden",visible?"false":"true");
+    const visible = selfStudyPage.classList.toggle("visible");
+    selfStudyPage.setAttribute("aria-hidden", visible?"false":"true");
     if(visible){
       let flashcardDays=0,totalCards=0;
-      Object.values(flashcardsByDay).forEach(arr=>{ if(arr.length){ flashcardDays++; totalCards+=arr.length; } });
+      for(const entry of studyData){
+        try{
+          const r=await fetch(`flashcards/day${entry.day}.txt`);
+          if(!r.ok) continue;
+          const t=await r.text();
+          const lines=t.split("\n").filter(l=>l.trim()&&!l.startsWith("#"));
+          if(lines.length){flashcardDays++; totalCards+=lines.length;}
+        } catch{}
+      }
       document.getElementById("ss-day-count").textContent=`Days self-studied: ${flashcardDays} / ${studyData.length}`;
       document.getElementById("ss-total-cards").textContent=`Total flashcards: ${totalCards}`;
       const plans=[
@@ -286,48 +478,141 @@ document.addEventListener("DOMContentLoaded", async () => {
         {name:"Kleppner's Classical Mechanics", status:"ongoing"},
         {name:"Python (Basics, Numpy, Pandas)", status:"planned"}
       ];
-      const ssPlansDiv=document.getElementById("ss-plans"); ssPlansDiv.innerHTML="";
+      const ssPlansDiv=document.getElementById("ss-plans");
+      ssPlansDiv.innerHTML="";
       plans.forEach(p=>{
-        const sq=document.createElement("span");
-        sq.className="status-square";
-        sq.style.background=p.status==="completed"?"green":p.status==="ongoing"?"orange":"red";
-        const div=document.createElement("div");
-        div.style.marginBottom="6px"; div.appendChild(sq);
-        div.appendChild(document.createTextNode(p.name));
-        ssPlansDiv.appendChild(div);
+        const color=p.status==="completed"?"green":p.status==="ongoing"?"orange":"red";
+        const row=document.createElement("div");
+        row.style.marginBottom="10px";
+        row.innerHTML=`<span class="status-square" style="background:${color}"></span>${p.name}`;
+        ssPlansDiv.appendChild(row);
       });
     }
   });
 
-  // Calendar
-  calendarBtn.addEventListener("click", async ()=>{
-    const visible = calendarPage.style.display==="block";
-    calendarPage.style.display = visible?"none":"block";
-    if(!visible) await renderCalendar();
+  // --- Calendar ---
+  calendarBtn.addEventListener("click", async () => {
+    if (calendarPage.style.display === "none" || calendarPage.style.display === "") {
+      calendarPage.style.display = "block";
+      await generateCalendar();
+    } else {
+      calendarPage.style.display = "none";
+    }
   });
-
-  async function renderCalendar(){
-    calendarContainer.innerHTML="";
+  
+  async function generateCalendar() {
+    if(calendarContainer.children.length) return;
+    if(!studyData.length) return;
+  
+    // Preload flashcard counts
     const flashcardMap = {};
-    studyData.forEach(entry=>{
-      flashcardMap[entry.date]=(flashcardsByDay[entry.day]||[]).length;
-    });
-    studyData.forEach(entry=>{
-      const dayBox=document.createElement("div");
-      dayBox.style.border="1px solid #ccc"; dayBox.style.borderRadius="8px"; dayBox.style.padding="12px";
-      dayBox.style.textAlign="center"; dayBox.style.background="#f7f7f7";
-      const dateDiv=document.createElement("div"); dateDiv.textContent=entry.date;
-      dateDiv.style.fontWeight="700"; dateDiv.style.marginBottom="6px";
-      const countDiv=document.createElement("div"); countDiv.textContent=`Flashcards: ${flashcardMap[entry.date]}`;
-      dayBox.appendChild(dateDiv); dayBox.appendChild(countDiv);
-      dayBox.style.cursor="pointer";
-      dayBox.addEventListener("click",()=>{ scrollToDay(entry.day); calendarPage.style.display="none"; });
-      calendarContainer.appendChild(dayBox);
+    await Promise.all(studyData.map(async entry => {
+      try {
+        const res = await fetch(`flashcards/day${entry.day}.txt`);
+        if(res.ok){
+          const txt = await res.text();
+          flashcardMap[entry.date] = txt.split("\n").filter(l => l.trim()&&!l.startsWith("#")).length;
+        } else flashcardMap[entry.date] = 0;
+      } catch {
+        flashcardMap[entry.date] = 0;
+      }
+    }));
+  
+    const firstStudyDate = studyData[0].date.split(".").reverse().join("-");
+    const firstStudy = new Date(firstStudyDate);
+    const today = new Date();
+    let current = new Date(firstStudy.getFullYear(), firstStudy.getMonth(), 1);
+  
+    const months = [];
+    while(current <= today){
+      months.push(new Date(current));
+      current.setMonth(current.getMonth()+1);
+    }
+  
+    // Calendar container layout: grid with 3 columns
+    calendarContainer.style.display = "grid";
+    calendarContainer.style.gridTemplateColumns = "repeat(3, 200px)";
+    calendarContainer.style.justifyItems = "center";
+    calendarContainer.style.gap = "200px";
+  
+    months.forEach(monthDate=>{
+      const monthBlock = document.createElement("div");
+      monthBlock.style.display="flex";
+      monthBlock.style.flexDirection="column";
+      monthBlock.style.alignItems="center";
+  
+      const title = document.createElement("div");
+      title.style.fontWeight="bold";
+      title.style.marginBottom="16px";
+      title.textContent = monthDate.toLocaleString('default',{ month:'long', year:'numeric' });
+      monthBlock.appendChild(title);
+  
+      const daysGrid = document.createElement("div");
+      daysGrid.style.display="grid";
+      daysGrid.style.gridTemplateColumns="repeat(7,32px)";
+      daysGrid.style.gap="4px";
+      daysGrid.style.justifyContent="center";
+  
+      const year = monthDate.getFullYear();
+      const month = monthDate.getMonth();
+      const firstDay = new Date(year,month,1).getDay();
+      for(let i=0;i<firstDay;i++) daysGrid.appendChild(document.createElement("div"));
+  
+      const daysInMonth = new Date(year,month+1,0).getDate();
+      for(let day=1; day<=daysInMonth; day++){
+        const cell = document.createElement("div");
+        cell.style.width="32px";
+        cell.style.height="32px";
+        cell.style.lineHeight="32px";
+        cell.style.textAlign="center";
+        cell.style.borderRadius="50%";
+        cell.style.fontWeight="700";
+  
+        const dateStr = `${String(day).padStart(2,"0")}.${String(month+1).padStart(2,"0")}.${year}`;
+        const entry = studyData.find(e=>e.date===dateStr);
+        const dateObj = new Date(year, month, day);
+  
+        cell.textContent = day;
+  
+        if(dateObj < firstStudy || dateObj > today) {
+          cell.style.background = "#ccc";
+          cell.style.color="#666";
+        } else if(entry){
+          const hasFlashcards = flashcardMap[dateStr] > 0;
+          cell.style.background = hasFlashcards ? "lightgreen" : "red";
+          cell.style.color = hasFlashcards ? "#000" : "#fff";
+          cell.style.cursor = "pointer";
+          cell.addEventListener("click", ()=>{
+            scrollToDay(entry.day);
+            calendarPage.style.display = "none";
+          });
+        } else {
+          cell.style.background = "#fff";
+          cell.style.color = "#000";
+        }
+  
+        if(dateStr === studyData[0].date){
+          cell.style.background = "gold";
+          cell.style.color = "#000";
+          cell.style.cursor = "pointer";
+          cell.addEventListener("click", ()=>{
+            scrollToDay(studyData[0].day);
+            calendarPage.style.display = "none";
+          });
+        }
+  
+        daysGrid.appendChild(cell);
+      }
+  
+      monthBlock.appendChild(daysGrid);
+      calendarContainer.appendChild(monthBlock);
     });
   }
-
 });
 </script>
-
 </body>
 </html>
+
+
+
+
