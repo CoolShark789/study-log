@@ -344,47 +344,76 @@ document.addEventListener("DOMContentLoaded", async () => {
   function generateCalendar() {
     if(calendarContainer.children.length) return;
     if(!studyData.length) return;
-    const firstStudyDate = new Date(studyData[0].date.split(".").reverse().join("-"));
-    firstStudyDate.setDate(1);
+  
+    const firstStudyDate = studyData[0].date.split(".").reverse().join("-"); // YYYY-MM-DD
+    const firstStudy = new Date(firstStudyDate);
     const today = new Date();
-    let current = new Date(firstStudyDate);
+    let current = new Date(firstStudy.getFullYear(), firstStudy.getMonth(), 1);
+  
     const months = [];
     while(current <= today){
       months.push(new Date(current));
       current.setMonth(current.getMonth()+1);
     }
-
+  
     months.forEach(monthDate=>{
       const monthBlock = document.createElement("div");
-      monthBlock.style.display="flex"; monthBlock.style.flexDirection="column"; monthBlock.style.marginBottom="24px";
-
+      monthBlock.style.display="flex";
+      monthBlock.style.flexDirection="column";
+      monthBlock.style.marginBottom="24px";
+  
       const title = document.createElement("div");
-      title.style.fontWeight="bold"; title.style.marginBottom="8px";
+      title.style.fontWeight="bold";
+      title.style.marginBottom="8px";
       title.textContent = monthDate.toLocaleString('default',{ month:'long', year:'numeric' });
       monthBlock.appendChild(title);
-
+  
       const daysGrid = document.createElement("div");
-      daysGrid.style.display="grid"; daysGrid.style.gridTemplateColumns="repeat(7,32px)"; daysGrid.style.gap="4px";
-
+      daysGrid.style.display="grid";
+      daysGrid.style.gridTemplateColumns="repeat(7,32px)";
+      daysGrid.style.gap="4px";
+  
       const year = monthDate.getFullYear();
       const month = monthDate.getMonth();
       const firstDay = new Date(year,month,1).getDay();
       for(let i=0;i<firstDay;i++) daysGrid.appendChild(document.createElement("div"));
       const daysInMonth = new Date(year,month+1,0).getDate();
-      for(let day=1;day<=daysInMonth;day++){
+  
+      for(let day=1; day<=daysInMonth; day++){
         const cell = document.createElement("div");
-        cell.style.width="32px"; cell.style.height="32px"; cell.style.lineHeight="32px";
-        cell.style.textAlign="center"; cell.style.borderRadius="50%"; cell.style.fontWeight="700";
-        // generate dateStr in DD.MM.YYYY
-        const dayStr = String(day).padStart(2,"0");
-        const monthStr = String(month+1).padStart(2,"0");
-        const dateStr = `${dayStr}.${monthStr}.${year}`;
-        const entry = studyData.find(e=>e.date===dateStr);
-        if(entry){ cell.style.background="lightgreen"; cell.style.color="#000"; cell.addEventListener("click",()=>scrollToDay(entry.day)); }
-        else{ cell.style.background="red"; cell.style.color="#fff"; }
+        cell.style.width="32px";
+        cell.style.height="32px";
+        cell.style.lineHeight="32px";
+        cell.style.textAlign="center";
+        cell.style.borderRadius="50%";
+        cell.style.fontWeight="700";
         cell.textContent = day;
+  
+        const dateStr = `${String(day).padStart(2,"0")}.${String(month+1).padStart(2,"0")}.${year}`;
+        const entry = studyData.find(e=>e.date===dateStr);
+        const dateObj = new Date(year, month, day);
+  
+        if(dateObj < firstStudy || dateObj > today) {
+          cell.style.background = "#ccc"; // gray for pre/future
+          cell.style.color="#666";
+        } else if(dateStr === studyData[0].date) {
+          cell.style.background = "gold"; // first study day
+          cell.style.color="#000";
+          cell.style.cursor="pointer";
+          cell.addEventListener("click", ()=>scrollToDay(entry.day));
+        } else if(entry) {
+          cell.style.background = "lightgreen"; // study day
+          cell.style.color="#000";
+          cell.style.cursor="pointer";
+          cell.addEventListener("click", ()=>scrollToDay(entry.day));
+        } else {
+          cell.style.background = "#fff"; // rest day
+          cell.style.color="#000";
+        }
+  
         daysGrid.appendChild(cell);
       }
+  
       monthBlock.appendChild(daysGrid);
       calendarContainer.appendChild(monthBlock);
     });
@@ -393,3 +422,4 @@ document.addEventListener("DOMContentLoaded", async () => {
 </script>
 </body>
 </html>
+
