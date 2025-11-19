@@ -78,8 +78,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const calendarContainer = document.getElementById("calendar-container");
 
   const studyData = await fetch("study_log.json").then(r => r.json());
-
   const knownAuthors = ["Stewart","Lay","Velleman","Vellerman","Abbott","Friedberg","Kleppner"];
+  const authorSplitExceptions = { "Day16": [4], "Day45": [4], "Day46": [10] };
 
   function extractAuthors(topics) {
     const authors = new Set();
@@ -132,8 +132,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   // Authors
-  const authorSplitExceptions = { "Day16": [4], "Day45": [4], "Day46": [10] };
-
   createFolder("Authors", container => {
     const authorMap = {};
     async function processAuthor(dayEntry){
@@ -335,50 +333,75 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  // Calendar toggle and generation
-  calendarBtn.addEventListener("click", () => {
-    calendarPage.style.display = calendarPage.style.display === "none" ? "block" : "none";
-    if(calendarPage.style.display==="block") generateCalendar();
+  // --- Calendar ---
+  calendarBtn.addEventListener("click", async () => {
+    if (calendarPage.style.display === "none" || calendarPage.style.display === "") {
+      calendarPage.style.display = "block";
+      await generateCalendar();
+    } else {
+      calendarPage.style.display = "none";
+    }
   });
 
-  function generateCalendar() {
+  async function generateCalendar() {
     if(calendarContainer.children.length) return;
     if(!studyData.length) return;
-  
-    const firstStudyDate = studyData[0].date.split(".").reverse().join("-"); // YYYY-MM-DD
+
+    // Preload flashcard counts
+    const flashcardMap = {};
+    await Promise.all(studyData.map(async entry => {
+      try {
+        const res = await fetch(`flashcards/day${entry.day}.txt`);
+        if(res.ok){
+          const txt = await res.text();
+          flashcardMap[entry.date] = txt.split("\n").filter(l => l.trim()&&!l.startsWith("#")).length;
+        } else flashcardMap[entry.date] = 0;
+      } catch {
+        flashcardMap[entry.date] = 0;
+      }
+    }));
+
+    const firstStudyDate = studyData[0].date.split(".").reverse().join("-");
     const firstStudy = new Date(firstStudyDate);
     const today = new Date();
     let current = new Date(firstStudy.getFullYear(), firstStudy.getMonth(), 1);
-  
+
     const months = [];
     while(current <= today){
       months.push(new Date(current));
       current.setMonth(current.getMonth()+1);
     }
-  
+
+    calendarContainer.style.display = "flex";
+    calendarContainer.style.flexDirection = "column";
+    calendarContainer.style.alignItems = "center";
+    calendarContainer.style.gap = "16px";
+
     months.forEach(monthDate=>{
       const monthBlock = document.createElement("div");
       monthBlock.style.display="flex";
       monthBlock.style.flexDirection="column";
+      monthBlock.style.alignItems="center";
       monthBlock.style.marginBottom="24px";
-  
+
       const title = document.createElement("div");
       title.style.fontWeight="bold";
       title.style.marginBottom="8px";
       title.textContent = monthDate.toLocaleString('default',{ month:'long', year:'numeric' });
       monthBlock.appendChild(title);
-  
+
       const daysGrid = document.createElement("div");
       daysGrid.style.display="grid";
       daysGrid.style.gridTemplateColumns="repeat(7,32px)";
       daysGrid.style.gap="4px";
-  
+      daysGrid.style.justifyContent="center";
+
       const year = monthDate.getFullYear();
       const month = monthDate.getMonth();
       const firstDay = new Date(year,month,1).getDay();
       for(let i=0;i<firstDay;i++) daysGrid.appendChild(document.createElement("div"));
+
       const daysInMonth = new Date(year,month+1,0).getDate();
-  
       for(let day=1; day<=daysInMonth; day++){
         const cell = document.createElement("div");
         cell.style.width="32px";
@@ -387,33 +410,43 @@ document.addEventListener("DOMContentLoaded", async () => {
         cell.style.textAlign="center";
         cell.style.borderRadius="50%";
         cell.style.fontWeight="700";
-        cell.textContent = day;
-  
+
         const dateStr = `${String(day).padStart(2,"0")}.${String(month+1).padStart(2,"0")}.${year}`;
         const entry = studyData.find(e=>e.date===dateStr);
         const dateObj = new Date(year, month, day);
-  
+
+        cell.textContent = day;
+
         if(dateObj < firstStudy || dateObj > today) {
-          cell.style.background = "#ccc"; // gray for pre/future
+          cell.style.background = "#ccc";
           cell.style.color="#666";
-        } else if(dateStr === studyData[0].date) {
-          cell.style.background = "gold"; // first study day
-          cell.style.color="#000";
-          cell.style.cursor="pointer";
-          cell.addEventListener("click", ()=>scrollToDay(entry.day));
-        } else if(entry) {
-          cell.style.background = "lightgreen"; // study day
-          cell.style.color="#000";
-          cell.style.cursor="pointer";
-          cell.addEventListener("click", ()=>scrollToDay(entry.day));
+        } else if(entry){
+          const hasFlashcards = flashcardMap[dateStr] > 0;
+          cell.style.background = hasFlashcards ? "lightgreen" : "red";
+          cell.style.color = hasFlashcards ? "#000" : "#fff";
+          cell.style.cursor = "pointer";
+          cell.addEventListener("click", ()=>{
+            scrollToDay(entry.day);
+            calendarPage.style.display = "none";
+          });
         } else {
-          cell.style.background = "#fff"; // rest day
-          cell.style.color="#000";
+          cell.style.background = "#fff";
+          cell.style.color = "#000";
         }
-  
+
+        if(dateStr === studyData[0].date){
+          cell.style.background = "gold";
+          cell.style.color = "#000";
+          cell.style.cursor = "pointer";
+          cell.addEventListener("click", ()=>{
+            scrollToDay(studyData[0].day);
+            calendarPage.style.display = "none";
+          });
+        }
+
         daysGrid.appendChild(cell);
       }
-  
+
       monthBlock.appendChild(daysGrid);
       calendarContainer.appendChild(monthBlock);
     });
@@ -422,4 +455,5 @@ document.addEventListener("DOMContentLoaded", async () => {
 </script>
 </body>
 </html>
+
 
