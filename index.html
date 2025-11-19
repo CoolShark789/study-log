@@ -116,15 +116,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   // Authors
-  // Exception object for splitting flashcards for multiple authors: { "DayX": [countAuthor1, countAuthor2,...] }
   const authorSplitExceptions = {
     "Day16": [4],
-    "Day45": [4], // first 4 flashcards to first author, rest to second
+    "Day45": [4],
     "Day46": [10]
   };
 
   createFolder("Authors", container => {
-    const authorMap = {}; // author => array of {day, lineIndex, title, answer}
+    const authorMap = {};
     async function processAuthor(dayEntry){
       try{
         const res = await fetch(`flashcards/day${dayEntry.day}.txt`);
@@ -150,7 +149,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     (async ()=>{
       for(const entry of studyData) await processAuthor(entry);
-      // Build sidebar items
       Object.keys(authorMap).forEach(author=>{
         const item = document.createElement("div");
         item.className="file-item";
@@ -181,6 +179,76 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
     })();
   });
+
+  // Calendar
+  createFolder("Calendar", container => {
+    const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const studyDates = studyData.map(e => new Date(e.date));
+    studyDates.sort((a,b)=>a-b);
+    const firstDay = studyDates[0];
+    const monthsMap = {};
+    studyDates.forEach(d => {
+      const key = `${d.getFullYear()}-${d.getMonth()}`;
+      if(!monthsMap[key]) monthsMap[key]=[];
+      monthsMap[key].push(d.getDate());
+    });
+
+    const calendarDiv = document.createElement("div");
+    calendarDiv.style.display="grid";
+    calendarDiv.style.gridTemplateColumns="repeat(auto-fit,minmax(200px,1fr))";
+    calendarDiv.style.gap="16px";
+
+    Object.keys(monthsMap).sort().forEach(key => {
+      const [year, month] = key.split("-").map(Number);
+      const daysWithData = monthsMap[key];
+      const monthDiv = document.createElement("div");
+      const header = document.createElement("h3");
+      header.textContent = `${monthNames[month]} ${year}`;
+      monthDiv.appendChild(header);
+
+      const daysGrid = document.createElement("div");
+      daysGrid.style.display="grid";
+      daysGrid.style.gridTemplateColumns="repeat(7,1fr)";
+      daysGrid.style.gap="4px";
+
+      const totalDays = new Date(year, month+1,0).getDate();
+      for(let day=1; day<=totalDays; day++){
+        const dayDiv = document.createElement("div");
+        dayDiv.textContent=day;
+        dayDiv.style.width="28px";
+        dayDiv.style.height="28px";
+        dayDiv.style.borderRadius="50%";
+        dayDiv.style.display="flex";
+        dayDiv.style.alignItems="center";
+        dayDiv.style.justifyContent="center";
+        dayDiv.style.fontSize="12px";
+        dayDiv.style.cursor="pointer";
+        dayDiv.style.border="1px solid #ccc";
+        if(day===firstDay.getDate() && month===firstDay.getMonth() && year===firstDay.getFullYear()){
+          dayDiv.style.background="gold";
+        } else if(daysWithData.includes(day)){
+          dayDiv.style.background="green";
+          dayDiv.style.color="#fff";
+        } else {
+          dayDiv.style.background="red";
+          dayDiv.style.color="#fff";
+        }
+        dayDiv.addEventListener("click", ()=>scrollToDayByDate(year,month,day));
+        daysGrid.appendChild(dayDiv);
+      }
+
+      monthDiv.appendChild(daysGrid);
+      calendarDiv.appendChild(monthDiv);
+    });
+
+    container.appendChild(calendarDiv);
+  });
+
+  function scrollToDayByDate(year,month,day){
+    const dateStr = `${year}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+    const entry = studyData.find(e=>e.date===dateStr);
+    if(entry) scrollToDay(entry.day);
+  }
 
   // Full Study Log container
   const fullContainer = document.createElement("div");
