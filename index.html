@@ -154,6 +154,74 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
+  // Random Flashcards
+  createFolder("Random Flashcards", container => {
+  const btn = document.createElement("div");
+  btn.className = "file-item";
+  btn.textContent = "Shuffle & Show";
+  btn.addEventListener("click", async () => {
+    content.innerHTML = "<h2>Random Flashcards</h2>";
+    const all = [];
+
+    for (const entry of studyData) {
+      try {
+        const res = await fetch(`flashcards/day${entry.day}.txt`);
+        if (!res.ok) continue;
+        const txt = await res.text();
+        const lines = txt.split("\n").filter(l => l.trim() && !l.startsWith("#"));
+        for (const line of lines) {
+          const [title, answer] = line.split("\t");
+          if (title) all.push({ title, answer });
+        }
+      } catch {}
+    }
+
+    for (let i = all.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [all[i], all[j]] = [all[j], all[i]];
+    }
+
+    const box = document.createElement("div");
+    box.style.display = "flex";
+    box.style.flexDirection = "column";
+    box.style.gap = "12px";
+
+    all.forEach((fc, i) => {
+      const card = document.createElement("div");
+      card.className = "flashcard-card";
+
+      const q = document.createElement("div");
+      q.style.fontWeight = "700";
+      q.style.marginBottom = "6px";
+      q.innerHTML = `${i+1}) ${fc.title}`;
+      card.appendChild(q);
+
+      const a = document.createElement("div");
+      a.className = "a";
+      a.innerHTML = fc.answer || "";
+      card.appendChild(a);
+
+      renderMathInElement(q, { delimiters:[
+        {left:"\\[", right:"\\]", display:true},
+        {left:"\\(", right:"\\)", display:false}
+      ]});
+      renderMathInElement(a, { delimiters:[
+        {left:"\\[", right:"\\]", display:true},
+        {left:"\\(", right:"\\)", display:false}
+      ]});
+
+      card.addEventListener("click", () =>
+        a.style.display = a.style.display === "block" ? "none" : "block"
+      );
+
+      box.appendChild(card);
+    });
+
+    content.appendChild(box);
+  });
+  container.appendChild(btn);
+});
+
   // Authors
   createFolder("Authors", container => {
     const authorMap = {};
@@ -478,5 +546,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 </script>
 </body>
 </html>
+
 
 
