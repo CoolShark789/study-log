@@ -21,19 +21,8 @@ body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
 .file-item { cursor: pointer; padding: 6px 8px; border-radius: 6px; margin-bottom: 6px; transition: background 0.14s, font-weight 0.14s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .file-item:hover { background: white; font-weight: bold; }
 
-#self-study-btn {
-  position: fixed; top: 12px; right: 12px;
-  background: #222; color: #fff; border: 1px solid #555;
-  padding: 8px 12px; border-radius: 6px; cursor: pointer; z-index: 1000;
-}
-
-#self-study-page {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.95); color: white;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  opacity: 0; pointer-events: none; transition: opacity 0.32s ease; z-index: 999;
-  padding: 40px; box-sizing: border-box; text-align: center;
-}
+#self-study-btn { position: fixed; top: 12px; right: 12px; background: #222; color: #fff; border: 1px solid #555; padding: 8px 12px; border-radius: 6px; cursor: pointer; z-index: 1000; }
+#self-study-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.32s ease; z-index: 999; padding: 40px; box-sizing: border-box; text-align: center; }
 #self-study-page.visible { opacity: 1; pointer-events: auto; }
 
 .status-square { display:inline-block; width:15px; height:15px; margin-right:8px; vertical-align:middle; }
@@ -42,30 +31,9 @@ section.day-section { margin-bottom: 40px; padding-bottom: 10px; border-bottom: 
 .flashcard-card .a { display:none; margin-top:6px; }
 
 /* Calendar button and page */
-#study-calendar-btn {
-  position: fixed;
-  bottom: 24px;
-  left: 24px;
-  padding: 12px 18px;
-  font-size: 14px;
-  border: none;
-  border-radius: 12px;
-  background: #222;
-  color: #fff;
-  cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.4);
-  transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
-  z-index: 1000;
-}
-#study-calendar-btn:hover {
-  background: #444;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.5);
-}
-#study-calendar-btn:active {
-  transform: translateY(0);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.4);
-}
+#study-calendar-btn { position: fixed; bottom: 24px; left: 24px; padding: 12px 18px; font-size: 14px; border: none; border-radius: 12px; background: #222; color: #fff; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.4); transition: transform 0.15s, box-shadow 0.15s, background 0.15s; z-index: 1000; }
+#study-calendar-btn:hover { background: #444; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.5); }
+#study-calendar-btn:active { transform: translateY(0); box-shadow: 0 4px 8px rgba(0,0,0,0.4); }
 #study-calendar-page { display:none; position:absolute; top:0; left:0; width:100%; height:100%; background:#fff; overflow-y:auto; padding:20px; box-sizing:border-box; z-index:998; }
 #study-calendar-page h2 { margin-bottom:16px; text-align: center;}
 #calendar-container { display:grid; grid-template-columns: repeat(3, 200px); justify-content: center; gap: 24px; }
@@ -129,7 +97,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     listItemsFunc(contentDiv);
   }
 
-  // --- Preload all flashcards ---
+  // Flashcards preloading
   const flashcardsByDay = {};
   await Promise.all(studyData.map(async entry => {
     try {
@@ -144,13 +112,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     } catch {}
   }));
 
-  // Precompute authors per day
   const authorsByDay = {};
   studyData.forEach(entry => {
     authorsByDay[entry.day] = extractAuthors(entry.topics).split("+").map(a=>a.trim());
   });
 
-  // --- Helper to render flashcards ---
   function renderFlashcards(cards){
     const box = document.createElement("div");
     box.style.display="flex";
@@ -175,7 +141,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     content.appendChild(box);
   }
 
-  // --- Study Log Folder ---
+  // Study Log Folder
   createFolder("Study Log", container => {
     studyData.forEach(entry => {
       const item = document.createElement("div");
@@ -186,7 +152,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
-  // --- Flashcards Folder ---
+  // Flashcards Folder
   createFolder("Flashcards", container => {
     studyData.forEach(entry => {
       const author = extractAuthors(entry.topics);
@@ -200,92 +166,50 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
-  // --- Random Flashcards Folder ---
+  // Random Flashcards Folder
   createFolder("Random Flashcards", container => {
-    const wrapper = document.createElement("div");
-    // Number dropdown
-    const numberLabel = document.createElement("label");
-    numberLabel.textContent = "Number of flashcards: ";
-    const numberSelect = document.createElement("select");
-    for(let i=1;i<=10;i++){
-      const opt = document.createElement("option");
-      opt.value=i; opt.textContent=i;
-      numberSelect.appendChild(opt);
-    }
-    numberLabel.appendChild(numberSelect);
-    wrapper.appendChild(numberLabel);
-    wrapper.appendChild(document.createElement("br"));
-    wrapper.appendChild(document.createElement("br"));
-    // Author checkboxes
-    const authorDiv = document.createElement("div");
-    knownAuthors.forEach(author=>{
-      const label=document.createElement("label");
-      label.style.display="block";
-      const checkbox=document.createElement("input");
-      checkbox.type="checkbox"; checkbox.value=author;
-      label.appendChild(checkbox);
-      label.appendChild(document.createTextNode(" "+author));
-      authorDiv.appendChild(label);
-    });
-    wrapper.appendChild(authorDiv);
-    wrapper.appendChild(document.createElement("br"));
-    // Generate button
-    const genBtn=document.createElement("button");
-    genBtn.textContent="Generate Random Flashcards";
-    genBtn.style.padding="6px 12px"; genBtn.style.cursor="pointer";
-    wrapper.appendChild(genBtn);
-    container.appendChild(wrapper);
-
-    genBtn.addEventListener("click", ()=>{
-      content.innerHTML="<h2>Random Flashcards</h2>";
-      const selectedNumber=parseInt(numberSelect.value);
-      const selectedAuthors=Array.from(authorDiv.querySelectorAll("input:checked")).map(c=>c.value);
-      let allFlashcards=[];
-      studyData.forEach(entry=>{
-        const day=entry.day;
-        if(selectedAuthors.length && !authorsByDay[day].some(a=>selectedAuthors.includes(a))) return;
-        allFlashcards.push(...(flashcardsByDay[day]||[]));
-      });
-      if(!selectedAuthors.length && allFlashcards.length===0)
-        allFlashcards = Object.values(flashcardsByDay).flat();
-      // shuffle
-      for(let i=allFlashcards.length-1;i>0;i--){
-        const j=Math.floor(Math.random()*(i+1));
-        [allFlashcards[i], allFlashcards[j]]=[allFlashcards[j], allFlashcards[i]];
+    const btn = document.createElement("div");
+    btn.className = "file-item";
+    btn.textContent = "Shuffle & Show";
+    btn.addEventListener("click", async () => {
+      content.innerHTML = "<h2>Random Flashcards</h2>";
+      let all = [];
+      for (const entry of studyData) {
+        all.push(...(flashcardsByDay[entry.day]||[]));
       }
-      renderFlashcards(allFlashcards.slice(0,selectedNumber));
+      for(let i=all.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1));
+        [all[i], all[j]]=[all[j], all[i]];
+      }
+      renderFlashcards(all);
     });
+    container.appendChild(btn);
   });
 
-  // --- Authors Folder ---
+  // Authors Folder
   createFolder("Authors", container => {
     const authorMap = {};
     studyData.forEach(entry=>{
-      const day=entry.day;
-      authorsByDay[day].forEach(author=>{
-        if(!authorMap[author]) authorMap[author]=[];
-        // handle split exceptions
-        const lines=flashcardsByDay[day]||[];
-        let splitCounts=authorSplitExceptions[`Day${day}`];
-        let startIdx=0;
-        const authors=authorsByDay[day];
-        for(let i=0;i<authors.length;i++){
-          const a=authors[i];
-          const count=splitCounts?.[i] ?? (i===authors.length-1 ? lines.length-startIdx:0);
-          for(let j=startIdx;j<startIdx+count;j++){
-            if(!lines[j]) continue;
-            authorMap[a] = authorMap[a]||[];
-            authorMap[a].push({day,title:lines[j].title,answer:lines[j].answer});
-          }
-          startIdx+=count;
+      const authors = authorsByDay[entry.day];
+      const lines = flashcardsByDay[entry.day]||[];
+      let splitCounts = authorSplitExceptions[`Day${entry.day}`];
+      let startIdx=0;
+      for(let i=0;i<authors.length;i++){
+        const a=authors[i];
+        const count = splitCounts?.[i] ?? (i===authors.length-1?lines.length-startIdx:0);
+        for(let j=startIdx;j<startIdx+count;j++){
+          if(!lines[j]) continue;
+          authorMap[a]=authorMap[a]||[];
+          authorMap[a].push({day:entry.day, title:lines[j].title, answer:lines[j].answer});
         }
-      });
+        startIdx+=count;
+      }
     });
-
     Object.keys(authorMap).forEach(author=>{
       const item=document.createElement("div");
       item.className="file-item";
-      item.style.whiteSpace="normal"; item.textContent=author;
+      item.style.whiteSpace="normal";
+      item.textContent=author;
       item.addEventListener("click", ()=>{
         content.innerHTML=`<h2>Flashcards for ${author}</h2>`;
         renderFlashcards(authorMap[author]);
@@ -294,7 +218,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
-  // --- Full Study Log ---
+  // Full Study Log
   const fullContainer=document.createElement("div");
   fullContainer.id="full-study-log"; fullContainer.style.paddingRight="8px";
   studyData.forEach(entry=>{
@@ -336,7 +260,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   async function loadFlashcards(dayNumber, replaceContent=false){
     if(replaceContent) content.innerHTML=`<h2>Day ${dayNumber} Flashcards</h2>`;
-    const parent=replaceContent?content:document.getElementById("flash-index")||content;
     const lines=flashcardsByDay[dayNumber]||[];
     if(!lines.length){ if(replaceContent) content.innerHTML+="<p><b>Rest Day</b></p>"; return; }
     renderFlashcards(lines.map((fc,i)=>({title:`Day ${dayNumber}: ${fc.title}`,answer:fc.answer})));
@@ -344,13 +267,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   showFullStudyLog();
 
-  // --- Self-Study Stats ---
+  // Self-Study Stats
   selfStudyBtn.addEventListener("click", async ()=>{
     const visible=selfStudyPage.classList.toggle("visible");
     selfStudyPage.setAttribute("aria-hidden",visible?"false":"true");
     if(visible){
-      const flashcardDays = Object.values(flashcardsByDay).filter(arr=>arr.length>0).length;
-      const totalCards = Object.values(flashcardsByDay).reduce((a,b)=>a+b.length,0);
+      let flashcardDays=0,totalCards=0;
+      Object.values(flashcardsByDay).forEach(arr=>{ if(arr.length){ flashcardDays++; totalCards+=arr.length; } });
       document.getElementById("ss-day-count").textContent=`Days self-studied: ${flashcardDays} / ${studyData.length}`;
       document.getElementById("ss-total-cards").textContent=`Total flashcards: ${totalCards}`;
       const plans=[
@@ -363,12 +286,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         {name:"Kleppner's Classical Mechanics", status:"ongoing"},
         {name:"Python (Basics, Numpy, Pandas)", status:"planned"}
       ];
-      const ssPlansDiv=document.getElementById("ss-plans");
-      ssPlansDiv.innerHTML="";
+      const ssPlansDiv=document.getElementById("ss-plans"); ssPlansDiv.innerHTML="";
       plans.forEach(p=>{
         const sq=document.createElement("span");
         sq.className="status-square";
-        sq.style.background=p.status==="completed"?"green":p.status==="ongoing"?"orange":"grey";
+        sq.style.background=p.status==="completed"?"green":p.status==="ongoing"?"orange":"red";
         const div=document.createElement("div");
         div.style.marginBottom="6px"; div.appendChild(sq);
         div.appendChild(document.createTextNode(p.name));
@@ -377,28 +299,33 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  // --- Calendar ---
-  calendarBtn.addEventListener("click", ()=>{
+  // Calendar
+  calendarBtn.addEventListener("click", async ()=>{
     const visible = calendarPage.style.display==="block";
     calendarPage.style.display = visible?"none":"block";
-    if(!visible) renderCalendar();
+    if(!visible) await renderCalendar();
   });
 
-  function renderCalendar(){
+  async function renderCalendar(){
     calendarContainer.innerHTML="";
+    const flashcardMap = {};
+    studyData.forEach(entry=>{
+      flashcardMap[entry.date]=(flashcardsByDay[entry.day]||[]).length;
+    });
     studyData.forEach(entry=>{
       const dayBox=document.createElement("div");
-      dayBox.style.border="1px solid #ccc"; dayBox.style.borderRadius="8px";
-      dayBox.style.padding="12px"; dayBox.style.textAlign="center"; dayBox.style.background="#f7f7f7";
+      dayBox.style.border="1px solid #ccc"; dayBox.style.borderRadius="8px"; dayBox.style.padding="12px";
+      dayBox.style.textAlign="center"; dayBox.style.background="#f7f7f7";
       const dateDiv=document.createElement("div"); dateDiv.textContent=entry.date;
       dateDiv.style.fontWeight="700"; dateDiv.style.marginBottom="6px";
-      const countDiv=document.createElement("div");
-      const count = (flashcardsByDay[entry.day]||[]).length;
-      countDiv.textContent=`Flashcards: ${count}`;
+      const countDiv=document.createElement("div"); countDiv.textContent=`Flashcards: ${flashcardMap[entry.date]}`;
       dayBox.appendChild(dateDiv); dayBox.appendChild(countDiv);
+      dayBox.style.cursor="pointer";
+      dayBox.addEventListener("click",()=>{ scrollToDay(entry.day); calendarPage.style.display="none"; });
       calendarContainer.appendChild(dayBox);
     });
   }
+
 });
 </script>
 
