@@ -42,7 +42,7 @@ section.day-section { margin-bottom: 40px; padding-bottom: 10px; border-bottom: 
 .flashcard-card .a { display:none; margin-top:6px; }
 
 /* Calendar button and page */
-#study-calendar-btn { position: fixed; bottom: 12px; left: 12px; padding:6px 10px; font-size:14px; z-index:1000; cursor:pointer; }
+#study-calendar-btn { position: fixed; bottom: 64px; left: 12px; padding:6px 10px; font-size:14px; z-index:1000; cursor:pointer; }
 #study-calendar-page { display:none; position:absolute; top:0; left:0; width:100%; height:100%; background:#fff; overflow-y:auto; padding:20px; box-sizing:border-box; z-index:998; }
 #study-calendar-page h2 { margin-bottom:16px; text-align: center;}
 #calendar-container { display:grid; grid-template-columns: repeat(3, 200px); justify-content: center; gap: 24px; }
@@ -386,7 +386,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   
       const title = document.createElement("div");
       title.style.fontWeight="bold";
-      title.style.marginBottom="64px";
+      title.style.marginBottom="16px";
       title.textContent = monthDate.toLocaleString('default',{ month:'long', year:'numeric' });
       monthBlock.appendChild(title);
   
