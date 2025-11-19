@@ -1,0 +1,9 @@
+#separator:tab
+#html:false
+\[\text{What are domain and range of the function}\;f(x,y)?\]	\[\text{Domain}\;D\;\text{is the set of all input pairs}\;(x,y)\;\text{s.t.}\;f(x,y)\;\text{is defined}\]\[\text{Range is the set of all value}\;f\;\text{takes on:}\;\{f(x,y)\mid (x,y)\in D\}\]
+\[\text{If}\;f\;\text{is a function of two variables, what is its graph?}\]	\[\text{The graph is the set of all points}\;(x,y,z)\in\mathbb{R}^3\;\text{s.t.}\;z=f(x,y)\;\text{where}\;(x,y)\in D\]
+\[\text{What is a level curve of}\;f(x,y)\]	\[\text{It is the curve}\;f(x,y)=k\;\text{where}\;k\;\text{is constant}\]\[\text{Basically shows where the graph of}\;f\;\text{has height}\;k\;\text{above the}\;xy\text{-plane}\]
+\[\text{What is a Contour Map of}\;f(x,y)?\]	\[\text{Collection of all level curves}\]
+\[\text{What is the definition of the limit for}\;f(x,y)?\]	\[\lim_{(x,y)\rightarrow (a,b)} f(x,y)=L\]\[\text{if}\;\forall\epsilon >0\;\exists\delta >0\;\text{s.t.}\;(x,y)\in D\land 0<\sqrt{(x-a)^2+(y-b)^2}<\delta\rightarrow |f(x,y)-L|<\epsilon\]
+\[\text{Prove}\;\lim_{(x,y)\rightarrow (0,0)}\frac{3x^2 y}{x^2+y^2}=0\]	\[\forall\epsilon >0\;\exists\delta >0\;\text{s.t.}\;\sqrt{x^2+y^2}<\delta\rightarrow\left|\frac{3x^2y}{x^2+y^2}\right|<\epsilon\]\[\left|\frac{3x^2y}{x^2+y^2}\right|=\frac{3x^2|y|}{x^2+y^2}\le 3|y|=3\sqrt{y^2}\le 3\sqrt{x^2+y^2}<\epsilon.\;\text{Let}\;\delta=\frac{\epsilon}{3}\]\[\text{Then:}\quad \left|\frac{3x^2y}{x^2+y^2}\right|\le3|y|=3\sqrt{y^2}\le3\cdot\sqrt{x^2+y^2}<\frac{\epsilon}{3}\cdot 3=\epsilon\implies\boxed{\lim_{(x,y)\rightarrow (0,0)}\frac{3x^2 y}{x^2+y^2}=0}\]
+\[\text{What is the definition of a limit for some function where}\;D\in\mathbb{R}^n\]	\[\lim_{\mathbf{x}\rightarrow\mathbf{a}}f(\mathbf{x})=L\]\[\text{If}\;\forall\epsilon >0\;\exists\delta >0\;\text{s.t.}\;\mathbf{x}\in D\land 0<|\mathbf{x}-\mathbf{a}|<\delta\rightarrow |f(\mathbf{x})-L|<\epsilon\]
