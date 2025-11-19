@@ -63,14 +63,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const studyData = await fetch("study_log.json").then(r => r.json());
 
-  // Only extract known authors, ignore extra words
+  const knownAuthors = ["Stewart","Lay","Velleman","Vellerman","Abbott","Friedberg","Kleppner"];
+
   function extractAuthors(topics) {
     const authors = new Set();
-    const known = ["Stewart","Lay","Velleman","Vellerman","Abbott","Friedberg","Kleppner"];
     for (const t of topics) {
-      for (const k of known) {
-        const re = new RegExp("\\b" + k.replace(/[:]/g,"") + "\\b","i");
-        if (re.test(t)) authors.add(k);
+      for (const k of knownAuthors) {
+        if (new RegExp("\\b"+k.replace(/[:]/g,"")+"\\b","i").test(t)) authors.add(k);
       }
     }
     return authors.size ? [...authors].join("+") : "<b>Rest Day</b>";
@@ -91,8 +90,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     listItemsFunc(contentDiv);
   }
 
-  // Study log folder
-  createFolder("Study Log", (container) => {
+  // Study Log
+  createFolder("Study Log", container => {
     studyData.forEach(entry => {
       const item = document.createElement("div");
       item.className = "file-item";
@@ -102,21 +101,88 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
-  // Flashcards folder: show authors or Rest Day in bold
-  createFolder("Flashcards", (container) => {
+  // Flashcards
+  createFolder("Flashcards", container => {
     studyData.forEach(entry => {
       const author = extractAuthors(entry.topics);
       const item = document.createElement("div");
       item.className = "file-item";
-      item.style.whiteSpace = "normal";  // allow multi-line if authors are long
+      item.style.whiteSpace = "normal";
       item.style.padding = "6px 8px";
-      // Use innerHTML to allow bold Rest Day
       item.innerHTML = `Day ${entry.day} (${author})`;
       item.addEventListener("click", () => { showFlashcardsIndex(); loadFlashcards(entry.day, true); });
       container.appendChild(item);
     });
   });
 
+  // Authors
+  // Exception object for splitting flashcards for multiple authors: { "DayX": [countAuthor1, countAuthor2,...] }
+  const authorSplitExceptions = {
+    "Day16": [4],
+    "Day45": [4], // first 4 flashcards to first author, rest to second
+    "Day46": [10]
+  };
+
+  createFolder("Authors", container => {
+    const authorMap = {}; // author => array of {day, lineIndex, title, answer}
+    async function processAuthor(dayEntry){
+      try{
+        const res = await fetch(`flashcards/day${dayEntry.day}.txt`);
+        if(!res.ok) return;
+        const txt = await res.text();
+        const lines = txt.split("\n").filter(l=>l.trim()&&!l.startsWith("#"));
+        if(!lines.length) return;
+        const authors = [...extractAuthors(dayEntry.topics).split("+")];
+        let splitCounts = authorSplitExceptions[`Day${dayEntry.day}`];
+        let startIdx = 0;
+        for(let i=0;i<authors.length;i++){
+          const author = authors[i];
+          const count = splitCounts?.[i] ?? (i===authors.length-1 ? lines.length-startIdx : 0);
+          for(let j=startIdx;j<startIdx+count;j++){
+            if(!authorMap[author]) authorMap[author]=[];
+            const [title, answer] = lines[j]?.split("\t") || ["", ""];
+            if(title) authorMap[author].push({day: dayEntry.day, title, answer});
+          }
+          startIdx+=count;
+        }
+      }catch{}
+    }
+
+    (async ()=>{
+      for(const entry of studyData) await processAuthor(entry);
+      // Build sidebar items
+      Object.keys(authorMap).forEach(author=>{
+        const item = document.createElement("div");
+        item.className="file-item";
+        item.style.whiteSpace="normal";
+        item.textContent=author;
+        item.addEventListener("click", ()=>{
+          content.innerHTML=`<h2>Flashcards for ${author}</h2>`;
+          const containerDiv=document.createElement("div");
+          containerDiv.style.display="flex"; containerDiv.style.flexDirection="column"; containerDiv.style.gap="12px";
+          content.appendChild(containerDiv);
+          authorMap[author].forEach((fc,i)=>{
+            const card=document.createElement("div");
+            card.className="flashcard-card";
+            const qDiv=document.createElement("div");
+            qDiv.style.fontWeight="700"; qDiv.style.marginBottom="6px";
+            qDiv.textContent=`${i+1}) Day ${fc.day}: ${fc.title}`;
+            card.appendChild(qDiv);
+            const aDiv=document.createElement("div");
+            aDiv.className="a";
+            aDiv.textContent=fc.answer;
+            card.appendChild(aDiv);
+            renderMathInElement(qDiv, { delimiters:[{left:"\\[", right:"\\]", display:true}] });
+            card.addEventListener("click", ()=>aDiv.style.display=(aDiv.style.display==="block"?"none":"block"));
+            containerDiv.appendChild(card);
+          });
+        });
+        container.appendChild(item);
+      });
+    })();
+  });
+
+  // Full Study Log container
   const fullContainer = document.createElement("div");
   fullContainer.id = "full-study-log";
   fullContainer.style.paddingRight = "8px";
@@ -141,9 +207,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       const author = extractAuthors(entry.topics);
       const div = document.createElement("div");
       div.className = "file-item";
-      div.style.whiteSpace = "normal"; // allow wrapping for long author strings
+      div.style.whiteSpace = "normal";
       div.style.padding = "8px";
-      div.innerHTML = `Day ${entry.day} (${author})`; // bold Rest Day included
+      div.innerHTML = `Day ${entry.day} (${author})`;
       div.addEventListener("click", () => loadFlashcards(entry.day, true));
       idx.appendChild(div);
     });
@@ -169,10 +235,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       if(!res.ok) throw 0;
       const txt = await res.text();
       const lines = txt.split("\n").filter(l=>l.trim()&&!l.startsWith("#"));
-      if(!lines.length){ 
-        if(replaceContent) content.innerHTML+="<p><b>Rest Day</b></p>"; 
-        return; 
-      }
+      if(!lines.length){ if(replaceContent) content.innerHTML+="<p><b>Rest Day</b></p>"; return; }
 
       const container = document.createElement("div");
       container.style.display="flex"; container.style.flexDirection="column"; container.style.gap="12px";
@@ -185,24 +248,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         const card = document.createElement("div");
         card.className="flashcard-card";
         const qDiv = document.createElement("div");
-        qDiv.style.fontWeight="700";
-        qDiv.style.marginBottom="6px";
+        qDiv.style.fontWeight="700"; qDiv.style.marginBottom="6px";
         qDiv.textContent = `${i+1}) ${title}`;
         card.appendChild(qDiv);
         const aDiv = document.createElement("div");
         aDiv.className="a";
         aDiv.textContent = answer || "";
         card.appendChild(aDiv);
-        container.appendChild(card);
         renderMathInElement(qDiv, { delimiters:[{left:"\\[", right:"\\]", display:true}] });
-        card.addEventListener("click", ()=>{
-          if(aDiv.style.display==="block"){
-            aDiv.style.display="none";
-          } else {
-            aDiv.style.display="block";
-            renderMathInElement(aDiv, { delimiters:[{left:"\\[", right:"\\]", display:true}] });
-          }
-        });
+        card.addEventListener("click", ()=>aDiv.style.display=(aDiv.style.display==="block"?"none":"block"));
+        container.appendChild(card);
       });
 
       if(replaceContent){
@@ -258,8 +313,5 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 });
 </script>
-
-
-
 </body>
 </html>
