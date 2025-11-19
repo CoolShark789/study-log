@@ -1,0 +1,5 @@
+#separator:tab
+#html:false
+\[\text{What is the Conservation of Momentum and when does it occur?}\]	\[\text{It is true for isolated systems. The total momentum of such systems is always constant}\]\[\text{And the change is always 0:}\quad\mathbf{F}=\frac{d\mathbf{P}}{dt}=0\quad(\mathbf{F}_{\text{internal}}=0)\]
+\[\text{What is the integral of the force with respect to time and its name?}\]	\[\text{The change in momentum of a system:}\;\int_{0}^t\mathbf{F}\,dt=\mathbf{P}(t)-\mathbf{P}(0)\]\[\text{It is called Impulse}\]
+\[\text{What is the equation for rocket motion in free space? (mass}\;\Delta m\;\text{is expelled with velocity}\;\mathbf{u})\]	\[\mathbf{P}(t)=(M+\Delta m)\mathbf{v}\quad\quad\quad\mathbf{P}(t+\Delta t)=M(\mathbf{v}+\Delta\mathbf{v})+\Delta m(\mathbf{v}+\Delta\mathbf{v}+\mathbf{u})\]\[\Delta\mathbf{P}=M\Delta\mathbf{v}+\Delta{m}(\Delta\mathbf{v}+\mathbf{u})\implies\frac{d\mathbf{P}}{dt}=\boxed{M\frac{d\mathbf{v}}{dt}+\mathbf{u}\frac{dm}{dt}=M\frac{d\mathbf{v}}{dt}-\mathbf{u}\frac{dM}{dt}=0}\]

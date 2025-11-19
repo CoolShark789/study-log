@@ -591,6 +591,26 @@
       "Arc length function, Unit tangent vector, Curvature",
       "Principal Normal and Binormal Vectors, Normal Plane and Osculating Plane, Torsion"
     ]
+  },
+  {
+    "day": 51,
+    "date": "16.11.2025",
+    "topics": ["Rest"]
+  },
+  {
+    "day": 52,
+    "date": "17.11.2025",
+    "topics": ["Fixing Sleep Schedule"]
+  },
+  {
+    "day": 53,
+    "date": "18.11.2025",
+    "topics": [
+      "Kleppner: Sections 4.5, 4.6, 4.7, 4.8",
+      "Pages: 128-143",
+      "Conservation of Momentum, Impulse",
+      "Flow of mass, Rocket Motion"
+    ]
   }
 ]
 
