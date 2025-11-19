@@ -21,36 +21,23 @@ body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
 .file-item { cursor: pointer; padding: 6px 8px; border-radius: 6px; margin-bottom: 6px; transition: background 0.14s, font-weight 0.14s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .file-item:hover { background: white; font-weight: bold; }
 
-#self-study-btn, #study-calendar-btn {
-  position: fixed; top: 12px;
-  background: #222; color: #fff; border: 1px solid #555;
-  padding: 8px 12px; border-radius: 6px; cursor: pointer; z-index: 1000;
-}
-#self-study-btn { right: 12px; }
-#study-calendar-btn { right: 140px; }
+#self-study-btn { position: fixed; top: 12px; right: 12px; background: #222; color: #fff; border: 1px solid #555; padding: 8px 12px; border-radius: 6px; cursor: pointer; z-index: 1000; }
 
-#self-study-page, #calendar-page {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.95); color: white;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  opacity: 0; pointer-events: none; transition: opacity 0.32s ease; z-index: 999;
-  padding: 40px; box-sizing: border-box; text-align: center; overflow-y: auto;
-}
-#self-study-page.visible, #calendar-page.visible { opacity: 1; pointer-events: auto; }
+#self-study-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.32s ease; z-index: 999; padding: 40px; box-sizing: border-box; text-align: center; }
+#self-study-page.visible { opacity: 1; pointer-events: auto; }
 
 .status-square { display:inline-block; width:15px; height:15px; margin-right:8px; vertical-align:middle; }
 section.day-section { margin-bottom: 40px; padding-bottom: 10px; border-bottom: 1px solid #ddd; }
 .flashcard-card { border:1px solid #ccc; padding:10px; border-radius:6px; background:#fff; cursor:pointer; }
 .flashcard-card .a { display:none; margin-top:6px; }
 
-.calendar-grid { display: flex; flex-wrap: wrap; gap:16px; justify-content: flex-start; width:100%; }
-.calendar-month { width:23%; min-width:180px; margin-bottom:24px; background:#222; color:white; padding:8px; border-radius:8px; box-sizing:border-box; }
-.calendar-month h3 { text-align:center; margin-bottom:6px; }
-.calendar-days { display:flex; flex-wrap: wrap; gap:4px; justify-content:flex-start; }
-.calendar-day { width:20px; height:20px; border-radius:50%; display:inline-block; cursor:pointer; }
-.day-gold { background: gold; }
-.day-green { background: lightgreen; }
-.day-red { background: red; }
+.study-calendar { display: flex; flex-wrap: wrap; gap:12px; margin-top:12px; }
+.month-grid { display:grid; grid-template-columns: repeat(7, 28px); gap:4px; text-align:center; }
+.month-name { grid-column: span 7; font-weight:bold; margin-bottom:4px; }
+.day-circle { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px; font-weight:bold; color:#000; }
+.gold { background: gold; }
+.green { background: lightgreen; }
+.red { background: #f08080; }
 </style>
 </head>
 <body>
@@ -58,7 +45,6 @@ section.day-section { margin-bottom: 40px; padding-bottom: 10px; border-bottom: 
 <div id="sidebar"></div>
 <div id="content" tabindex="0"></div>
 <button id="self-study-btn">Self-Study Stats</button>
-<button id="study-calendar-btn">Study Calendar</button>
 
 <div id="self-study-page" aria-hidden="true">
   <h1 id="ss-day-count" style="font-size:48px; margin-bottom:18px;"></h1>
@@ -66,21 +52,12 @@ section.day-section { margin-bottom: 40px; padding-bottom: 10px; border-bottom: 
   <div id="ss-plans" style="font-size:18px; max-width:760px;"></div>
 </div>
 
-<div id="calendar-page" aria-hidden="true">
-  <h1 style="font-size:36px; margin-bottom:24px;">Study Calendar</h1>
-  <div id="calendar-container" class="calendar-grid"></div>
-</div>
-
 <script>
 document.addEventListener("DOMContentLoaded", async () => {
   const sidebar = document.getElementById("sidebar");
   const content = document.getElementById("content");
   const selfStudyBtn = document.getElementById("self-study-btn");
-  const studyCalendarBtn = document.getElementById("study-calendar-btn");
   const selfStudyPage = document.getElementById("self-study-page");
-  const calendarPage = document.getElementById("calendar-page");
-  const calendarContainer = document.getElementById("calendar-container");
-
   const studyData = await fetch("study_log.json").then(r => r.json());
   const knownAuthors = ["Stewart","Lay","Velleman","Vellerman","Abbott","Friedberg","Kleppner"];
 
@@ -130,9 +107,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
-  // Authors
   const authorSplitExceptions = { "Day16": [4], "Day45": [4], "Day46": [10] };
-
   createFolder("Authors", container => {
     const authorMap = {};
     async function processAuthor(dayEntry){
@@ -157,7 +132,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
       }catch{}
     }
-
     (async ()=>{
       for(const entry of studyData) await processAuthor(entry);
       Object.keys(authorMap).forEach(author=>{
@@ -191,7 +165,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     })();
   });
 
-  // Full Study Log
   const fullContainer = document.createElement("div");
   fullContainer.id = "full-study-log";
   fullContainer.style.paddingRight = "8px";
@@ -281,6 +254,47 @@ document.addEventListener("DOMContentLoaded", async () => {
     } catch { if(replaceContent) content.innerHTML+="<p><b>Rest Day</b></p>"; }
   }
 
+  // Study Calendar Feature
+  createFolder("Study Calendar", container=>{
+    const calendarDiv=document.createElement("div");
+    calendarDiv.className="study-calendar";
+    container.appendChild(calendarDiv);
+
+    const startDate = new Date(studyData[0].date);
+    const endDate = new Date();
+    const months = [];
+    let d = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
+    while(d <= endDate){ months.push(new Date(d)); d.setMonth(d.getMonth()+1); }
+
+    months.forEach(monthStart=>{
+      const monthDiv=document.createElement("div");
+      monthDiv.className="month-grid";
+      const monthName=document.createElement("div");
+      monthName.className="month-name";
+      monthName.textContent=monthStart.toLocaleString("default",{month:"long",year:"numeric"});
+      monthDiv.appendChild(monthName);
+
+      const firstDay=new Date(monthStart.getFullYear(),monthStart.getMonth(),1).getDay();
+      for(let i=0;i<firstDay;i++){ const blank=document.createElement("div"); monthDiv.appendChild(blank); }
+
+      const daysInMonth=new Date(monthStart.getFullYear(), monthStart.getMonth()+1,0).getDate();
+      for(let day=1;day<=daysInMonth;day++){
+        const dateStr=`${monthStart.getFullYear()}-${(monthStart.getMonth()+1).toString().padStart(2,"0")}-${day.toString().padStart(2,"0")}`;
+        const dayEntry=studyData.find(e=>e.date===dateStr);
+        const circle=document.createElement("div");
+        circle.className="day-circle";
+        if(studyData[0].date===dateStr) circle.classList.add("gold");
+        else if(dayEntry) circle.classList.add("green");
+        else circle.classList.add("red");
+        circle.textContent=day;
+        if(dayEntry) circle.addEventListener("click",()=>{ showFullStudyLog(); scrollToDay(dayEntry.day); });
+        monthDiv.appendChild(circle);
+      }
+
+      calendarDiv.appendChild(monthDiv);
+    });
+  });
+
   showFullStudyLog();
 
   selfStudyBtn.addEventListener("click", async ()=>{
@@ -320,82 +334,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
     }
   });
-
-  // --- Calendar feature implementation (rows of 4 months, clickable, color-coded, infinite-scroll compatible) ---
-  studyCalendarBtn.addEventListener("click", async () => {
-    const visible = calendarPage.classList.toggle("visible");
-    calendarPage.setAttribute("aria-hidden", visible ? "false" : "true");
-    if (!visible) return;
-    calendarContainer.innerHTML = "";
-
-    const firstDate = new Date(studyData[0].date);
-    const today = new Date();
-    let curMonth = new Date(firstDate.getFullYear(), firstDate.getMonth(), 1);
-    const months = [];
-    while (curMonth <= today) {
-      months.push(new Date(curMonth));
-      curMonth.setMonth(curMonth.getMonth() + 1);
-    }
-
-    for (let i = 0; i < months.length; i += 4) {
-      const row = document.createElement("div");
-      row.style.display = "flex";
-      row.style.gap = "16px";
-      row.style.flexWrap = "wrap";
-      calendarContainer.appendChild(row);
-
-      for (let j = i; j < i + 4 && j < months.length; j++) {
-        const monthDate = months[j];
-        const monthDiv = document.createElement("div");
-        monthDiv.className = "calendar-month";
-        const monthName = monthDate.toLocaleString("default", { month: "long", year: "numeric" });
-        monthDiv.innerHTML = `<h3>${monthName}</h3>`;
-        const daysDiv = document.createElement("div");
-        daysDiv.className = "calendar-days";
-
-        const lastDay = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0);
-        for (let d = 1; d <= lastDay.getDate(); d++) {
-          const dayDiv = document.createElement("div");
-          dayDiv.className = "calendar-day";
-          const dayStr = `${monthDate.getFullYear()}-${String(monthDate.getMonth()+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
-          const entry = studyData.find(e => e.date === dayStr);
-
-          let hasFlashcards = false;
-          if (entry) {
-            try {
-              const res = await fetch(`flashcards/day${entry.day}.txt`);
-              if(res.ok){
-                const txt = await res.text();
-                hasFlashcards = txt.split("\n").filter(l=>l.trim()&&!l.startsWith("#")).length > 0;
-              }
-            } catch {}
-          }
-
-          if (d === firstDate.getDate() && monthDate.getMonth() === firstDate.getMonth() && monthDate.getFullYear() === firstDate.getFullYear()) {
-            dayDiv.classList.add("day-gold");
-          } else if (entry) {
-            dayDiv.classList.add(hasFlashcards ? "day-green" : "day-red");
-          } else {
-            dayDiv.style.opacity = 0.3;
-          }
-
-          dayDiv.title = dayStr;
-          dayDiv.addEventListener("click", () => {
-            calendarPage.classList.remove("visible");
-            calendarPage.setAttribute("aria-hidden", "true");
-            if(entry) scrollToDay(entry.day);
-          });
-
-          daysDiv.appendChild(dayDiv);
-        }
-
-        monthDiv.appendChild(daysDiv);
-        row.appendChild(monthDiv);
-      }
-    }
-  });
 });
 </script>
 </body>
 </html>
-
