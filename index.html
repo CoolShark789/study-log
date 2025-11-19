@@ -40,6 +40,14 @@ body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
 section.day-section { margin-bottom: 40px; padding-bottom: 10px; border-bottom: 1px solid #ddd; }
 .flashcard-card { border:1px solid #ccc; padding:10px; border-radius:6px; background:#fff; cursor:pointer; }
 .flashcard-card .a { display:none; margin-top:6px; }
+
+.calendar-container { display:flex; flex-direction:column; gap:12px; margin-top:8px; }
+.month-row { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px; }
+.month-grid { display:grid; grid-template-columns: repeat(7, 28px); gap:4px; margin-top:4px; }
+.day-cell { width:28px; height:28px; display:flex; align-items:center; justify-content:center; border-radius:4px; cursor:pointer; font-size:12px; }
+.day-cell.flash { background:#8ecae6; color:#000; }
+.day-cell.rest { background:#ccc; color:#666; }
+.day-cell.first { background:#219ebc; color:#fff; font-weight:bold; }
 </style>
 </head>
 <body>
@@ -183,72 +191,63 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Calendar
   createFolder("Calendar", container => {
     const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-    const studyDates = studyData.map(e => new Date(e.date));
-    studyDates.sort((a,b)=>a-b);
-    const firstDay = studyDates[0];
-    const monthsMap = {};
-    studyDates.forEach(d => {
-      const key = `${d.getFullYear()}-${d.getMonth()}`;
-      if(!monthsMap[key]) monthsMap[key]=[];
-      monthsMap[key].push(d.getDate());
-    });
+    const studyMap = {};
+    studyData.forEach(d => studyMap[d.date] = d.day);
 
-    const calendarDiv = document.createElement("div");
-    calendarDiv.style.display="grid";
-    calendarDiv.style.gridTemplateColumns="repeat(auto-fit,minmax(200px,1fr))";
-    calendarDiv.style.gap="16px";
+    const firstDay = new Date(studyData[0].date);
+    const lastDay = new Date(studyData[studyData.length-1].date);
 
-    Object.keys(monthsMap).sort().forEach(key => {
-      const [year, month] = key.split("-").map(Number);
-      const daysWithData = monthsMap[key];
+    const calendarContainer = document.createElement("div");
+    calendarContainer.className = "calendar-container";
+    container.appendChild(calendarContainer);
+
+    let current = new Date(firstDay.getFullYear(), firstDay.getMonth(), 1);
+    const last = new Date(lastDay.getFullYear(), lastDay.getMonth(), 1);
+    let monthRow = document.createElement("div");
+    monthRow.className = "month-row";
+
+    while(current <= last){
       const monthDiv = document.createElement("div");
-      const header = document.createElement("h3");
-      header.textContent = `${monthNames[month]} ${year}`;
+      monthDiv.style.minWidth="220px";
+      const header = document.createElement("h4");
+      header.textContent = `${monthNames[current.getMonth()]} ${current.getFullYear()}`;
       monthDiv.appendChild(header);
 
       const daysGrid = document.createElement("div");
-      daysGrid.style.display="grid";
-      daysGrid.style.gridTemplateColumns="repeat(7,1fr)";
-      daysGrid.style.gap="4px";
+      daysGrid.className="month-grid";
+      const totalDays = new Date(current.getFullYear(), current.getMonth()+1,0).getDate();
 
-      const totalDays = new Date(year, month+1,0).getDate();
-      for(let day=1; day<=totalDays; day++){
+      for(let d=1; d<=totalDays; d++){
+        const dateStr = `${current.getFullYear()}-${String(current.getMonth()+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
         const dayDiv = document.createElement("div");
-        dayDiv.textContent=day;
-        dayDiv.style.width="28px";
-        dayDiv.style.height="28px";
-        dayDiv.style.borderRadius="50%";
-        dayDiv.style.display="flex";
-        dayDiv.style.alignItems="center";
-        dayDiv.style.justifyContent="center";
-        dayDiv.style.fontSize="12px";
-        dayDiv.style.cursor="pointer";
-        dayDiv.style.border="1px solid #ccc";
-        if(day===firstDay.getDate() && month===firstDay.getMonth() && year===firstDay.getFullYear()){
-          dayDiv.style.background="gold";
-        } else if(daysWithData.includes(day)){
-          dayDiv.style.background="green";
-          dayDiv.style.color="#fff";
+        dayDiv.textContent = d;
+        if(dateStr === studyData[0].date){
+          dayDiv.className="day-cell first";
+        } else if(studyMap[dateStr]){
+          dayDiv.className="day-cell flash";
         } else {
-          dayDiv.style.background="red";
-          dayDiv.style.color="#fff";
+          dayDiv.className="day-cell rest";
         }
-        dayDiv.addEventListener("click", ()=>scrollToDayByDate(year,month,day));
+        dayDiv.addEventListener("click", ()=>{
+          const dayNumber = studyMap[dateStr];
+          if(dayNumber) scrollToDay(dayNumber);
+        });
         daysGrid.appendChild(dayDiv);
       }
 
       monthDiv.appendChild(daysGrid);
-      calendarDiv.appendChild(monthDiv);
-    });
+      monthRow.appendChild(monthDiv);
 
-    container.appendChild(calendarDiv);
+      if(monthRow.childElementCount>=3){
+        calendarContainer.appendChild(monthRow);
+        monthRow = document.createElement("div");
+        monthRow.className="month-row";
+      }
+
+      current.setMonth(current.getMonth()+1);
+    }
+    if(monthRow.childElementCount) calendarContainer.appendChild(monthRow);
   });
-
-  function scrollToDayByDate(year,month,day){
-    const dateStr = `${year}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
-    const entry = studyData.find(e=>e.date===dateStr);
-    if(entry) scrollToDay(entry.day);
-  }
 
   // Full Study Log container
   const fullContainer = document.createElement("div");
@@ -306,7 +305,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       if(!lines.length){ if(replaceContent) content.innerHTML+="<p><b>Rest Day</b></p>"; return; }
 
       const container = document.createElement("div");
-      container.style.display="flex"; container.style.flexDirection="column"; container.style.gap="12px";
+      container.style.display="flex"; container.style.flexDirection="column";
+      container.style.gap="12px";
       container.id=`flashcards-day-${dayNumber}`;
       parent.appendChild(container);
 
@@ -316,7 +316,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const card = document.createElement("div");
         card.className="flashcard-card";
         const qDiv = document.createElement("div");
-        qDiv.style.fontWeight="700"; qDiv.style.marginBottom="6px";
+        qDiv.style.fontWeight="700";
+        qDiv.style.marginBottom="6px";
         qDiv.textContent = `${i+1}) ${title}`;
         card.appendChild(qDiv);
         const aDiv = document.createElement("div");
