@@ -41,28 +41,11 @@ section.day-section { margin-bottom: 40px; padding-bottom: 10px; border-bottom: 
 .flashcard-card { border:1px solid #ccc; padding:10px; border-radius:6px; background:#fff; cursor:pointer; }
 .flashcard-card .a { display:none; margin-top:6px; }
 
-/* Study Calendar page */
-#study-calendar-page {
-  position: fixed; top:0; left:0; width:100%; height:100%;
-  background: rgba(0,0,0,0.95); color:white;
-  display:flex; flex-direction:column; align-items:center; justify-content:flex-start;
-  overflow-y:auto; padding:40px; box-sizing:border-box; text-align:center;
-  opacity:0; pointer-events:none; transition: opacity 0.32s ease; z-index:999;
-}
-#study-calendar-page.visible { opacity:1; pointer-events:auto; }
-
-#calendar-container { display:flex; flex-wrap:wrap; justify-content:flex-start; max-width:1200px; gap:32px; }
-.month-block { display:flex; flex-direction:column; margin-bottom:32px; }
-.month-title { font-weight:bold; margin-bottom:12px; font-size:18px; text-align:center; }
-.weekdays { display:grid; grid-template-columns:repeat(7,32px); margin-bottom:4px; font-size:12px; text-align:center; color:#aaa; }
-.days-grid { display:grid; grid-template-columns:repeat(7,32px); gap:4px; justify-content:center; }
-.day-cell {
-  width:32px; height:32px; line-height:32px; text-align:center; border-radius:50%;
-  cursor:pointer; user-select:none; font-size:14px; font-weight:700; color:white;
-}
-.gold { background:gold; color:#000; }
-.green { background:lightgreen; color:#000; }
-.red { background:red; color:#fff; }
+/* Calendar button and page */
+#study-calendar-btn { position: fixed; bottom: 12px; left: 12px; padding:6px 10px; font-size:14px; z-index:1000; cursor:pointer; }
+#study-calendar-page { display:none; position:absolute; top:0; left:0; width:100%; height:100%; background:#fff; overflow-y:auto; padding:20px; box-sizing:border-box; z-index:998; }
+#study-calendar-page h2 { margin-bottom:16px; }
+#calendar-container { display:flex; flex-wrap:wrap; gap:16px; }
 </style>
 </head>
 <body>
@@ -77,9 +60,10 @@ section.day-section { margin-bottom: 40px; padding-bottom: 10px; border-bottom: 
   <div id="ss-plans" style="font-size:18px; max-width:760px;"></div>
 </div>
 
-<button id="study-calendar-btn" style="margin-bottom:12px;">Study Calendar</button>
-<div id="study-calendar-page" aria-hidden="true">
-  <h1 style="margin-bottom:24px;">Study Calendar</h1>
+<!-- Calendar -->
+<button id="study-calendar-btn">Calendar</button>
+<div id="study-calendar-page">
+  <h2>Study Calendar</h2>
   <div id="calendar-container"></div>
 </div>
 
@@ -89,10 +73,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   const content = document.getElementById("content");
   const selfStudyBtn = document.getElementById("self-study-btn");
   const selfStudyPage = document.getElementById("self-study-page");
+  const calendarBtn = document.getElementById("study-calendar-btn");
+  const calendarPage = document.getElementById("study-calendar-page");
+  const calendarContainer = document.getElementById("calendar-container");
 
   const studyData = await fetch("study_log.json").then(r => r.json());
 
-  const knownAuthors = ["Stewart","Lay","Velleman","Abbott","Friedberg","Kleppner"];
+  const knownAuthors = ["Stewart","Lay","Velleman","Vellerman","Abbott","Friedberg","Kleppner"];
 
   function extractAuthors(topics) {
     const authors = new Set();
@@ -348,59 +335,50 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  // Calendar
-  const calendarBtn = document.getElementById("study-calendar-btn");
-  const calendarPage = document.getElementById("study-calendar-page");
-  const calendarContainer = document.getElementById("calendar-container");
-
+  // Calendar toggle and generation
   calendarBtn.addEventListener("click", () => {
-    const visible = calendarPage.classList.toggle("visible");
-    calendarPage.setAttribute("aria-hidden", visible ? "false" : "true");
-    if (visible) generateCalendar();
+    calendarPage.style.display = calendarPage.style.display === "none" ? "block" : "none";
+    if(calendarPage.style.display==="block") generateCalendar();
   });
 
   function generateCalendar() {
-    if (calendarContainer.children.length) return; 
+    if(calendarContainer.children.length) return;
+    if(!studyData.length) return;
     const firstStudyDate = new Date(studyData[0].date);
     firstStudyDate.setDate(1);
     const today = new Date();
-    const months = [];
     let current = new Date(firstStudyDate);
-    while (current <= today) { months.push(new Date(current)); current.setMonth(current.getMonth() + 1); }
+    const months = [];
+    while(current <= today){
+      months.push(new Date(current));
+      current.setMonth(current.getMonth()+1);
+    }
 
-    months.forEach(monthDate => {
+    months.forEach(monthDate=>{
       const monthBlock = document.createElement("div");
-      monthBlock.className = "month-block";
+      monthBlock.style.display="flex"; monthBlock.style.flexDirection="column"; monthBlock.style.marginBottom="24px";
+
       const title = document.createElement("div");
-      title.className = "month-title";
-      title.textContent = monthDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+      title.style.fontWeight="bold"; title.style.marginBottom="8px";
+      title.textContent = monthDate.toLocaleString('default',{ month:'long', year:'numeric' });
       monthBlock.appendChild(title);
 
-      const weekdaysRow = document.createElement("div");
-      weekdaysRow.className = "weekdays";
-      ["Su","Mo","Tu","We","Th","Fr","Sa"].forEach(d => {
-        const w = document.createElement("div"); w.textContent = d; weekdaysRow.appendChild(w);
-      });
-      monthBlock.appendChild(weekdaysRow);
-
       const daysGrid = document.createElement("div");
-      daysGrid.className = "days-grid";
+      daysGrid.style.display="grid"; daysGrid.style.gridTemplateColumns="repeat(7,32px)"; daysGrid.style.gap="4px";
 
       const year = monthDate.getFullYear();
       const month = monthDate.getMonth();
-      const firstDayOfWeek = new Date(year, month, 1).getDay();
-      for (let i = 0; i < firstDayOfWeek; i++) daysGrid.appendChild(document.createElement("div"));
-
-      const daysInMonth = new Date(year, month + 1, 0).getDate();
-      for (let day = 1; day <= daysInMonth; day++) {
+      const firstDay = new Date(year,month,1).getDay();
+      for(let i=0;i<firstDay;i++) daysGrid.appendChild(document.createElement("div"));
+      const daysInMonth = new Date(year,month+1,0).getDate();
+      for(let day=1;day<=daysInMonth;day++){
         const cell = document.createElement("div");
-        cell.className = "day-cell";
-        const fullDateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-        const entry = studyData.find(e => e.date === fullDateStr);
-        if (entry) {
-          cell.classList.add(entry.topics && entry.topics.length ? "green" : "red");
-          cell.addEventListener("click", () => scrollToDay(entry.day));
-        } else cell.classList.add("red");
+        cell.style.width="32px"; cell.style.height="32px"; cell.style.lineHeight="32px";
+        cell.style.textAlign="center"; cell.style.borderRadius="50%"; cell.style.fontWeight="700";
+        const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+        const entry = studyData.find(e=>e.date===dateStr);
+        if(entry){ cell.style.background="lightgreen"; cell.style.color="#000"; cell.addEventListener("click",()=>scrollToDay(entry.day)); }
+        else{ cell.style.background="red"; cell.style.color="#fff"; }
         cell.textContent = day;
         daysGrid.appendChild(cell);
       }
@@ -408,7 +386,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       calendarContainer.appendChild(monthBlock);
     });
   }
-
 });
 </script>
 </body>
