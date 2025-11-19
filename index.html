@@ -132,6 +132,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     return authors.size ? [...authors].join("+") : "<b>Rest Day</b>";
   }
 
+  // --- BUILD AUTHOR MAP FIRST ---
+  const authorMap = {};
+  studyData.forEach(entry => {
+    const authors = extractAuthors(entry.topics).split("+");
+    const lines = flashcardsCache[entry.day];
+    let splitCounts = authorSplitExceptions[`Day${entry.day}`];
+    let startIdx = 0;
+    for(let i=0;i<authors.length;i++){
+      const author = authors[i];
+      const count = splitCounts?.[i] ?? (i===authors.length-1 ? lines.length-startIdx : 0);
+      for(let j=startIdx;j<startIdx+count;j++){
+        if(!authorMap[author]) authorMap[author]=[];
+        const fc = lines[j]; if(!fc) continue;
+        authorMap[author].push({day: entry.day, title: fc.title, answer: fc.answer});
+      }
+      startIdx += count;
+    }
+  });
+
   function createFolder(titleText, listItemsFunc) {
     const folder = document.createElement("div");
     folder.className = "folder";
@@ -259,23 +278,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Authors
   createFolder("Authors", container => {
-    const authorMap = {};
-    studyData.forEach(entry => {
-      const authors = extractAuthors(entry.topics).split("+");
-      const lines = flashcardsCache[entry.day];
-      let splitCounts = authorSplitExceptions[`Day${entry.day}`];
-      let startIdx = 0;
-      for(let i=0;i<authors.length;i++){
-        const author = authors[i];
-        const count = splitCounts?.[i] ?? (i===authors.length-1 ? lines.length-startIdx : 0);
-        for(let j=startIdx;j<startIdx+count;j++){
-          if(!authorMap[author]) authorMap[author]=[];
-          const fc = lines[j]; if(!fc) continue;
-          authorMap[author].push({day: entry.day, title: fc.title, answer: fc.answer});
-        }
-        startIdx += count;
-      }
-    });
     Object.keys(authorMap).forEach(author=>{
       const item = document.createElement("div");
       item.className="file-item";
@@ -306,6 +308,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
+  // --- FULL STUDY LOG ---
   const fullContainer = document.createElement("div");
   fullContainer.id = "full-study-log";
   fullContainer.style.paddingRight = "8px";
@@ -474,4 +477,3 @@ document.addEventListener("DOMContentLoaded", async () => {
 </script>
 </body>
 </html>
-
