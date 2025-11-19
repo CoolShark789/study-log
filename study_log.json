@@ -304,7 +304,7 @@
     "day": 27,
     "date": "23.10.2025",
     "topics": [
-      "Vellerman: Sections Intro, 1.1, 1.2, 1.3, 1.4",
+      "Velleman: Sections Intro, 1.1, 1.2, 1.3, 1.4",
       "Pages 13-65",
       "2^n -1 factorization for proving, infinitely many primes proving idea",
       "proving sequence of n composite consecutive integers for any integer n",
@@ -320,7 +320,7 @@
     "day": 28,
     "date": "24.10.2025",
     "topics": [
-      "Vellerman: Sections 1.5, 2.1, 2.2, 2.3 (first half)",
+      "Velleman: Sections 1.5, 2.1, 2.2, 2.3 (first half)",
       "Pages 65-109",
       "Conditional Laws, Contrapositive Law, Biconditional Statement",
       "Universal, Existential Quantifiers; Special 'exactly one' quantifier",
@@ -332,7 +332,7 @@
     "day": 29,
     "date": "25.10.2025",
     "topics": [
-      "Vellerman: Sections 2.3 (second half), 3.1, 3.2",
+      "Velleman: Sections 2.3 (second half), 3.1, 3.2",
       "Pages 109-145",
       "Alternative notations for union and intersections of family sets",
       "Prove a goal of the form P→Q (2 methods)",
@@ -344,7 +344,7 @@
     "day": 30,
     "date": "26.10.2025",
     "topics": [
-      "Vellerman: Sections 3.3, 3.4",
+      "Velleman: Sections 3.3, 3.4",
       "Pages 145-179",
       "Prove a goal of the form ∀xP(x)",
       "Prove a goal of them for ∃xP(x)",
@@ -358,7 +358,7 @@
     "day": 31,
     "date": "27.10.2025",
     "topics": [
-      "Vellerman: Sections 3.5, 3.6, 4.1",
+      "Velleman: Sections 3.5, 3.6, 4.1",
       "Pages 179-203, 215-225",
       "Prove a goal and use a given of the form P∨Q",
       "Prove Uniqueness, prove Existence - prove a goal of the form ∃! x P(x)",
@@ -371,7 +371,7 @@
     "day": 32,
     "date": "28.10.2025",
     "topics": [
-      "Vellerman: Sections 4.2",
+      "Velleman: Sections 4.2",
       "Pages 225-236",
       "Finished torturing AI to make a website, I guess it's okay now",
       "Relation from set to set",
@@ -383,7 +383,7 @@
     "day": 33,
     "date": "29.10.2025",
     "topics": [
-      "Vellerman: Sections 4.3, 4.4 (first half)",
+      "Velleman: Sections 4.3, 4.4 (first half)",
       "Pages 236-252",
       "Alternate notation for (x,y)∈R; Visual representation of R",
       "Identity, Reflexive, Symmetric and Transitive Relations and their conditions (proofs for some)",
@@ -396,7 +396,7 @@
     "day": 34,
     "date": "30.10.2025",
     "topics": [
-      "Vellerman: Sections 4.4 (second half), 4.5 (with no last part)",
+      "Velleman: Sections 4.4 (second half), 4.5 (with no last part)",
       "Pages 252-272",
       "Properties of the smallest element",
       "Largest, maximal elements",
