@@ -21,40 +21,29 @@ body { margin: 0; font-family: sans-serif; display: flex; height: 100vh; }
 .file-item { cursor: pointer; padding: 6px 8px; border-radius: 6px; margin-bottom: 6px; transition: background 0.14s, font-weight 0.14s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .file-item:hover { background: white; font-weight: bold; }
 
-#self-study-btn {
-  position: fixed; top: 12px; right: 12px;
+#self-study-btn, #study-calendar-btn {
+  position: fixed; top: 12px;
   background: #222; color: #fff; border: 1px solid #555;
   padding: 8px 12px; border-radius: 6px; cursor: pointer; z-index: 1000;
 }
+#self-study-btn { right: 12px; }
+#study-calendar-btn { right: 140px; }
 
-#self-study-page {
+#self-study-page, #calendar-page {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
   background: rgba(0,0,0,0.95); color: white;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   opacity: 0; pointer-events: none; transition: opacity 0.32s ease; z-index: 999;
-  padding: 40px; box-sizing: border-box; text-align: center;
+  padding: 40px; box-sizing: border-box; text-align: center; overflow-y: auto;
 }
-#self-study-page.visible { opacity: 1; pointer-events: auto; }
+#self-study-page.visible, #calendar-page.visible { opacity: 1; pointer-events: auto; }
 
 .status-square { display:inline-block; width:15px; height:15px; margin-right:8px; vertical-align:middle; }
 section.day-section { margin-bottom: 40px; padding-bottom: 10px; border-bottom: 1px solid #ddd; }
 .flashcard-card { border:1px solid #ccc; padding:10px; border-radius:6px; background:#fff; cursor:pointer; }
 .flashcard-card .a { display:none; margin-top:6px; }
 
-#study-calendar-btn {
-  position: fixed; top: 12px; right: 140px;
-  background: #222; color: #fff; border: 1px solid #555;
-  padding: 8px 12px; border-radius: 6px; cursor: pointer; z-index: 1000;
-}
-#study-calendar-page {
-  position: fixed; top:0; left:0; width:100%; height:100%;
-  background: rgba(0,0,0,0.95); color: white;
-  display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-  opacity:0; pointer-events:none; transition: opacity 0.32s ease; z-index:999;
-  padding: 40px; box-sizing: border-box; text-align: center; overflow-y:auto;
-}
-#study-calendar-page.visible { opacity:1; pointer-events:auto; }
-.calendar-grid { display:flex; flex-wrap: wrap; gap:16px; justify-content:flex-start; width:100%; }
+.calendar-grid { display: flex; flex-wrap: wrap; gap:16px; justify-content: flex-start; width:100%; }
 .calendar-month { width:23%; min-width:180px; margin-bottom:24px; background:#222; color:white; padding:8px; border-radius:8px; box-sizing:border-box; }
 .calendar-month h3 { text-align:center; margin-bottom:6px; }
 .calendar-days { display:flex; flex-wrap: wrap; gap:4px; justify-content:flex-start; }
@@ -69,6 +58,7 @@ section.day-section { margin-bottom: 40px; padding-bottom: 10px; border-bottom: 
 <div id="sidebar"></div>
 <div id="content" tabindex="0"></div>
 <button id="self-study-btn">Self-Study Stats</button>
+<button id="study-calendar-btn">Study Calendar</button>
 
 <div id="self-study-page" aria-hidden="true">
   <h1 id="ss-day-count" style="font-size:48px; margin-bottom:18px;"></h1>
@@ -76,8 +66,7 @@ section.day-section { margin-bottom: 40px; padding-bottom: 10px; border-bottom: 
   <div id="ss-plans" style="font-size:18px; max-width:760px;"></div>
 </div>
 
-<button id="study-calendar-btn">Study Calendar</button>
-<div id="study-calendar-page" aria-hidden="true">
+<div id="calendar-page" aria-hidden="true">
   <h1 style="font-size:36px; margin-bottom:24px;">Study Calendar</h1>
   <div id="calendar-container" class="calendar-grid"></div>
 </div>
@@ -87,19 +76,17 @@ document.addEventListener("DOMContentLoaded", async () => {
   const sidebar = document.getElementById("sidebar");
   const content = document.getElementById("content");
   const selfStudyBtn = document.getElementById("self-study-btn");
+  const studyCalendarBtn = document.getElementById("study-calendar-btn");
   const selfStudyPage = document.getElementById("self-study-page");
+  const calendarPage = document.getElementById("calendar-page");
+  const calendarContainer = document.getElementById("calendar-container");
 
   const studyData = await fetch("study_log.json").then(r => r.json());
-
   const knownAuthors = ["Stewart","Lay","Velleman","Vellerman","Abbott","Friedberg","Kleppner"];
 
   function extractAuthors(topics) {
     const authors = new Set();
-    for (const t of topics) {
-      for (const k of knownAuthors) {
-        if (new RegExp("\\b"+k.replace(/[:]/g,"")+"\\b","i").test(t)) authors.add(k);
-      }
-    }
+    for (const t of topics) for (const k of knownAuthors) if (new RegExp("\\b"+k.replace(/[:]/g,"")+"\\b","i").test(t)) authors.add(k);
     return authors.size ? [...authors].join("+") : "<b>Rest Day</b>";
   }
 
@@ -144,11 +131,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   // Authors
-  const authorSplitExceptions = {
-    "Day16": [4],
-    "Day45": [4],
-    "Day46": [10]
-  };
+  const authorSplitExceptions = { "Day16": [4], "Day45": [4], "Day46": [10] };
 
   createFolder("Authors", container => {
     const authorMap = {};
@@ -208,6 +191,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     })();
   });
 
+  // Full Study Log
   const fullContainer = document.createElement("div");
   fullContainer.id = "full-study-log";
   fullContainer.style.paddingRight = "8px";
@@ -337,65 +321,79 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  // Calendar logic
-  const studyCalendarBtn = document.getElementById("study-calendar-btn");
-  const studyCalendarPage = document.getElementById("study-calendar-page");
-  const container = document.getElementById("calendar-container");
-
-  studyCalendarBtn.addEventListener("click", () => {
-    const visible = studyCalendarPage.classList.toggle("visible");
-    studyCalendarPage.setAttribute("aria-hidden", visible ? "false" : "true");
+  // --- Calendar feature implementation (rows of 4 months, clickable, color-coded, infinite-scroll compatible) ---
+  studyCalendarBtn.addEventListener("click", async () => {
+    const visible = calendarPage.classList.toggle("visible");
+    calendarPage.setAttribute("aria-hidden", visible ? "false" : "true");
     if (!visible) return;
-    container.innerHTML = "";
+    calendarContainer.innerHTML = "";
 
     const firstDate = new Date(studyData[0].date);
     const today = new Date();
-    const months = [];
     let curMonth = new Date(firstDate.getFullYear(), firstDate.getMonth(), 1);
+    const months = [];
     while (curMonth <= today) {
       months.push(new Date(curMonth));
       curMonth.setMonth(curMonth.getMonth() + 1);
     }
 
-    months.forEach(monthDate => {
-      const monthDiv = document.createElement("div");
-      monthDiv.className = "calendar-month";
-      const monthName = monthDate.toLocaleString("default", { month: "long", year: "numeric" });
-      monthDiv.innerHTML = `<h3>${monthName}</h3>`;
-      const daysDiv = document.createElement("div");
-      daysDiv.className = "calendar-days";
+    for (let i = 0; i < months.length; i += 4) {
+      const row = document.createElement("div");
+      row.style.display = "flex";
+      row.style.gap = "16px";
+      row.style.flexWrap = "wrap";
+      calendarContainer.appendChild(row);
 
-      const firstDay = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1);
-      const lastDay = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0);
-      for (let d = 1; d <= lastDay.getDate(); d++) {
-        const dayDiv = document.createElement("div");
-        dayDiv.className = "calendar-day";
-        const dayStr = `${monthDate.getFullYear()}-${String(monthDate.getMonth() + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
-        const entry = studyData.find(e => e.date === dayStr);
-        if (entry) {
-          const lines = entry.topics.length;
-          if (lines > 5) dayDiv.classList.add("day-green");
-          else if (lines > 0) dayDiv.classList.add("day-gold");
-          else dayDiv.classList.add("day-red");
-        } else {
-          dayDiv.style.opacity = 0.3;
-        }
-        dayDiv.title = dayStr;
-        dayDiv.addEventListener("click", () => {
-          studyCalendarPage.classList.remove("visible");
-          studyCalendarPage.setAttribute("aria-hidden", "true");
-          showFullStudyLog();
+      for (let j = i; j < i + 4 && j < months.length; j++) {
+        const monthDate = months[j];
+        const monthDiv = document.createElement("div");
+        monthDiv.className = "calendar-month";
+        const monthName = monthDate.toLocaleString("default", { month: "long", year: "numeric" });
+        monthDiv.innerHTML = `<h3>${monthName}</h3>`;
+        const daysDiv = document.createElement("div");
+        daysDiv.className = "calendar-days";
+
+        const lastDay = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0);
+        for (let d = 1; d <= lastDay.getDate(); d++) {
+          const dayDiv = document.createElement("div");
+          dayDiv.className = "calendar-day";
+          const dayStr = `${monthDate.getFullYear()}-${String(monthDate.getMonth()+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
           const entry = studyData.find(e => e.date === dayStr);
-          if(entry) scrollToDay(entry.day);
-        });
-        daysDiv.appendChild(dayDiv);
+
+          let hasFlashcards = false;
+          if (entry) {
+            try {
+              const res = await fetch(`flashcards/day${entry.day}.txt`);
+              if(res.ok){
+                const txt = await res.text();
+                hasFlashcards = txt.split("\n").filter(l=>l.trim()&&!l.startsWith("#")).length > 0;
+              }
+            } catch {}
+          }
+
+          if (d === firstDate.getDate() && monthDate.getMonth() === firstDate.getMonth() && monthDate.getFullYear() === firstDate.getFullYear()) {
+            dayDiv.classList.add("day-gold");
+          } else if (entry) {
+            dayDiv.classList.add(hasFlashcards ? "day-green" : "day-red");
+          } else {
+            dayDiv.style.opacity = 0.3;
+          }
+
+          dayDiv.title = dayStr;
+          dayDiv.addEventListener("click", () => {
+            calendarPage.classList.remove("visible");
+            calendarPage.setAttribute("aria-hidden", "true");
+            if(entry) scrollToDay(entry.day);
+          });
+
+          daysDiv.appendChild(dayDiv);
+        }
+
+        monthDiv.appendChild(daysDiv);
+        row.appendChild(monthDiv);
       }
-
-      monthDiv.appendChild(daysDiv);
-      container.appendChild(monthDiv);
-    });
+    }
   });
-
 });
 </script>
 </body>
