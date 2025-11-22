@@ -641,6 +641,17 @@
       "Net work derivation, SHM solution derivation, Escape velocity and maximum distance from launch",
       "Work, Kinetic Energy, Power, Conservative force"
     ]
+  },
+  {
+    "day": 57,
+    "date": "22.11.2025",
+    "topics": [
+      "Kleppner: Sections 5.4, 5.5, 5.6, 5.7, 5.8 (5.9 and 5.10 just give a background)",
+      "Pages: 177-196",
+      "Total mechanical energy, deriving solution of SHM for pendulum, work by conservative force",
+      "Potential energy of the spring derivation, potential energy of inverse square powers",
+      "Deriving work of non conservative forces"
+    ]
   }
 ]
 
