@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const calendarContainer = document.getElementById("calendar-container");
 
   const studyData = await fetch("study_log.json").then(r => r.json());
-  const knownAuthors = ["Stewart","Lay","Velleman","Abbott","Friedberg","Kleppner"];
+  const knownAuthors = ["Stewart","Lay","Velleman","Abbott","Friedberg","Kleppner","Morin];
   const authorSplitExceptions = { "Day16": [4], "Day45": [4], "Day46": [10] };
 
   // --- Preload all flashcards at once ---
@@ -395,19 +395,20 @@ document.addEventListener("DOMContentLoaded", async () => {
       document.getElementById("ss-day-count").textContent=`Days self-studied: ${flashcardDays} / ${studyData.length}`;
       document.getElementById("ss-total-cards").textContent=`Total flashcards: ${totalCards}`;
       const plans=[
-        {name:"Stewart's Calculus (Chapters 3-11.10)", status:"completed"},
-        {name:"Lay's Linear Algebra (Chapters 1-6.1)", status:"completed"},
-        {name:"Vellerman's Intro to Proofs (Chapters 1-4.5)", status:"completed"},
-        {name:"Abbott's Intro to Real Analysis", status:"ongoing"},
+        {name:"Stewart's Calculus (Current Section: 14.3)", status:"ongoing"},
+        {name:"Lay's Linear Algebra (Current Section: 6.1)", status:"paused"},
+        {name:"Vellerman's Intro to Proofs (Current Section: 4.5)", status:"paused"},
+        {name:"Abbott's Intro to Real Analysis (Current Section: 4.6)", status:"paused"},
         {name:"Friedberg's Linear Algebra", status:"planned"},
-        {name:"Stewart's Calculus (Chapters 12-16)", status:"ongoing"},
-        {name:"Kleppner's Classical Mechanics", status:"ongoing"},
+        {name:"Kleppner's Classical Mechanics (Current Section: 6.6)", status:"ongoing"},
+        {name:"Morin's Introduction to Classical Mechanics", status:"planned"},
+        {name:"Boyce's Differential Equations", status:"planned"},
         {name:"Python (Basics, Numpy, Pandas)", status:"planned"}
       ];
       const ssPlansDiv=document.getElementById("ss-plans");
       ssPlansDiv.innerHTML="";
       plans.forEach(p=>{
-        const color=p.status==="completed"?"green":p.status==="ongoing"?"orange":"red";
+        const color=p.status==="completed"?"green":p.status==="ongoing"?"orange":p.status==="paused"?"gray":"red";
         const row=document.createElement("div"); row.style.marginBottom="10px";
         row.innerHTML=`<span class="status-square" style="background:${color}"></span>${p.name}`;
         ssPlansDiv.appendChild(row);
