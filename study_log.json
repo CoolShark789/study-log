@@ -671,6 +671,17 @@
       "Pages: 225-234",
       "Elastic and inelastic collisions, center of mass coordinates for collisions; velocity relative to a moving frame"
     ]
+  },
+  {
+    "day": 60,
+    "date": "25.11.2025",
+    "topics": [
+      "Friedberg: Sections 1.1, 1.2, 1.3, 1.4",
+      "Pages: 1-32",
+      "Vector Space, Field, n-tuple, set of all m x n matrices",
+      "Subspace, trace of a matrix, intersection of subspaces; Sum of subsets, direct sum of subspaces",
+      "Linear combination, Span, theorems+proofs related to them"
+    ]
   }
 ]
 
