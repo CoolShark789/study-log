@@ -682,6 +682,16 @@
       "Subspace, trace of a matrix, intersection of subspaces; Sum of subsets, direct sum of subspaces",
       "Linear combination, Span, theorems+proofs related to them"
     ]
+  },
+  {
+    "day": 61,
+    "date": "26.11.2025",
+    "topics": [
+      "Friedberg: Sections 1.5, 1.6 (first half)",
+      "Pages: 33-45",
+      "Linear Dependence\Independence: general, theorems+proofs",
+      "Basis, standard basis, theorems+proofs, reduction of a spanning set to a basis;"
+    ]
   }
 ]
 
