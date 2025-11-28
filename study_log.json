@@ -697,10 +697,21 @@
     "day": 62,
     "date": "27.11.2025",
     "topics": [
-      "Friedberg: Sections 1.6 (second half), 2.1",
+      "Friedberg: Sections 1.6 (second half), 2.1 (first part)",
       "Pages: 45-58, 64-67",
       "Replacement theorem+corollary; Finite-dimensional vector space, dimension, properties",
       "Linear transformation definition and properties"
+    ]
+  },
+  {
+    "day": 63,
+    "date": "28.11.2025",
+    "topics": [
+      "Friedberg: 2.1 (second part),",
+      "Pages: 67-74",
+      "identity, zero transformations; Null space, Range, their relation to vector spaces and basis with proofs",
+      "Rank and nullity, Dimension theorem, one-to-one transformation; Properties of the special case dim(V)=dim(W)",
+      "Relation between basis of V and vectors in W"
     ]
   }
 ]
