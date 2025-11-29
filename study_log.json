@@ -713,6 +713,16 @@
       "Rank and nullity, Dimension theorem, one-to-one transformation; Properties of the special case dim(V)=dim(W)",
       "Relation between basis of V and vectors in W"
     ]
+  },
+  {
+    "day": 64,
+    "date": "29.11.2025",
+    "topics": [
+      "Friedberg: 2.2, 2.3 (beginning)",
+      "Pages: 74-87",
+      "Ordered Basis, vector relative to a basis, matrix representation of T",
+      " Vector space of linear transformations, composition of linear transformations, matrix product derivation"
+    ]
   }
 ]
 
