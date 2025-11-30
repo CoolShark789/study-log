@@ -723,6 +723,16 @@
       "Ordered Basis, vector relative to a basis, matrix representation of T",
       " Vector space of linear transformations, composition of linear transformations, matrix product derivation"
     ]
+  },
+  {
+    "day": 65,
+    "date": "30.11.2025",
+    "topics": [
+      "Friedberg: 2.3, 2.4 (first half)",
+      "Pages: 87-103",
+      "More properties, Kronecker delta, powers of the nxn matrix, left-multiplication transformation and its properties",
+      "Inverse, isomorphism"
+    ]
   }
 ]
 
