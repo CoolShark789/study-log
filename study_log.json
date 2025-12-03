@@ -738,6 +738,21 @@
     "day": 66,
     "date": "01.12.2025",
     "topics": ["Rest"]
+  },
+  {
+    "day": 67,
+    "date": "02.12.2025",
+    "topics": ["Rest"]
+  },
+  {
+    "day": 68,
+    "date": "03.12.2025",
+    "topics": [
+      "Friedberg: 2.4, 2.5, 3.1",
+      "Pages: 103-117, 147-152",
+      "Functions for the transformation and vector space representation, change of coordinates matrix, linear operator",
+      "Similar Matrices, "
+    ]
   }
 ]
 
