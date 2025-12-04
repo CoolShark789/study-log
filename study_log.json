@@ -753,6 +753,17 @@
       "Functions for the transformation and vector space representation, change of coordinates matrix, linear operator",
       "Similar Matrices, "
     ]
+  },
+  {
+    "day": 69,
+    "date": "04.12.2025",
+    "topics": [
+      "Friedberg: 3.2",
+      "Pages: 152-176",
+      "Rank definition, relation between rank/elementary matrices and invertible matrices, more rank properties",
+      "Method to find the inverse, homogeneous system, relation between solutions to Ax=0 and Ax=b with proof",
+      "Properties for number of solutions, other stuff"
+    ]
   }
 ]
 
