@@ -312,16 +312,50 @@ document.addEventListener("DOMContentLoaded", async () => {
   const fullContainer = document.createElement("div");
   fullContainer.id = "full-study-log";
   fullContainer.style.paddingRight = "8px";
+
   studyData.forEach(entry => {
     const section = document.createElement("section");
     section.className = "day-section";
     section.id = `day-${entry.day}`;
+    section.style.position = "relative"; // ensure that button can be absolute inside
+
     section.innerHTML = `<h2>Day ${entry.day} — ${entry.date}</h2>`;
     const ul = document.createElement("ul");
-    entry.topics.forEach(t => { const li = document.createElement("li"); li.textContent = t; ul.appendChild(li); });
+    entry.topics.forEach(t => {
+      const li = document.createElement("li");
+      li.textContent = t;
+      ul.appendChild(li);
+    });
     section.appendChild(ul);
+
+    // --- FLASHCARDS TRANSITION BUTTON ---
+    const btn = document.createElement("button");
+    btn.innerHTML = "&#9654;"; // triangular arrow symbol
+    btn.style.position = "absolute";
+    btn.style.bottom = "8px";
+    btn.style.right = "8px";
+    btn.style.width = "36px";
+    btn.style.height = "36px";
+    btn.style.borderRadius = "50%";
+    btn.style.border = "none";
+    btn.style.background = "#222";
+    btn.style.color = "#fff";
+    btn.style.cursor = "pointer";
+    btn.style.fontSize = "18px";
+    btn.style.display = "flex";
+    btn.style.alignItems = "center";
+    btn.style.justifyContent = "center";
+    btn.style.boxShadow = "0 2px 6px rgba(0,0,0,0.4)";
+    btn.style.transition = "transform 0.15s, box-shadow 0.15s";
+    btn.addEventListener("mouseenter", () => { btn.style.transform = "translateY(-2px)"; btn.style.boxShadow = "0 4px 10px rgba(0,0,0,0.5)"; });
+    btn.addEventListener("mouseleave", () => { btn.style.transform = "translateY(0)"; btn.style.boxShadow = "0 2px 6px rgba(0,0,0,0.4)"; });
+    btn.addEventListener("click", () => loadFlashcards(entry.day, true));
+
+    section.appendChild(btn);
+
     fullContainer.appendChild(section);
   });
+
   content.appendChild(fullContainer);
 
   function showFullStudyLog() { content.innerHTML=""; content.appendChild(fullContainer); content.focus(); }
