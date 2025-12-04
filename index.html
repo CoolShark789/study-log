@@ -424,14 +424,27 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function generateCalendar() {
     if(calendarContainer.children.length) return;
     if(!studyData.length) return;
+
+    // Build map of date -> flashcard count
     const flashcardMap = {};
-    studyData.forEach(entry => flashcardMap[entry.date] = (flashcardsCache[entry.day] || []).length);
+    let minCount = Infinity, maxCount = -Infinity;
+    studyData.forEach(entry => {
+      const count = (flashcardsCache[entry.day] || []).length;
+      flashcardMap[entry.date] = count;
+      if(count > 0) { minCount = Math.min(minCount, count); maxCount = Math.max(maxCount, count); }
+    });
+
+    // If all counts are zero, set minCount=0 and maxCount=1 to avoid division by zero
+    if(minCount === Infinity) minCount = 0;
+    if(maxCount === -Infinity) maxCount = 1;
+
     const firstStudyDate = studyData[0].date.split(".").reverse().join("-");
     const firstStudy = new Date(firstStudyDate);
     const today = new Date();
     let current = new Date(firstStudy.getFullYear(), firstStudy.getMonth(), 1);
     const months = [];
     while(current <= today){ months.push(new Date(current)); current.setMonth(current.getMonth()+1); }
+
     calendarContainer.style.display = "grid";
     calendarContainer.style.gridTemplateColumns = "repeat(3, 200px)";
     calendarContainer.style.justifyItems = "center";
@@ -440,53 +453,83 @@ document.addEventListener("DOMContentLoaded", async () => {
     months.forEach(monthDate=>{
       const monthBlock = document.createElement("div");
       monthBlock.style.display="flex"; monthBlock.style.flexDirection="column"; monthBlock.style.alignItems="center";
-      const title = document.createElement("div"); title.style.fontWeight="bold"; title.style.marginBottom="16px";
+
+      const title = document.createElement("div");
+      title.style.fontWeight="bold";
+      title.style.marginBottom="16px";
       title.textContent = monthDate.toLocaleString('default',{ month:'long', year:'numeric' });
       monthBlock.appendChild(title);
+
       const daysGrid = document.createElement("div");
-      daysGrid.style.display="grid"; daysGrid.style.gridTemplateColumns="repeat(7,32px)"; daysGrid.style.gap="4px"; daysGrid.style.justifyContent="center";
+      daysGrid.style.display="grid";
+      daysGrid.style.gridTemplateColumns="repeat(7,32px)";
+      daysGrid.style.gap="4px";
+      daysGrid.style.justifyContent="center";
 
       const year = monthDate.getFullYear();
       const month = monthDate.getMonth();
       const firstDay = new Date(year,month,1).getDay();
       for(let i=0;i<firstDay;i++) daysGrid.appendChild(document.createElement("div"));
+
       const daysInMonth = new Date(year,month+1,0).getDate();
       for(let day=1; day<=daysInMonth; day++){
         const cell = document.createElement("div");
-        cell.style.width="32px"; cell.style.height="32px"; cell.style.lineHeight="32px"; cell.style.textAlign="center"; cell.style.borderRadius="50%"; cell.style.fontWeight="700";
+        cell.style.width="32px";
+        cell.style.height="32px";
+        cell.style.lineHeight="32px";
+        cell.style.textAlign="center";
+        cell.style.borderRadius="50%";
+        cell.style.fontWeight="700";
+
         const dateStr = `${String(day).padStart(2,"0")}.${String(month+1).padStart(2,"0")}.${year}`;
         const entry = studyData.find(e=>e.date===dateStr);
         const dateObj = new Date(year, month, day);
         cell.textContent = day;
-        if(dateObj < firstStudy || dateObj > today) { cell.style.background="#ccc"; cell.style.color="#666"; }
-        else if(entry){
-          const hasFlashcards = flashcardMap[dateStr] > 0;
-          cell.style.background = hasFlashcards ? "lightgreen" : "red";
-          cell.style.color = hasFlashcards ? "#000" : "#fff";
+
+        if(dateObj < firstStudy || dateObj > today) {
+          cell.style.background="#ccc";
+          cell.style.color="#666";
+        } else if(entry){
+          const count = flashcardMap[dateStr];
+          if(count > 0){
+            // Normalize count between 0 and 1
+            const t = (count - minCount) / (maxCount - minCount || 1);
+            // Interpolate between dark green and lime
+            const greenValue = Math.round(100 + t * 155); // 100 -> 255
+            cell.style.background = `rgb(0,${greenValue},0)`;
+          } else{
+              cell.style.background = "red"; // zero-flashcard days
+          }
+          cell.style.color="#000";
           cell.style.cursor="pointer";
           cell.addEventListener("click", ()=>{
               showFullStudyLog();
               scrollToDay(entry.day);
               calendarPage.style.display = "none";
           });
-        } else { cell.style.background="#fff"; cell.style.color="#000"; }
-        if(dateStr === studyData[0].date) {
-            cell.style.background = "gold";
-            cell.style.color = "#000";
-            cell.style.cursor = "pointer";
-            cell.addEventListener("click", () => {
-                showFullStudyLog();
-                scrollToDay(studyData[0].day);
-                calendarPage.style.display = "none";
-            });
+        } else {
+          cell.style.background="#fff";
+          cell.style.color="#000";
         }
+
+        if(dateStr === studyData[0].date){
+          cell.style.background="gold";
+          cell.style.color="#000";
+          cell.style.cursor="pointer";
+          cell.addEventListener("click", () => {
+              showFullStudyLog();
+              scrollToDay(studyData[0].day);
+              calendarPage.style.display = "none";
+          });
+        }
+
         daysGrid.appendChild(cell);
       }
+
       monthBlock.appendChild(daysGrid);
       calendarContainer.appendChild(monthBlock);
     });
   }
-
 });
 </script>
 </body>
