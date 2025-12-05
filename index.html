@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const studyData = await fetch("study_log.json").then(r => r.json());
   const knownAuthors = ["Stewart","Lay","Velleman","Abbott","Friedberg","Kleppner","Morin"];
-  const authorColors = {"Stewart": "#FF8C00","Lay": "#1E90FF","Velleman": "#8A2BE2","Abbott": "#FF1493","Friedberg": "#00CED1","Kleppner":"red"};
+  const authorColors = {"Stewart": "#FF8C00","Lay": "#15e6cde6","Velleman": "#a7f208db","Abbott": "#7d07fadb","Friedberg": "#0a5563db","Kleppner":"#d90b49f0"};
   const authorSplitExceptions = { "Day16": [4], "Day45": [4], "Day46": [10] };
 
   // --- Preload all flashcards at once ---
@@ -481,7 +481,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       calendarContainer.style.display = "grid";
       calendarContainer.style.gridTemplateColumns = "repeat(3, 200px)";
       calendarContainer.style.justifyItems = "center";
-      calendarContainer.style.gap = "200px"; // spacing between months
+      calendarContainer.style.gap = "100px"; // spacing between months
 
       months.forEach(monthDate => {
           const monthBlock = document.createElement("div");
