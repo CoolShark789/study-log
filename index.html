@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const studyData = await fetch("study_log.json").then(r => r.json());
   const knownAuthors = ["Stewart","Lay","Velleman","Abbott","Friedberg","Kleppner","Morin"];
-  const authorColors = {"Stewart": "orange","Lay": "cyan","Velleman": "green","Abbott": "purple","Friedberg": "darkblue"};
+  const authorColors = {"Stewart": "orange","Lay": "cyan","Velleman": "green","Abbott": "purple","Friedberg": "darkblue","Kleppner":"red"};
   const authorSplitExceptions = { "Day16": [4], "Day45": [4], "Day46": [10] };
 
   // --- Preload all flashcards at once ---
@@ -540,10 +540,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                   // Add rings for all authors
                   const authors = extractAuthors(entry.topics).split("+").map(a => a.trim());
                   if(authors.length && authors[0] !== "<b>Rest Day</b>") {
-                      const borderWidth = 4;
+                      const borderWidth = 2;
+                      const step=1;
                       const shadowParts = authors.map((a,i)=>{
                           const color = authorColors[a] || "black";
-                          const offset = i * borderWidth * 2;
+                          const offset = borderWidth +i*step;
                           return `0 0 0 ${borderWidth + offset}px ${color}`;
                       });
                       cell.style.boxShadow = shadowParts.join(", ");
