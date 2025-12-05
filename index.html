@@ -500,7 +500,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           const daysGrid = document.createElement("div");
           daysGrid.style.display="grid";
           daysGrid.style.gridTemplateColumns="repeat(7,32px)";
-          daysGrid.style.gap="8px";
+          daysGrid.style.gap="12px";
           daysGrid.style.justifyContent="center";
 
           const year = monthDate.getFullYear();
@@ -541,7 +541,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                   // Add thin rings for all authors
                   const authors = extractAuthors(entry.topics).split("+").map(a => a.trim());
                   if(authors.length && authors[0] !== "<b>Rest Day</b>") {
-                      const borderWidth = 2;
+                      const borderWidth = 4;
                       const step = 2; // distance between rings
                       const shadows = authors.map((a,i)=>{
                           const color = authorColors[a] || "black";
