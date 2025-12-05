@@ -707,7 +707,7 @@
     "day": 63,
     "date": "28.11.2025",
     "topics": [
-      "Friedberg: 2.1 (second part),",
+      "Friedberg: Sections 2.1 (second part),",
       "Pages: 67-74",
       "identity, zero transformations; Null space, Range, their relation to vector spaces and basis with proofs",
       "Rank and nullity, Dimension theorem, one-to-one transformation; Properties of the special case dim(V)=dim(W)",
@@ -718,7 +718,7 @@
     "day": 64,
     "date": "29.11.2025",
     "topics": [
-      "Friedberg: 2.2, 2.3 (beginning)",
+      "Friedberg: Sections 2.2, 2.3 (beginning)",
       "Pages: 74-87",
       "Ordered Basis, vector relative to a basis, matrix representation of T",
       " Vector space of linear transformations, composition of linear transformations, matrix product derivation"
@@ -728,7 +728,7 @@
     "day": 65,
     "date": "30.11.2025",
     "topics": [
-      "Friedberg: 2.3, 2.4 (first half)",
+      "Friedberg: Sections 2.3, 2.4 (first half)",
       "Pages: 87-103",
       "More properties, Kronecker delta, powers of the nxn matrix, left-multiplication transformation and its properties",
       "Inverse, isomorphism"
@@ -748,7 +748,7 @@
     "day": 68,
     "date": "03.12.2025",
     "topics": [
-      "Friedberg: 2.4, 2.5, 3.1",
+      "Friedberg: Sections 2.4, 2.5, 3.1",
       "Pages: 103-117, 147-152",
       "Functions for the transformation and vector space representation, change of coordinates matrix, linear operator",
       "Similar Matrices, "
@@ -758,11 +758,21 @@
     "day": 69,
     "date": "04.12.2025",
     "topics": [
-      "Friedberg: 3.2, 3.3",
+      "Friedberg: Sections 3.2, 3.3",
       "Pages: 152-176",
       "Rank definition, relation between rank/elementary matrices and invertible matrices, more rank properties",
       "Method to find the inverse, homogeneous system, relation between solutions to Ax=0 and Ax=b with proof",
       "Properties for number of solutions, other stuff"
+    ]
+  },
+  {
+    "day": 70,
+    "date": "05.12.2025",
+    "topics": [
+      "Friedberg: Sections 3.3 (last bit), 3.4",
+      "Pages: 176-199",
+      "Equivalent matrices, formal proof to reduced echelon form method, general solution",
+      "Relation between reduced echelon matrix and the corresponding original"
     ]
   }
 ]
