@@ -481,7 +481,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       calendarContainer.style.display = "grid";
       calendarContainer.style.gridTemplateColumns = "repeat(3, 200px)";
       calendarContainer.style.justifyItems = "center";
-      calendarContainer.style.gap = "200px"; // spacing between months
+      calendarContainer.style.columnGap = "200px"; // horizontal gap between months
+      calendarContainer.style.rowGap = "100px";    // vertical gap between rows of months
+
 
       months.forEach(monthDate => {
           const monthBlock = document.createElement("div");
@@ -572,37 +574,50 @@ document.addEventListener("DOMContentLoaded", async () => {
       let legend = document.getElementById("author-legend");
       if(!legend){
           legend = document.createElement("div");
-          legend.id="author-legend";
-          legend.style.position="absolute";
-          legend.style.top="20px";
-          legend.style.right="20px";
-          legend.style.display="flex";
-          legend.style.flexDirection="column";
-          legend.style.gap="12px";
+          legend.id = "author-legend";
+          legend.style.position = "fixed";
+          legend.style.top = "60px"; // below the self-study button (button is 12px from top + 48px height)
+          legend.style.left = "12px";
+          legend.style.display = "flex";
+          legend.style.flexDirection = "column";
+          legend.style.gap = "8px";
           calendarPage.appendChild(legend);
       }
       legend.innerHTML = "";
 
+      // Count days per author
+      const authorDayCounts = {};
+      studyData.forEach(entry => {
+          const authors = extractAuthors(entry.topics).split("+").map(a => a.trim());
+          authors.forEach(a => {
+              if(a !== "<b>Rest Day</b>") {
+                  if(!authorDayCounts[a]) authorDayCounts[a] = new Set();
+                  authorDayCounts[a].add(entry.day);
+              }
+          });
+      });
+
       Object.keys(authorColors).forEach(author => {
-          const totalDays = authorMap[author]?.length || 0; // number of flashcards
+          const dayCount = authorDayCounts[author]?.size || 0;
           const row = document.createElement("div");
           row.style.display = "flex";
           row.style.alignItems = "center";
 
           const circle = document.createElement("div");
-          circle.style.width="16px";
-          circle.style.height="16px";
-          circle.style.borderRadius="50%";
+          circle.style.width = "16px";
+          circle.style.height = "16px";
+          circle.style.borderRadius = "50%";
           circle.style.background = authorColors[author];
-          circle.style.marginRight="8px";
+          circle.style.marginRight = "8px";
           row.appendChild(circle);
 
           const label = document.createElement("div");
-          label.textContent = `${author} (${totalDays})`; // append total flashcards
+          label.textContent = `${author} (${dayCount} Days)`;
           row.appendChild(label);
 
           legend.appendChild(row);
       });
+
   }
 });
 </script>
