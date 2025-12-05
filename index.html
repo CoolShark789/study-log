@@ -555,7 +555,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           // --- multi-author border ---
           const authors = entry ? extractAuthors(entry.topics).split("+").map(a => a.trim()) : [];
           if(authors.length && authors[0] !== "<b>Rest Day</b>") {
-              const borderWidth = 4;
+              const borderWidth = 10;
               const shadowParts = authors.map((a,i)=>{
                   const color = authorColors[a] || "black";
                   const offset = i * borderWidth * 2; // space out rings
