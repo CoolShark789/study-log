@@ -553,20 +553,18 @@ document.addEventListener("DOMContentLoaded", async () => {
           cell.style.cursor="pointer";
 
           // --- multi-author border ---
-          const authors = extractAuthors(entry.topics).split("+").map(a => a.trim());
+          const authors = entry ? extractAuthors(entry.topics).split("+").map(a => a.trim()) : [];
           if(authors.length && authors[0] !== "<b>Rest Day</b>") {
-              const borderWidth = 2;
-              const gradients = authors.map((a,i)=>{
+              const borderWidth = 4;
+              const shadowParts = authors.map((a,i)=>{
                   const color = authorColors[a] || "black";
-                  const offsetStart = (i / authors.length) * 100;
-                  const offsetEnd = ((i+1)/authors.length) * 100;
-                  return `${color} ${offsetStart}%, ${color} ${offsetEnd}%`;
+                  const offset = i * borderWidth * 2; // space out rings
+                  return `0 0 0 ${borderWidth + offset}px ${color}`;
               });
-              cell.style.border = `${borderWidth}px solid transparent`;
-              cell.style.backgroundImage = `conic-gradient(${gradients.join(", ")})`;
-              cell.style.backgroundClip = "padding-box, border-box";
-              cell.style.backgroundOrigin = "border-box";
+              cell.style.boxShadow = shadowParts.join(", ");
+              cell.style.borderRadius = "50%";
           }
+
 
           cell.addEventListener("click", () => {
               showFullStudyLog();
