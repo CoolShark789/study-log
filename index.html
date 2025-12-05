@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const studyData = await fetch("study_log.json").then(r => r.json());
   const knownAuthors = ["Stewart","Lay","Velleman","Abbott","Friedberg","Kleppner","Morin"];
-  const authorColors = {"Stewart": "#FF8C00","Lay": "#15e6cde6","Velleman": "#a7f208db","Abbott": "#7d07fadb","Friedberg": "#0a5563db","Kleppner":"#d90b49f0"};
+  const authorColors = {"Stewart": "#FF8C00","Lay": "#15e6cde6","Velleman": "#a7f208db","Abbott": "#7d07fadb","Friedberg": "#076d80fa","Kleppner":"#d90b49f0"};
   const authorSplitExceptions = { "Day16": [4], "Day45": [4], "Day46": [10] };
 
   // --- Preload all flashcards at once ---
@@ -530,7 +530,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                   const count = flashcardMap[dateStr];
                   if(count > 0){
                       const t = (count - minCount) / (maxCount - minCount || 1);
-                      const greenValue = Math.round(70 + t * 155);
+                      const greenValue = Math.round(100 + t * 155);
                       cell.style.background = `rgb(0,${greenValue},0)`;
                   } else{
                       cell.style.background = "red";
