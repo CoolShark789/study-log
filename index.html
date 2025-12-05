@@ -529,10 +529,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             // Normalize count between 0 and 1
             const t = (count - minCount) / (maxCount - minCount || 1);
             // Interpolate between dark green and lime
-            //const greenValue = Math.round(100 + t * 155); // 100 -> 255
-            const lightness = 30 + t * 50;
-            cell.style.background = `hsl(120, 100%, ${lightness}%)`;
-            //cell.style.background = `rgb(0,${greenValue},0)`;
+            const greenValue = Math.round(40 + t * 155); // 100 -> 255
+            cell.style.background = `rgb(0,${greenValue},0)`;
           } else{
               cell.style.background = "red"; // zero-flashcard days
           }
