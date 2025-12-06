@@ -169,11 +169,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     wrapper.style.padding = "12px";
     wrapper.style.borderRadius = "6px";
 
-    wrapper.querySelectorAll("select, input, button").forEach(el => {
-      el.style.background = "#252525";
-      el.style.color = "#e0e0e0";
-      el.style.border = "1px solid #555";
-    });
+    const styleInputs = () => {
+      wrapper.querySelectorAll("select, input, button").forEach(el => {
+        el.style.background = "#252525";
+        el.style.color = "#e0e0e0";
+        el.style.border = "1px solid #555";
+      });
+    };
+    styleInputs();
 
     const numberLabel = document.createElement("label");
     numberLabel.textContent = "Number of flashcards: ";
@@ -505,7 +508,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
               if(dateObj < firstStudy || dateObj > today){
                   cell.style.background="#2a2a2a";
-                  cell.style.color="#777";
+                  cell.style.color="#bbb";
               } else if(entry){
                   const count = flashcardMap[dateStr];
                   if(count > 0){
