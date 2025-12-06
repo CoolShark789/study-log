@@ -28,7 +28,7 @@ body {margin: 0; font-family: sans-serif; display: flex; height: 100vh; backgrou
 .status-square {display:inline-block; width:15px; height:15px; margin-right:8px; vertical-align:middle;}
 section.day-section {margin-bottom: 40px; padding-bottom: 10px; border-bottom: 1px solid #333;}
 
-.flashcard-card {border:1px solid #555; padding:10px; border-radius:6px; cursor:pointer; color: #e0e0e0; background: #252525} 
+.flashcard-card {border:1px solid #555; padding:10px; border-radius:6px; cursor:pointer; color: #e0e0e0;}
 .flashcard-card .a {display:none; margin-top:6px;}
 /* Calendar button and page */
 #study-calendar-btn {position: fixed; bottom: 24px; left: 24px; padding: 12px 18px; font-size: 14px; border: none; border-radius: 12px; background: #222; color: #e0e0e0; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.4); transition: transform 0.15s, box-shadow 0.15s, background 0.15s; z-index: 1000;}
@@ -37,22 +37,6 @@ section.day-section {margin-bottom: 40px; padding-bottom: 10px; border-bottom: 1
 #study-calendar-page {display:none; position:absolute; top:0; left:0; width:100%; height:100%; background:#181818; overflow-y:auto; padding:20px; box-sizing:border-box; z-index:998; color: #e0e0e0;}
 #study-calendar-page h2 {margin-bottom:16px; text-align: center;}
 #calendar-container {display:grid; grid-template-columns: repeat(3, 200px); justify-content: center; gap: 24px;}
-
-/* Firefox */
-#content, #sidebar, #study-calendar-page {scrollbar-width: thin; scrollbar-color: #555 #181818;}
-
-/* Chrome, Edge */
-#content::-webkit-scrollbar,
-#sidebar::-webkit-scrollbar,
-#study-calendar-page::-webkit-scrollbar {width: 10px;}
-
-#content::-webkit-scrollbar-track,
-#sidebar::-webkit-scrollbar-track,
-#study-calendar-page::-webkit-scrollbar-track {background: #181818;}
-
-#content::-webkit-scrollbar-thumb,
-#sidebar::-webkit-scrollbar-thumb,
-#study-calendar-page::-webkit-scrollbar-thumb {background-color: #555; border-radius: 10px; border: 2px solid #181818;}
 </style>
 </head>
 <body>
@@ -637,4 +621,3 @@ document.addEventListener("DOMContentLoaded", async () => {
 </script>
 </body>
 </html>
-
