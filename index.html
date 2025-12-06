@@ -265,8 +265,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       selected.forEach((fc, i) => {
         const card = document.createElement("div");
         card.className = "flashcard-card";
-        card.style.background = "#252525";
-        card.style.color = "#e0e0e0";
         const q = document.createElement("div");
         q.style.fontWeight = "700";
         q.style.marginBottom = "6px";
@@ -274,7 +272,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         const a = document.createElement("div");
         a.className = "a";
         a.innerHTML = fc.answer || "";
-        a.style.color = "#e0e0e0";
         card.appendChild(q);
         card.appendChild(a);
         renderMathInElement(q, { delimiters:[
