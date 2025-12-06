@@ -5,12 +5,13 @@ It is intended solely for my own tracking and because it kind of motivates me?..
 
 ---
 
-The website displays a list of all study days and corresponding flashcards made by me with a sidebar for quick navigation between them.  
-Each day lists the topics studied and short summary by topics. You can easily check the corresponding flashcards with the button at the bottom right.      
-You can also view the visual representation with the Calendar in the bottom left corner as well as the "stats" in the upper right.  
-The Calendar includes gradient of a green to indicate how many flashcards were added each day as well as the colored borders around days indicating the author studied that day.  
-For all the books I've started there is a collection of all relevant flashcards under Authors category.  
-You can use Random Flashcards to see 1-10 random flashcards from the chosen authors (if none are chosen it will take out of the whole bank).
+## Features
+- **Daily Log**: Shows each study day with (poor?) topic summaries and a link to that day’s flashcards.
+- **Sidebar Navigation**: Quick access to any day or section.
+- **Calendar View**: Green gradient represents flashcards created per day; colored borders show which author was studied.
+- **Statistics Panel**: Displays aggregate counts and overall metrics.
+- **Author Collections**: Groups all flashcards by the author's book.
+- **Random Flashcards**: Generates 1–10 random flashcards from selected authors or from the entire bank.
 
 ---
 
