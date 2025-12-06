@@ -28,8 +28,8 @@ body {margin: 0; font-family: sans-serif; display: flex; height: 100vh; backgrou
 .status-square {display:inline-block; width:15px; height:15px; margin-right:8px; vertical-align:middle;}
 section.day-section {margin-bottom: 40px; padding-bottom: 10px; border-bottom: 1px solid #333;}
 
-.flashcard-card {border:1px solid #555; padding:10px; border-radius:6px; cursor:pointer; color: #e0e0e0;}
-.flashcard-card .a {display:none; margin-top:6px;}
+.flashcard-card {border:1px solid #555; padding:10px; border-radius:6px; cursor:pointer; background: #252525; color: #e0e0e0;}
+.flashcard-card .a {display:none; margin-top:6px; color: #e0e0e0;}
 /* Calendar button and page */
 #study-calendar-btn {position: fixed; bottom: 24px; left: 24px; padding: 12px 18px; font-size: 14px; border: none; border-radius: 12px; background: #222; color: #e0e0e0; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.4); transition: transform 0.15s, box-shadow 0.15s, background 0.15s; z-index: 1000;}
 #study-calendar-btn:hover {background: #333; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.5);}
@@ -246,6 +246,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       box.style.display = "flex";
       box.style.flexDirection = "column";
       box.style.gap = "12px";
+      box.style.background = "#181818";
+      box.style.padding = "12px";
+      box.style.borderRadius = "6px";
       selected.forEach((fc, i) => {
         const card = document.createElement("div");
         card.className = "flashcard-card";
@@ -256,6 +259,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const a = document.createElement("div");
         a.className = "a";
         a.innerHTML = fc.answer || "";
+        a.style.color = "#e0e0e0";
         card.appendChild(q);
         card.appendChild(a);
         renderMathInElement(q, { delimiters:[
