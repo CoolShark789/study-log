@@ -28,7 +28,7 @@ body {margin: 0; font-family: sans-serif; display: flex; height: 100vh; backgrou
 .status-square {display:inline-block; width:15px; height:15px; margin-right:8px; vertical-align:middle;}
 section.day-section {margin-bottom: 40px; padding-bottom: 10px; border-bottom: 1px solid #333;}
 
-.flashcard-card {border:1px solid #555; padding:10px; border-radius:6px; cursor:pointer; background: #252525; color: #e0e0e0;}
+.flashcard-card {border:1px solid #444; padding:10px; border-radius:6px; cursor:pointer; background: #1c1c1c; color: #e0e0e0;}
 .flashcard-card .a {display:none; margin-top:6px; color: #e0e0e0;}
 /* Calendar button and page */
 #study-calendar-btn {position: fixed; bottom: 24px; left: 24px; padding: 12px 18px; font-size: 14px; border: none; border-radius: 12px; background: #222; color: #e0e0e0; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.4); transition: transform 0.15s, box-shadow 0.15s, background 0.15s; z-index: 1000;}
@@ -396,7 +396,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     parent.appendChild(container);
     lines.forEach((fc,i)=>{
       const card = document.createElement("div"); card.className="flashcard-card";
-      card.style.background = "#252525"; card.style.color = "#e0e0e0";
+      card.style.background = "#1c1c1c"; card.style.color = "#e0e0e0"; card.style.border = "1px solid #444";
       const qDiv = document.createElement("div"); qDiv.style.fontWeight="700"; qDiv.style.marginBottom="6px"; qDiv.innerHTML=`${i+1}) ${fc.title}`;
       const aDiv = document.createElement("div"); aDiv.className="a"; aDiv.innerHTML=fc.answer||"";
       card.appendChild(qDiv); card.appendChild(aDiv);
