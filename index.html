@@ -163,7 +163,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Random Flashcards
   createFolder("Random Flashcards", container => {
     const wrapper = document.createElement("div");
-
+    wrapper.className = "random-flashcards"; // mark as dark
     wrapper.style.background = "#181818";
     wrapper.style.color = "#e0e0e0";
     wrapper.style.padding = "12px";
@@ -176,11 +176,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         el.style.border = "1px solid #555";
       });
     };
-    styleInputs();
 
     const numberLabel = document.createElement("label");
     numberLabel.textContent = "Number of flashcards: ";
     const numberSelect = document.createElement("select");
+    numberSelect.style.background = "#252525";
+    numberSelect.style.color = "#e0e0e0";
+    numberSelect.style.border = "1px solid #555";
     for (let i = 1; i <= 10; i++) {
       const opt = document.createElement("option");
       opt.value = i;
@@ -191,29 +193,37 @@ document.addEventListener("DOMContentLoaded", async () => {
     wrapper.appendChild(numberLabel);
     wrapper.appendChild(document.createElement("br"));
     wrapper.appendChild(document.createElement("br"));
-  
-    // Use authors from authorMap (only authors with flashcards)
+
     const authorDiv = document.createElement("div");
     Object.keys(authorMap).forEach(author => {
       const label = document.createElement("label");
       label.style.display = "block";
+      label.style.color = "#e0e0e0"; // force text color
       const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
       checkbox.value = author;
+      checkbox.style.background = "#252525";
+      checkbox.style.color = "#e0e0e0";
+      checkbox.style.border = "1px solid #555";
       label.appendChild(checkbox);
       label.appendChild(document.createTextNode(" " + author));
       authorDiv.appendChild(label);
     });
     wrapper.appendChild(authorDiv);
     wrapper.appendChild(document.createElement("br"));
-  
+
     const genBtn = document.createElement("button");
     genBtn.textContent = "Generate Random Flashcards";
     genBtn.style.padding = "6px 12px";
     genBtn.style.cursor = "pointer";
+    genBtn.style.background = "#252525";
+    genBtn.style.color = "#e0e0e0";
+    genBtn.style.border = "1px solid #555";
     wrapper.appendChild(genBtn);
+
     container.appendChild(wrapper);
-  
+    styleInputs();
+
     genBtn.addEventListener("click", () => {
       content.innerHTML = "<h2>Random Flashcards</h2>";
       const selectedNumber = parseInt(numberSelect.value);
@@ -224,13 +234,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (selectedAuthors.length && !authorsOfDay.some(a => selectedAuthors.includes(a))) return;
         allFlashcards.push(...flashcardsCache[entry.day]);
       });
-  
+
       // shuffle
       for (let i = allFlashcards.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [allFlashcards[i], allFlashcards[j]] = [allFlashcards[j], allFlashcards[i]];
       }
-  
+
       const selected = allFlashcards.slice(0, selectedNumber);
       const box = document.createElement("div");
       box.style.display = "flex";
@@ -240,13 +250,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         const card = document.createElement("div");
         card.className = "flashcard-card";
         card.style.background = "#252525";
+        card.style.color = "#e0e0e0";
         const q = document.createElement("div");
-        q.style.fontWeight = "700"; q.style.marginBottom = "6px";
+        q.style.fontWeight = "700";
+        q.style.marginBottom = "6px";
         q.innerHTML = `${i+1}) ${fc.title}`;
         const a = document.createElement("div");
         a.className = "a";
         a.innerHTML = fc.answer || "";
-        card.appendChild(q); card.appendChild(a);
+        a.style.color = "#e0e0e0";
+        card.appendChild(q);
+        card.appendChild(a);
         renderMathInElement(q, { delimiters:[
           {left:"\\[", right:"\\]", display:true},{left:"\\(", right:"\\)", display:false}
         ]});
