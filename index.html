@@ -395,6 +395,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     parent.appendChild(container);
     lines.forEach((fc,i)=>{
       const card = document.createElement("div"); card.className="flashcard-card";
+      card.style.background = "#252525"; card.style.color = "#e0e0e0";
       const qDiv = document.createElement("div"); qDiv.style.fontWeight="700"; qDiv.style.marginBottom="6px"; qDiv.innerHTML=`${i+1}) ${fc.title}`;
       const aDiv = document.createElement("div"); aDiv.className="a"; aDiv.innerHTML=fc.answer||"";
       card.appendChild(qDiv); card.appendChild(aDiv);
