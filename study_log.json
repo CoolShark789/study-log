@@ -779,10 +779,11 @@
     "day": 71,
     "date": "06.12.2025",
     "topics": [
-      "Friedberg: Sections 4.1",
-      "Pages: 199-",
-      "",
-      ""
+      "Friedberg: Sections 4.1, 4.2, 4.3, 4.4",
+      "Pages: 199-238",
+      "Determinant for 2x2, function representation, relation to invertibility, relation to an area, right and left handed coordinates",
+      "Determinant for nxn, cofactor, cofactor expansion, effects of elementary row operation on determinants",
+      "Determinants of elementary matrices, property for the det product and proof, more properties, Cramer's Rule proof"
     ]
   }
 ]
