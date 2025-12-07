@@ -785,6 +785,16 @@
       "Determinant for nxn, cofactor, cofactor expansion, effects of elementary row operation on determinants",
       "Determinants of elementary matrices, property for the det product and proof, more properties, Cramer's Rule proof"
     ]
+  },
+  {
+    "day": 72,
+    "date": "07.12.2025",
+    "topics": [
+      "Friedberg: Sections 5.1",
+      "Pages: 245-256",
+      "Diagonalizable linear operator, eigenvector, eigenvalue, diagonalizability, method to find eigenvalue",
+      "Characteristic polynomial, finding eigenvectors"
+    ]
   }
 ]
 
