@@ -795,6 +795,15 @@
       "Diagonalizable linear operator, eigenvector, eigenvalue, diagonalizability, method to find eigenvalue",
       "Characteristic polynomial, finding eigenvectors"
     ]
+  },
+  {
+    "day": 73,
+    "date": "08.12.2025",
+    "topics": [
+      "Friedberg: Sections 5.2 (first part)",
+      "Pages: 256-267",
+      "Diagonalization ,multiplicity, eigenspace and its dimension"
+    ]
   }
 ]
 
