@@ -98,7 +98,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (new RegExp("\\b"+k.replace(/[:]/g,"")+"\\b","i").test(t)) authors.add(k);
       }
     }
-    return authors.size ? [...authors].join("+") : "<b>Rest Day</b>";
+    return authors.size ? [...authors].join("+") : "";
+  }
+
+  function isRestDay(entry) {
+      if(!entry) return false;
+      const desc = entry.topics.join(" ").toLowerCase();
+      return desc.includes("rest");
   }
 
   // --- BUILD AUTHOR MAP FIRST ---
@@ -389,7 +395,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const lines = flashcardsCache[dayNumber] || [];
     if(replaceContent) content.innerHTML=`<h2>Day ${dayNumber} Flashcards</h2>`;
     const parent = replaceContent ? content : document.getElementById("flash-index") || content;
-    if(!lines.length){ if(replaceContent) content.innerHTML+="<p><b>Rest Day</b></p>"; return; }
+    const rest = isRestDay(studyData.find(e => e.day === dayNumber));
+    if (rest) {
+        if (replaceContent) content.innerHTML += "<p><b>Rest Day</b></p>";
+        return;
+    }
     const container = document.createElement("div");
     container.style.display="flex"; container.style.flexDirection="column"; container.style.gap="12px";
     container.id=`flashcards-day-${dayNumber}`;
@@ -526,37 +536,28 @@ document.addEventListener("DOMContentLoaded", async () => {
                   cell.style.background="#2a2a2a";
                   cell.style.color="#bbb";
               } else if(entry){
-                  const count = flashcardMap[dateStr];
-                  if(count > 0){
-                      const t = (count - minCount) / (maxCount - minCount || 1);
-                      const greenValue = Math.round(100 + t * 155);
-                      cell.style.background = `rgb(0,${greenValue},0)`;
-                  } else{
-                      cell.style.background = "red";
-                  }
-                  cell.style.color="#000";
-                  cell.style.cursor="pointer";
-
-                  // Add thin rings for all authors
-                  const authors = extractAuthors(entry.topics).split("+").map(a => a.trim());
-                  if(authors.length && authors[0] !== "<b>Rest Day</b>") {
-                      const borderWidth = 4;
-                      const step = 2; // distance between rings
-                      const shadows = authors.map((a,i)=>{
-                          const color = authorColors[a] || "black";
-                          const offset = borderWidth + i*step;
-                          return `0 0 0 ${offset}px ${color}`;
-                      });
-                      cell.style.boxShadow = shadows.join(", ");
-                      cell.style.borderRadius = "50%";
+                  const rest = isRestDay(entry);
+                  if(rest){
+                      cell.style.background="gray"; // or any color for rest
+                      cell.style.color="#000";
+                  } else {
+                      const count = flashcardMap[dateStr];
+                      if(count > 0){
+                          const t = (count - minCount) / (maxCount - minCount || 1);
+                          const greenValue = Math.round(100 + t * 155);
+                          cell.style.background = `rgb(0,${greenValue},0)`;
+                      } else{
+                          cell.style.background = "#000"; // black for days with no flashcards and not rest
+                      }
+                      cell.style.color="#fff";
                   }
 
+                  cell.style.cursor = "pointer";
                   cell.addEventListener("click", ()=>{
                       showFullStudyLog();
                       scrollToDay(entry.day);
                       calendarPage.style.display = "none";
                   });
-
               } else {
                   cell.style.background="#2a2a2a";
                   cell.style.color="#777";
