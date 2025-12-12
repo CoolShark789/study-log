@@ -819,6 +819,17 @@
     "day": 76,
     "date": "11.12.2025",
     "topics": ["Repeating the stacked flashcards from the last days, rest"]
+  },
+  {
+    "day": 77,
+    "date": "12.12.2025",
+    "topics": [
+      "Friedberg: Sections 5.2 (second part), 5.4",
+      "Pages: 267-281, 313-318",
+      "Relations between diagonalization and eigenvalues",
+      "Invariant subspace, T-cyclic subspace, restriction, characteristic polynomials and invariant subspace",
+      "Basis and characteristic polynomial of a cyclic subspace, Cayley-Hamilton theorem with the proof"
+    ]
   }
 ]
 
