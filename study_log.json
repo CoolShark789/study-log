@@ -830,6 +830,16 @@
       "Invariant subspace, T-cyclic subspace, restriction, characteristic polynomials and invariant subspace",
       "Basis and characteristic polynomial of a cyclic subspace, Cayley-Hamilton theorem with the proof"
     ]
+  },
+  {
+    "day": 78,
+    "date": "13.12.2025",
+    "topics": [
+      "Friedberg: Sections 6.1",
+      "Pages: 329-341",
+      "Inner product, adjoint (conjugate transpose), Frobenius inner product, inner product space, length of a vector",
+      "Cauchy-Schwarz inequality, orthogonal vectors and set; orthonormal set, inner product of functions on the interval, parallelogram law"
+    ]
   }
 ]
 
