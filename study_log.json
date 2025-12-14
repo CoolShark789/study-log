@@ -840,6 +840,17 @@
       "Inner product, adjoint (conjugate transpose), Frobenius inner product, inner product space, length of a vector",
       "Cauchy-Schwarz inequality, orthogonal vectors and set; orthonormal set, inner product of functions on the interval, parallelogram law"
     ]
+  },
+  {
+    "day": 79,
+    "date": "14.12.2025",
+    "topics": [
+      "Friedberg: Sections 6.2",
+      "Pages: 341-352",
+      "Orthonormal basis, formula for a vector in the span of the orthogonal set, linear independence of an orthogonal set",
+      "Gram-Schmidt process, geometrical understanding. vectors and entries of a matrices for orthonormal bases",
+      "Orthogonal complement, vector relation between an orthogonal complement and inner product space"
+    ]
   }
 ]
 
