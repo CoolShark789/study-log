@@ -1,0 +1,5 @@
+#separator:tab
+#html:false
+\[\text{What is the restriction on the input when doing Gram-Schmidt process?}\]	\[\text{It must be linearly independent because otherwise constructed orthogonal set will contain at least one zero vector}\]
+\[\text{If}\;S=\{v_1,\cdots,v_k\}\;\text{is an orthonormal set in an}\;n\text{-dimensional inner product space}\;V,\;\text{what can be done with}\;S?\]	\[\text{It can be extended to an orthonormal basis}\;\{v_1,\cdots,v_k,v_{k+1},\cdots,v_n\}\;\text{for}\;V\]
+\[\text{Given an orthogonal basis}\;S'=\{v_1,\cdots,v_n\}\;\text{and an orthogonal subset}\;S=\{v_1,\cdots,v_k\},\;W=\operatorname{span}(S)\]\[\text{Which connections can be made to}\;W^{\perp}?\]	\[\text{1. If}\;W=\operatorname{span}(S)\;\text{then}\;S'\setminus S =\{v_{k+1},\cdots, v_n\}\;\text{is an orthogonal basis for}\;W^{\perp}\]\[2.\;\operatorname{dim}(V)=\operatorname{dim}(W)+\operatorname{dim}(W^{\perp})\]\[(W\;\text{is any subspace of}\;V)\]

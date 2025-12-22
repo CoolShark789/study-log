@@ -533,9 +533,15 @@ document.addEventListener("DOMContentLoaded", async () => {
                       const greenValue = Math.round(100 + t * 155);
                       cell.style.background = `rgb(0,${greenValue},0)`;
                   } else{
-                      cell.style.background = "red";
+                     const isBusy = entry.topics.some(t => t.toLowerCase() === "busy");
+                     if(isBusy){
+                        cell.style.background = "#000";
+                        cell.style.color = "#e0e0e0";
+                     } else{
+                        cell.style.background = "red";
+                        cell.style.color = "#000";
+                     }
                   }
-                  cell.style.color="#000";
                   cell.style.cursor="pointer";
 
                   // Add thin rings for all authors

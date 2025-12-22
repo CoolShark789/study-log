@@ -851,6 +851,55 @@
       "Gram-Schmidt process, geometrical understanding. vectors and entries of a matrices for orthonormal bases",
       "Orthogonal complement, vector relation between an orthogonal complement and inner product space"
     ]
+  },
+  {
+    "day": 80,
+    "date": "15.12.2025",
+    "topics": ["Friedberg: Busy"]
+  },
+  {
+    "day": 81,
+    "date": "16.12.2025",
+    "topics": ["Busy"]
+  },
+  {
+    "day": 82,
+    "date": "17.12.2025",
+    "topics": ["Busy"]
+  },
+  {
+    "day": 83,
+    "date": "18.12.2025",
+    "topics": ["Busy"]
+  },
+  {
+    "day": 84,
+    "date": "19.12.2025",
+    "topics": ["Busy"]
+  },
+  {
+    "day": 85,
+    "date": "20.12.2025",
+    "topics": [
+      "Abbott: Sections 5.1, 5.2",
+      "Pages: 145-155",
+      "Derivative at a point, relation between continuity and differentiability, Interior Extremum Theorem, Darboux Theorem"
+    ]
+  },
+  {
+    "day": 86,
+    "date": "21.12.2025",
+    "topics": ["Busy"]
+  },
+  {
+    "day": 87,
+    "date": "22.12.2025",
+    "topics": [
+      "Abbott: Sections 5.3, 6.1",
+      "Pages: 155-162, 166-",
+      "Rolle's Theorem and Mean Value Theorem with proofs, Generalized Mean Value Theorem, infinite limit structure",
+      "pee pee poo poo"
+    ]
   }
 ]
 
